@@ -17,7 +17,7 @@ module ram(r_addr, w_addr, r_line, w_line, read, write, wrdy, rrdy, exc, clk);
     reg           wrdy, rrdy;
 
     //memory
-    parameter mem_size = 262144; //1mb, 4b/w
+    parameter mem_size = 1024; //4kb, 4b/w
 
     reg [31:0] mem [mem_size:0];
 
@@ -75,7 +75,7 @@ module emb_ram(r_addr, w_addr, r_line, w_line, read, write, exc, clk);
     reg           exc;
 
     //memory
-    parameter mem_size = 262144; //1mb, 4b/w
+    parameter mem_size = 1024; //4kb, 4b/w
 
     reg [31:0] mem [mem_size:0];
 

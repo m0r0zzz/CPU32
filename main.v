@@ -42,17 +42,20 @@ module main();
     end
 
     always begin //testcase
-        for(i = 0; i < 1024; i++) begin
+        for(i = 0; i < 2048; i++) begin
             w_line <= i << 1;
             w_addr <= i + 1;
             write <= 1;
             r_addr <= i;
             read <= 1;
             wait(!wrdy && !rrdy);
-            wait(wrdy && rrdy);
+            if(!(exc1 || exc2)) wait(wrdy && rrdy);
             write <= 0;
             $display(r_line1);
             $display(r_line2);
+            if(exc1 && exc2) $display("Double Exception!");
+            else if(exc1) $display("First Exception!");
+            else if(exc2) $display("Second Exception!");
             read <= 0;
             #0;
         end
