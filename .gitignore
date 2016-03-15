@@ -49,3 +49,8 @@ Temporary Items
 out
 *.net
 *.pcb
+*.exe
+*.out
+*.v
+*.o
+*.depend
