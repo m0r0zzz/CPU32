@@ -14,6 +14,7 @@ class Gate{
 public:
     virtual void gen(std::ostream& out) = 0;
     virtual string name() = 0;
+    virtual unsigned int count() = 0;
 
     virtual ~Gate() {};
 };
@@ -32,6 +33,8 @@ public:
     string name() override{
         return (vnm + "[" + to_string(vref)+"]");
     }
+
+    unsigned int count() override{ return 0;}
 };
 
 class OutputGate: public Gate{
@@ -49,6 +52,7 @@ public:
     string name() override{
         return (vnm + "[" + to_string(vref)+"]");
     }
+    unsigned int count() override{ return 0;}
 };
 
 class ANDGate: public Gate{
@@ -68,6 +72,7 @@ public:
     string name() override{
         return ("wand_" + to_string(nref));
     }
+    unsigned int count() override{ return 1;}
 };
 
 class FAProvider: public Gate{
@@ -89,6 +94,8 @@ public:
         return string();
     }
 
+    unsigned int count() override{ return 5;}
+
     unsigned int getRef(){ return nref; }
 };
 
@@ -106,6 +113,8 @@ public:
     string name() override{
         return ("wfa_s_" + to_string(p->getRef()));
     }
+
+    unsigned int count() override{ return 0;}
 };
 
 class FANode_Cout: public Gate{
@@ -122,6 +131,8 @@ public:
     string name() override{
         return ("wfa_cout_" + to_string(p->getRef()));
     }
+
+    unsigned int count() override{ return 0;}
 };
 
 class HAProvider: public Gate{
@@ -143,6 +154,8 @@ public:
         return string();
     }
 
+    unsigned int count() override{ return 2;}
+
     unsigned int getRef(){ return nref; }
 };
 
@@ -160,6 +173,8 @@ public:
     string name() override{
         return ("wha_s_" + to_string(p->getRef()));
     }
+
+    unsigned int count() override{ return 0;}
 };
 
 class HANode_C: public Gate{
@@ -176,6 +191,8 @@ public:
     string name() override{
         return ("wha_c_" + to_string(p->getRef()));
     }
+
+    unsigned int count() override{ return 0;}
 };
 
 atomic_uint ANDGate::cnt;
@@ -202,23 +219,24 @@ void gen_mult(std::ostream& out, unsigned int opsz){
         ins2.push_back(new InputGate("b", i));
     }
 
-    cout << "Input generation" << endl;
+    cout << "Input generation\n";
     for(unsigned int i = 0; i < opsz; i++){
         for(unsigned int j = 0; j < opsz; j++){
             wg[i+j].push_back(new ANDGate(ins1[i], ins2[j]));
         }
     }
-    for(unsigned int i = 0; i < 2*opsz - 1; i++) cout << " Weight " << i << ", length " << wg[i].size() << endl;
+    for(unsigned int i = 0; i < 2*opsz - 1; i++) cout << " Weight " << i << ", length " << wg[i].size() << "\n";
+    cout << "\n\n";
 
     unsigned int i = 1;
     while(gen_seq.size() > 0){ ///Reduce vectors towards ready-to-use entities (auto generate last adders layer)
         unsigned int cur = gen_seq.back();
         gen_seq.pop_back();
-        cout << "Layer " << i << ", target " << cur << endl;
+        cout << "\nLayer " << i << ", target " << cur << "\n";
         i++;
 
         for(unsigned int w = 0; w < 2*opsz - 1; w++){
-            cout << " Weight " << w << ", length " << wg[w].size() << endl;
+            cout << " Weight " << w << ", length " << wg[w].size() << "\n";
             if(wg[w].size() > cur){
                 vector<Gate*>& gs = wg[w];
                 vector<Gate*>& ngs = wg[w+1];
@@ -234,7 +252,7 @@ void gen_mult(std::ostream& out, unsigned int opsz){
                         ngs.push_back(new FANode_Cout(fa));
                         used.push_back(a), used.push_back(b), used.push_back(_cin), used.push_back(fa);
                         s -= 2;
-                        cout << "  Inserted Full Adder, now " << s << endl;
+                        cout << "  Inserted Full Adder, now " << s << "\n";
                     }
                     else if((s - cur) == 1){ ///Insert Half Adder
                         Gate* a = gs[0];
@@ -245,17 +263,18 @@ void gen_mult(std::ostream& out, unsigned int opsz){
                         ngs.push_back(new HANode_C(ha));
                         used.push_back(a), used.push_back(b), used.push_back(ha);
                         s -= 1;
-                        cout << "  Inserted Half Adder, now " << s << endl;
+                        cout << "  Inserted Half Adder, now " << s << "\n";
                     }
                     else if((s - cur) == 0){ ///Connect to next layer
                         s -= 0;
-                        cout << "  Passed to next layer, now" << s << endl;
+                        cout << "  Passed to next layer, now" << s << "\n";
                     }
                     else throw runtime_error("Bad condition in place #1");
                 }
             }
         }
     }
+    cout << "\n\n";
     ///Check if we're have good vectors
     if(wg[0].size() != 1) throw runtime_error("First vector have " + to_string(wg[0].size()) + " entities in it instead of 1");
     for(unsigned int i = 1; i < 2*opsz - 1; i++)
@@ -294,6 +313,7 @@ void gen_mult(std::ostream& out, unsigned int opsz){
             cout << "  Passed to the outputs layer" << endl;
         }
     }
+    cout << "\n\n";
 
     ///Generate outputs
     for(unsigned int i = 0; i < 2*opsz; i++){
@@ -303,8 +323,14 @@ void gen_mult(std::ostream& out, unsigned int opsz){
         used.push_back(ow);
     }
 
+    unsigned long int gates_number = 0;
+    for(Gate* i: used) gates_number += i->count();
+
+    cout << "Approx. gates count: " << gates_number << "\n" << endl;
+
     ///Generate rtl representation
     for(Gate* i: used) i->gen(out);
+    out << "\n";
     for(Gate* i: outs) i->gen(out);
 
     ///Cleanup
