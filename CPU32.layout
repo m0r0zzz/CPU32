@@ -2,20 +2,20 @@
 <CodeBlocks_layout_file>
 	<FileVersion major="1" minor="0" />
 	<ActiveTarget name="Release" />
-	<File name="Makefile" open="1" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="2" topLine="0" />
-		</Cursor>
-	</File>
 	<File name="main.v" open="1" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="1453" topLine="18" />
+			<Cursor1 position="1442" topLine="24" />
 		</Cursor>
 	</File>
-	<File name="ram.v" open="1" top="1" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="ram.v" open="1" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="1622" topLine="65" />
+			<Cursor1 position="1622" topLine="0" />
 		</Cursor>
 	</File>
-	<EditorTabsLayout layout="09f0431856d6b98c0004f70d00000002=10;CPU32:main.v,*11;CPU32:ram.v,12;CPU32:Makefile@layout2|name=dummy;caption=;state=2098174;dir=3;layer=0;row=0;pos=0;prop=100000;bestw=694;besth=420;minw=694;minh=420;maxw=-1;maxh=-1;floatx=-1;floaty=-1;floatw=-1;floath=-1|name=09f0431856d6b98c0004f70d00000002;caption=;state=2098172;dir=5;layer=0;row=0;pos=0;prop=100000;bestw=200;besth=200;minw=-1;minh=-1;maxw=-1;maxh=-1;floatx=-1;floaty=-1;floatw=-1;floath=-1|dock_size(5,0,0)=202|" />
+	<File name="Makefile" open="1" top="1" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="366" topLine="0" />
+		</Cursor>
+	</File>
+	<EditorTabsLayout layout="09a08e2056e9c51200026e8c00000003=1;CPU32:main.v,2;CPU32:ram.v,*3;CPU32:Makefile@layout2|name=dummy;caption=;state=2098174;dir=3;layer=0;row=0;pos=0;prop=100000;bestw=694;besth=420;minw=694;minh=420;maxw=-1;maxh=-1;floatx=-1;floaty=-1;floatw=-1;floath=-1|name=09a08e2056e9c51200026e8c00000003;caption=;state=2098172;dir=5;layer=0;row=0;pos=0;prop=100000;bestw=200;besth=200;minw=-1;minh=-1;maxw=-1;maxh=-1;floatx=-1;floaty=-1;floatw=-1;floath=-1|dock_size(5,0,0)=202|" />
 </CodeBlocks_layout_file>

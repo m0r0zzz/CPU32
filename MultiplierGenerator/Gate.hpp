@@ -12,7 +12,8 @@ using namespace std;
 
 class Gate{
 public:
-    virtual void gen(std::ostream& out) = 0;
+    virtual void genWire(std::ostream& out) = 0;
+    virtual void genInst(std::ostream& out) = 0;
     virtual string name() = 0;
     virtual unsigned int count() = 0;
 
@@ -26,7 +27,11 @@ public:
     InputGate(): vnm(), vref(0) {};
     InputGate(std::string vname, unsigned int vnumber): vnm(vname), vref(vnumber) {};
 
-    void gen(std::ostream& out) override{
+    void genWire(std::ostream& out) override{
+        return;
+    }
+
+    void genInst(std::ostream& out) override{
         return;
     }
 
@@ -45,8 +50,12 @@ public:
     OutputGate(): vnm(), vref(0), in(nullptr) {};
     OutputGate(std::string vname, unsigned int vnumber, Gate* in1): vnm(vname), vref(vnumber), in(in1) {};
 
-    void gen(std::ostream& out) override{
+    void genWire(std::ostream& out) override{
         out << "\tassign " << vnm << "[" << vref << "]" << " = " << in->name() << ";\n";
+    }
+
+    void genInst(std::ostream& out) override{
+        return;
     }
 
     string name() override{
@@ -64,9 +73,12 @@ public:
     ANDGate(): nref(cnt++), in1(nullptr), in2(nullptr) {};
     ANDGate(Gate* in1, Gate* in2): nref(cnt++), in1(in1), in2(in2) {};
 
-    void gen(std::ostream& out) override{
+    void genWire(std::ostream& out) override{
         out << "\twire wand_" << nref << ";\n";
-        out << "\tand and_" << nref << "( wand_" << nref <<", " << in1->name() << ", " << in2->name() << ");\n";
+    }
+
+    void genInst(std::ostream& out) override{
+        out << "\tand #1 and_" << nref << "( wand_" << nref <<", " << in1->name() << ", " << in2->name() << ");\n";
     }
 
     string name() override{
@@ -84,8 +96,11 @@ public:
     FAProvider(): nref(cnt++), in1(nullptr), in2(nullptr), in3(nullptr) {};
     FAProvider(Gate* a, Gate* b, Gate* _cin): nref(cnt++), in1(a), in2(b), in3(_cin) {};
 
-    void gen(std::ostream& out) override{
+    void genWire(std::ostream& out) override{
         out << "\twire wfa_s_" << nref << ", wfa_cout_" << nref << ";\n";
+    }
+
+    void genInst(std::ostream& out) override{
         out << "\tfa fa_" << nref << "( " << in1->name() << ", " << in2->name() << ", " << in3->name() << ", wfa_s_" << nref << ", wfa_cout_" << nref << ");\n";
     }
 
@@ -105,8 +120,13 @@ public:
     FANode_S(): p(nullptr) {};
     FANode_S(FAProvider* prov): p(prov) {};
 
-    void gen(std::ostream& out) override{
-        ///It is only node, not provider
+    void genWire(std::ostream& out) override{
+        ///It's only node, not provider
+        return;
+    }
+
+    void genInst(std::ostream& out) override{
+        ///It's only node, not provider
         return;
     }
 
@@ -123,8 +143,13 @@ public:
     FANode_Cout(): p(nullptr) {};
     FANode_Cout(FAProvider* prov): p(prov) {};
 
-    void gen(std::ostream& out) override{
-        ///It is only node, not provider
+    void genWire(std::ostream& out) override{
+        ///It's only node, not provider
+        return;
+    }
+
+    void genInst(std::ostream& out) override{
+        ///It's only node, not provider
         return;
     }
 
@@ -144,8 +169,11 @@ public:
     HAProvider(): nref(cnt++), in1(nullptr), in2(nullptr) {};
     HAProvider(Gate* a, Gate* b): nref(cnt++), in1(a), in2(b) {};
 
-    void gen(std::ostream& out) override{
+    void genWire(std::ostream& out) override{
         out << "\twire wha_s_" << nref << ", wha_c_" << nref << ";\n";
+    }
+
+    void genInst(std::ostream& out) override{
         out << "\tha ha_" << nref << "( " << in1->name() << ", " << in2->name() << ", wha_s_" << nref << ", wha_c_" << nref << ");\n";
     }
 
@@ -165,8 +193,13 @@ public:
     HANode_S(): p(nullptr) {};
     HANode_S(HAProvider* prov): p(prov) {};
 
-    void gen(std::ostream& out) override{
-        ///It is only node, not provider
+    void genWire(std::ostream& out) override{
+        ///It's only node, not provider
+        return;
+    }
+
+    void genInst(std::ostream& out) override{
+        ///It's only node, not provider
         return;
     }
 
@@ -183,8 +216,13 @@ public:
     HANode_C(): p(nullptr) {};
     HANode_C(HAProvider* prov): p(prov) {};
 
-    void gen(std::ostream& out) override{
-        ///It is only node, not provider
+    void genWire(std::ostream& out) override{
+        ///It's only node, not provider
+        return;
+    }
+
+    void genInst(std::ostream& out) override{
+        ///It's only node, not provider
         return;
     }
 
@@ -329,9 +367,12 @@ void gen_mult(std::ostream& out, unsigned int opsz){
     cout << "Approx. gates count: " << gates_number << "\n" << endl;
 
     ///Generate rtl representation
-    for(Gate* i: used) i->gen(out);
+    for(Gate* i: used) i->genWire(out);
     out << "\n";
-    for(Gate* i: outs) i->gen(out);
+    for(Gate* i: used) i->genInst(out);
+    out << "\n";
+    for(Gate* i: outs) i->genWire(out);
+    for(Gate* i: outs) i->genInst(out);
 
     ///Cleanup
     delete [] wg;
@@ -351,8 +392,14 @@ void gen_incls(std::ostream& out){
     out << "\toutput s;\n";
     out << "\toutput cout;\n";
     out << "\n";
-    out << "\tassign s = a^b^cin;\n";
-    out << "\tassign cout = (a & b) | (cin & (a ^ b));\n";
+    out << "\twire w1, w2, w3;\n";
+    out << "\n";
+    out << "\txor #1 x1(w1, a, b);\n";
+    out << "\txor #1 x2(s, w1, cin);\n";
+    out << "\n";
+    out << "\tand #1 a1(w2, a, b);\n";
+    out << "\tand #1 a2(w3, w1, cin);\n";
+    out << "\tor #1 o1(cout, w2, w3);\n";
     out << "endmodule\n";
     out << "\n";
 
@@ -364,8 +411,8 @@ void gen_incls(std::ostream& out){
     out << "\toutput s;\n";
     out << "\toutput c;\n";
     out << "\n";
-    out << "\tassign s = a^b;\n";
-    out << "\tassign c = a&b;\n";
+    out << "\txor #1 x(s, a, b);\n";
+    out << "\tand #1 a(c, a, b);\n";
     out << "endmodule\n";
     out << "\n";
 }

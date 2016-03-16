@@ -47,6 +47,7 @@ Temporary Items
 
 #Output files
 out
+*.vvp
 MultiplierGenerator/bin
 MultiplierGenerator/obj
 *.net

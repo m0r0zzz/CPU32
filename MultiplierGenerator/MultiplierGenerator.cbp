@@ -25,7 +25,7 @@
 				<Option object_output="obj/Release/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
-				<Option parameters="64 test.v" />
+				<Option parameters="8 test.v" />
 				<Compiler>
 					<Add option="-fexpensive-optimizations" />
 					<Add option="-O3" />
@@ -38,13 +38,14 @@
 		<Compiler>
 			<Add option="-Wall" />
 			<Add option="-std=c++14" />
-			<Add option="-m32" />
+			<Add option="-m64" />
 		</Compiler>
 		<Linker>
-			<Add option="-m32" />
+			<Add option="-m64" />
 		</Linker>
 		<Unit filename="Gate.hpp" />
 		<Unit filename="Main.cpp" />
+		<Unit filename="testcase.v" />
 		<Extensions>
 			<code_completion />
 			<envvars />
