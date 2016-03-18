@@ -20,6 +20,8 @@ int main(int argc, char** argv){
 
     unsigned int opsz = atoi(argv[1]);
 
+    gen_header(out, opsz);
+
     gen_incls(out);
 
     gen_module_decl(out, opsz);

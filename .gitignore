@@ -57,3 +57,4 @@ MultiplierGenerator/obj
 *.o
 *.depend
 MultiplierGenerator/test.v
+MultiplierGenerator/mult_size.txt

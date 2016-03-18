@@ -432,4 +432,11 @@ void gen_module_end(std::ostream& out){
     out << "\n";
 }
 
+void gen_header(std::ostream& out, unsigned int opsz){
+    out << "// This file is generated with MultiplierGenerator from CPU32 project.\n";
+    out << "// (c) DeD MorozZz\n";
+    out << "// This is " << opsz << "x" << opsz << " bits parallel multiplier, Dadda tree design.\n";
+    out << "\n";
+}
+
 #endif // GATE_HPP_INCLUDED

@@ -3,9 +3,9 @@
 `include "test.v"
 
 module main();
-    parameter s = 8;
+    parameter s = 32;
     parameter mx = 1 << s;
-    parameter dl = 28;
+    parameter dl = 64;
     reg [s-1:0] a;
     reg [s-1:0] b;
 

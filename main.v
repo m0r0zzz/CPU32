@@ -1,8 +1,10 @@
 `include "ram.v"
+`include "adder.v"
 
-`timescale 1 ns / 10 ps
+`timescale 1 ns / 100 ps
 
-module main();
+// memory test
+/*module main();
 
     reg [31:0] w_addr;
     reg [31:0] r_addr;
@@ -63,4 +65,40 @@ module main();
         $finish;
     end
 
+endmodule*/
+
+//adder test
+module main();
+    reg [15:0] a, b;
+    reg cin;
+    wire [15:0] s;
+    wire pg, gg, cout;
+
+    cla_16 cla0(a, b, cin, s, pg, gg);
+
+    initial begin
+        integer i, j, k;
+        //$dumpfile("dump.fst");
+        //$dumpvars(0);
+        //$dumpon;
+        #3;
+        for(k = 0; k < 2; k++) begin
+            for(i = 0; i < 65536; i++) begin
+                for(j = 0; j < 65536; j++) begin
+                   a = i;
+                   b = j;
+                   cin = k;
+                   #3;
+                   if({cout, s} != (i+j+k)) $display(" (%h) %h + %h != %h", k, a, b, {cout, s});
+                end
+                $display(" %h", i);
+ //               $dumpflush;
+            end
+            $display("---half---");
+ //           $dumpflush;
+        end
+        //$dumpflush;
+        //$finish;
+    end
 endmodule
+
