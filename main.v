@@ -1,7 +1,8 @@
 `include "ram.v"
 `include "adder.v"
+`include "shift.v"
 
-`timescale 1 ns / 100 ps
+`timescale 1 ns / 1 ns
 
 // memory test
 /*module main();
@@ -68,7 +69,7 @@
 endmodule*/
 
 //adder test
-module main();
+/*module main();
     reg [15:0] a, b;
     reg cin;
     wire [15:0] s;
@@ -100,5 +101,48 @@ module main();
         //$dumpflush;
         //$finish;
     end
-endmodule
+endmodule*/
 
+//shifter test
+function [31:0] rotate;
+    input[31:0] a;
+    input[4:0] b;
+    rotate = ( a >> b) | (a << ((-b) & 31));
+endfunction
+
+
+module main();
+    reg[31:0] a;
+    reg[4:0] b;
+    wire[31:0] y;
+
+    reg left, rot, arith;
+    wire z, ov;
+
+    bshift_32 bs0(y, ov, z, a, b, rot, left, arith);
+
+    integer i, j;
+    reg [31:0] x;
+
+    initial begin
+        $dumpfile("dump.fst");
+        $dumpvars(0);
+        $dumpon;
+        a = 32'b0;
+        b = 5'b0;
+        left = 0; rot = 0; arith = 0;
+        #1;
+        for(i = 0; i < 65536*2; i++) begin
+            x = $mti_random;
+            for(j = 0; j < 32; j++) begin
+                a = x;
+                b = j;
+                #1;
+                if(y != (x >> j)) $display(" %h >> %h != %h (%h)", a, b, y, (x >> j));
+            end
+            if( (i&65535) == 0 ) $display("-> %h", (i >> 16));
+        end
+        $dumpflush;
+        $finish;
+    end
+endmodule

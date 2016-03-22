@@ -1,4 +1,3 @@
-`timescale 1 ns / 100 ps
 
 module fa_pg(a, b, cin, s, p, g);
     input a, b, cin;

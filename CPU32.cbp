@@ -29,6 +29,7 @@
 		<Unit filename="mult.v" />
 		<Unit filename="mult_stub.v" />
 		<Unit filename="ram.v" />
+		<Unit filename="shift.v" />
 		<Extensions>
 			<code_completion />
 			<envvars />
