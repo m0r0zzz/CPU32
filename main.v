@@ -104,7 +104,7 @@ endmodule*/
 endmodule*/
 
 //shifter test
-function [31:0] rotr;
+/*function [31:0] rotr;
     input[31:0] a;
     input[4:0] b;
     rotr = ( a >> b) | (a << ((-b) & 31));
@@ -167,4 +167,6 @@ module main();
         $dumpflush;
         $finish;
     end
-endmodule
+endmodule*/
+
+
