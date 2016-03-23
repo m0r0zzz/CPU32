@@ -148,7 +148,7 @@ module fmask_32(q, a);
     output [31:0] q;
     reg [31:0] q;
 
-    always @(q) begin
+    always @(a) begin
         case(a)
             5'h00: q = 32'b11111111111111111111111111111111;
             5'h01: q = 32'b01111111111111111111111111111111;
@@ -196,7 +196,7 @@ module ovf_32(q, a, f, sla);
 
     wire [30:0] aexp = a[31] ? 31'h7FFFFFFF : 31'h00000000;
 
-    wire w1 = |(aexp^a[30:0])&(~f[31:1]);
+    wire w1 = |((aexp^a[30:0])&(~(f[31:1])));
 
     assign q = sla&w1;
 endmodule
@@ -211,7 +211,7 @@ module zmask_32(q, a, sla);
 
     genvar i;
     generate for(i = 1; i < 32; i = i + 1) begin
-        assign q[i] = (~sla)&a[31-i] | sla&a[31];
+        assign q[i] = sla ? a[32-i] : a[31-i];
     end
     endgenerate
 endmodule

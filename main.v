@@ -104,12 +104,34 @@ endmodule*/
 endmodule*/
 
 //shifter test
-function [31:0] rotate;
+function [31:0] rotr;
     input[31:0] a;
     input[4:0] b;
-    rotate = ( a >> b) | (a << ((-b) & 31));
+    rotr = ( a >> b) | (a << ((-b) & 31));
 endfunction
 
+function [31:0] rotl;
+    input[31:0] a;
+    input[4:0] b;
+    rotl = ( a << b) | (a >> ((-b) & 31));
+endfunction
+
+function [31:0] sal;
+    input[31:0] a;
+    input[4:0] b;
+    sal[30:0] = (a[30:0] << b);
+    sal[31] = a[31];
+endfunction
+
+function [31:0] sar;
+    input[31:0] a;
+    input[4:0] b;
+
+    integer x;
+    x = a;
+    //if(a[31]) x = -x;
+    sar = x >>> b;
+endfunction
 
 module main();
     reg[31:0] a;
@@ -130,15 +152,15 @@ module main();
         $dumpon;
         a = 32'b0;
         b = 5'b0;
-        left = 0; rot = 0; arith = 0;
+        left = 1; rot = 1; arith = 0;
         #1;
-        for(i = 0; i < 65536*2; i++) begin
+        for(i = 0; i < 65536; i++) begin
             x = $mti_random;
             for(j = 0; j < 32; j++) begin
                 a = x;
                 b = j;
                 #1;
-                if(y != (x >> j)) $display(" %h >> %h != %h (%h)", a, b, y, (x >> j));
+                if(y != rotl(x, j)) $display(" %h rotl %h != %h (%h)", a, b, y, rotl(x, j));
             end
             if( (i&65535) == 0 ) $display("-> %h", (i >> 16));
         end
