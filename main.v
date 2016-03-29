@@ -1,8 +1,6 @@
-`include "ram.v"
-`include "adder.v"
-`include "shift.v"
+`timescale 1 ns / 100 ps
 
-`timescale 1 ns / 1 ns
+`include "alu.v"
 
 // memory test
 /*module main();
@@ -104,7 +102,7 @@ endmodule*/
 endmodule*/
 
 //shifter test
-/*function [31:0] rotr;
+function [31:0] rotr;
     input[31:0] a;
     input[4:0] b;
     rotr = ( a >> b) | (a << ((-b) & 31));
@@ -133,7 +131,7 @@ function [31:0] sar;
     sar = x >>> b;
 endfunction
 
-module main();
+/*module main();
     reg[31:0] a;
     reg[4:0] b;
     wire[31:0] y;
@@ -170,3 +168,63 @@ module main();
 endmodule*/
 
 
+module main();
+    reg [31:0] a, b;
+    reg [7:0] op;
+
+    wire [31:0] ql, qh;
+    wire [3:0] fout;
+
+    alu32_2x2 alu0(ql, qh, fout, a, b, op);
+
+    initial begin
+        integer i, j, o;
+        reg [31:0] x1, x2;
+        reg [31:0] tl, th;
+        $dumpfile("dump.fst");
+        $dumpvars(0);
+        $dumpon;
+        a = 32'b0;
+        b = 32'b0;
+        op = 8'b0;
+        #1
+        for(i = 0; i < 256; i++) begin
+            x1 = $mti_random;
+            for(j = 0; j < 256; j++) begin
+                x2 = $mti_random;
+                for(o = 0; o < 19; o++) begin
+                    a = x1;
+                    b = x2;
+                    op = o;
+                    th = 0;
+                    case(o)
+                        0: begin tl = x1; th = x2; end
+                        1: tl = x1 + x2;
+                        2: tl = x1 - x2;
+                        3: tl = -x1;
+                        4: {th, tl} = x1*x2;
+                        5: tl = x1 >> (x2&5'h1F);
+                        6: tl = x1 << (x2&5'h1F);
+                        7: tl = sar(x1, (x2&5'h1F));
+                        8: tl = sal(x1, (x2&5'h1F));
+                        9: tl = rotr(x1, (x2&5'h1F));
+                        10: tl = rotl(x1, (x2&5'h1F));
+                        11: tl = ~x1;
+                        12: tl = x1 & x2;
+                        13: tl = x1 | x2;
+                        14: tl = x1 ^ x2;
+                        15: tl = x1 ~& x2;
+                        16: tl = x1 ~| x2;
+                        17: tl = x1 ~^ x2;
+                        18: begin tl = 32'bx; th = 32'bx; end
+                    endcase
+                    #16;
+                    if(ql != tl || qh != th) $display("error in op %h for a = %h, b = %h (test: l = %h, h = %h; got l = %h, h = %h)", o, x1, x2, tl, th, ql, qh);
+                end
+            end
+            $display("-> %h",i);
+        end
+        $dumpflush;
+        $finish;
+    end
+endmodule

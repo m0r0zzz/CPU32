@@ -1,4 +1,6 @@
 
+`timescale 1 ns / 100 ps
+
 module fa_pg(a, b, cin, s, p, g);
     input a, b, cin;
 
@@ -78,7 +80,7 @@ module cla_32(a, b, cin, s, cout);
     wire [2:0] c;
 
     cla_16 cla0(a[15:0],   b[15:0],  cin,   s[15:0], p[0], g[0]);
-    cla_16 cla1(a[31:16], b[31:16], c[0],  s[13:16], p[1], g[1]);
+    cla_16 cla1(a[31:16], b[31:16], c[0],  s[31:16], p[1], g[1]);
 
     assign c[0] = g[0] | p[0]&cin;
     assign cout = g[1] | g[0]&p[1] | cin&p[0]&p[1];

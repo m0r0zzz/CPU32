@@ -2,6 +2,8 @@
 // (c) DeD MorozZz
 // This is 32x32 bits parallel multiplier, Dadda tree design.
 
+`timescale 1 ns / 100 ps
+
 module fa(a,b,cin, s, cout);
 	input a;
 	input b;

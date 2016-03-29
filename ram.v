@@ -1,4 +1,3 @@
-
 `timescale 1 ns / 100 ps
 
 module ram(r_addr, w_addr, r_line, w_line, read, write, wrdy, rrdy, exc, clk);

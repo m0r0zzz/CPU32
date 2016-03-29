@@ -26,6 +26,7 @@
 		<Unit filename="Makefile" />
 		<Unit filename="adder.v" />
 		<Unit filename="alu.v" />
+		<Unit filename="insn_decoder.v" />
 		<Unit filename="main.v" />
 		<Unit filename="mult.v" />
 		<Unit filename="mult_stub.v" />

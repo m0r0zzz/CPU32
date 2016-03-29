@@ -1,4 +1,6 @@
 
+`timescale 1 ns / 100 ps
+
 /*module fr(a, q);
     input  [2:0] a;
     output [2:0] q;

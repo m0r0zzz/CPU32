@@ -1,4 +1,6 @@
 
+`timescale 1 ns / 100 ps
+
 module reg32_2x2(rd0, rd1, ra0, ra1, wa0, wa1, wd0, wd1, read, write, clk, rst);
     parameter addrsize = 5;
     parameter regsnum = 32;
