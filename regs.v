@@ -1,7 +1,7 @@
 
 `timescale 1 ns / 100 ps
 
-module reg32_2x2(rd0, rd1, ra0, ra1, wa0, wa1, wd0, wd1, read, write, clk, rst);
+module reg32_2x2_pc(rd0, rd1, ra0, ra1, wa0, wa1, wd0, wd1, read, write, clk, rst, lrout, spout, stout, pcout, stin, stwr, pcincr);
     parameter addrsize = 5;
     parameter regsnum = 32;
 
@@ -18,6 +18,15 @@ module reg32_2x2(rd0, rd1, ra0, ra1, wa0, wa1, wd0, wd1, read, write, clk, rst);
 
     reg [31:0] regs [regsnum-1:0];
 
+    output wire [31:0] lrout, spout, stout, pcout;
+    input [31:0] stin;
+    input stwr, pcincr;
+
+    assign pcout = regs[31];
+    assign lrout = regs[29];
+    assign spout = regs[30];
+    assign stout = regs[28];
+
     always @(posedge clk or rst) begin
         if(rst) begin
             rd0 <= 0;
@@ -31,5 +40,9 @@ module reg32_2x2(rd0, rd1, ra0, ra1, wa0, wa1, wd0, wd1, read, write, clk, rst);
 
         if(write[0]) regs[wa0] <= wd0;
         if(write[1]) regs[wa1] <= wd1;
+
+        if(stwr) regs[28] = stin;
+        if(pcincr) regs[31] = regs[31] + 1;
+
     end
 end
