@@ -9,7 +9,7 @@
 		<Build>
 			<Target title="Release">
 				<Option type="4" />
-				<Option compiler="gnu_gcc_compilerx64" />
+				<Option compiler="gcc" />
 				<Option parameters="runonly" />
 				<Option host_application="make" />
 				<Option run_host_application_in_terminal="1" />
@@ -29,9 +29,11 @@
 		<Unit filename="execute.v" />
 		<Unit filename="insn_decoder.v" />
 		<Unit filename="main.v" />
+		<Unit filename="memory_op.v" />
 		<Unit filename="mult.v" />
 		<Unit filename="mult_stub.v" />
 		<Unit filename="ram.v" />
+		<Unit filename="register_wb.v" />
 		<Unit filename="regs.v" />
 		<Unit filename="shift.v" />
 		<Extensions>

@@ -2,29 +2,34 @@
 <CodeBlocks_layout_file>
 	<FileVersion major="1" minor="0" />
 	<ActiveTarget name="Release" />
-	<File name="execute.v" open="1" top="0" tabpos="10" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="insn_decoder.v" open="1" top="0" tabpos="9" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="184" topLine="0" />
+			<Cursor1 position="62" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="memory_op.v" open="1" top="0" tabpos="11" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="596" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="register_wb.v" open="1" top="0" tabpos="12" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="223" topLine="0" />
 		</Cursor>
 	</File>
 	<File name="Makefile" open="1" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="171" topLine="0" />
+			<Cursor1 position="244" topLine="0" />
 		</Cursor>
 	</File>
-	<File name="regs.v" open="1" top="1" tabpos="7" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="execute.v" open="1" top="1" tabpos="10" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="1125" topLine="0" />
+			<Cursor1 position="3511" topLine="0" />
 		</Cursor>
 	</File>
-	<File name="insn_decoder.v" open="1" top="0" tabpos="9" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="regs.v" open="1" top="0" tabpos="7" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="0" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="shift.v" open="1" top="0" tabpos="6" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="2" topLine="0" />
+			<Cursor1 position="1095" topLine="0" />
 		</Cursor>
 	</File>
 	<File name="adder.v" open="1" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
@@ -34,12 +39,12 @@
 	</File>
 	<File name="main.v" open="1" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="4430" topLine="0" />
+			<Cursor1 position="93" topLine="0" />
 		</Cursor>
 	</File>
 	<File name="alu.v" open="1" top="0" tabpos="8" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="2468" topLine="178" />
+			<Cursor1 position="1211" topLine="56" />
 		</Cursor>
 	</File>
 	<File name="ram.v" open="1" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
@@ -47,10 +52,14 @@
 			<Cursor1 position="0" topLine="0" />
 		</Cursor>
 	</File>
+	<File name="shift.v" open="1" top="0" tabpos="6" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="1" topLine="0" />
+		</Cursor>
+	</File>
 	<File name="mult.v" open="1" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
 			<Cursor1 position="155" topLine="9" />
 		</Cursor>
 	</File>
-	<EditorTabsLayout layout="09c0a71856fe5a54005e172300000002=0;CPU32:main.v,1;CPU32:ram.v,2;CPU32:Makefile,3;CPU32:mult.v,4;CPU32:adder.v,5;CPU32:shift.v,*6;CPU32:regs.v,7;CPU32:alu.v,8;CPU32:insn_decoder.v,9;CPU32:execute.v@layout2|name=dummy;caption=;state=2098174;dir=3;layer=0;row=0;pos=0;prop=100000;bestw=694;besth=420;minw=694;minh=420;maxw=-1;maxh=-1;floatx=-1;floaty=-1;floatw=-1;floath=-1|name=09c0a71856fe5a54005e172300000002;caption=;state=2098172;dir=5;layer=0;row=0;pos=0;prop=100000;bestw=200;besth=200;minw=-1;minh=-1;maxw=-1;maxh=-1;floatx=-1;floaty=-1;floatw=-1;floath=-1|dock_size(5,0,0)=202|" />
 </CodeBlocks_layout_file>

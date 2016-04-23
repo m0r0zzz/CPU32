@@ -1,6 +1,8 @@
 `timescale 1 ns / 100 ps
 
-`include "alu.v"
+`include "execute.v"
+`include "memory_op.v"
+`include "register_wb.v"
 
 // memory test
 /*module main();
@@ -168,7 +170,7 @@ endfunction
 endmodule*/
 
 
-module main();
+/*module main();
     reg [31:0] a, b;
     reg [7:0] op;
 
@@ -227,4 +229,4 @@ module main();
         $dumpflush;
         $finish;
     end
-endmodule
+endmodule*/
