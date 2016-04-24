@@ -412,7 +412,7 @@ void gen_incls(std::ostream& out){
     out << "\toutput c;\n";
     out << "\n";
     out << "\txor #1 x(s, a, b);\n";
-    out << "\tand #1 a(c, a, b);\n";
+    out << "\tand #1 an(c, a, b);\n";
     out << "endmodule\n";
     out << "\n";
 }
