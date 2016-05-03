@@ -1,0 +1,469 @@
+%% LyX 2.1.4 created this file.  For more info, see http://www.lyx.org/.
+%% Do not edit unless you really know what you are doing.
+\documentclass[russian]{beamer}
+\usepackage{mathptmx}
+\renewcommand{\familydefault}{\sfdefault}
+\usepackage[T2A,T1]{fontenc}
+\usepackage[koi8-r]{inputenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+
+\makeatletter
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% LyX specific LaTeX commands.
+\DeclareRobustCommand{\cyrtext}{%
+  \fontencoding{T2A}\selectfont\def\encodingdefault{T2A}}
+\DeclareRobustCommand{\textcyr}[1]{\leavevmode{\cyrtext #1}}
+\AtBeginDocument{\DeclareFontEncoding{T2A}{}{}}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Textclass specific LaTeX commands.
+ % this default might be overridden by plain title style
+ \newcommand\makebeamertitle{\frame{\maketitle}}%
+ % (ERT) argument for the TOC
+ \AtBeginDocument{%
+   \let\origtableofcontents=\tableofcontents
+   \def\tableofcontents{\@ifnextchar[{\origtableofcontents}{\gobbletableofcontents}}
+   \def\gobbletableofcontents#1{\origtableofcontents}
+ }
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% User specified LaTeX commands.
+\usetheme{Warsaw}
+% or ...
+
+\setbeamercovered{transparent}
+% or whatever (possibly just delete it)
+
+\makeatother
+
+\usepackage{babel}
+\begin{document}
+
+
+
+
+
+\title[RISC-процессор]{Дипломная работа}
+
+
+\subtitle{Разработка RTL-oписания интегрированного микропроцессорного модуля
+c RISC-архитектурой}
+
+
+\author[Кареев К. А.]{Кареев Кирилл Андреевич\inst{1}}
+
+
+\institute[МИЭТ]{\inst{1}МИЭТ}
+
+
+\date[МИЭТ, 2016]{МИЭТ, 2016}
+
+\makebeamertitle
+
+
+%\pgfdeclareimage[height=0.5cm]{institution-logo}{MIET.png}
+%\logo{\pgfuseimage{institution-logo}}
+
+
+
+\AtBeginSubsection[]{%
+  \frame<beamer>{ 
+    \frametitle{}   
+    \tableofcontents[currentsection,currentsubsection] 
+  }
+}
+
+
+
+%\beamerdefaultoverlayspecification{<+->}
+\begin{frame}{Содержание}
+
+
+\tableofcontents{}
+
+
+
+
+\end{frame}
+
+\section{Мотвация}
+
+
+\subsection[Причина]{Почему Я Решил Сделать Ещё Один RISC Процессор}
+\begin{frame}{Чего не хватает другим процессорам }
+
+
+\framesubtitle{}
+\begin{itemize}
+\item Простоты работы с машинным кодом и ассемблерным представлением.
+
+
+\pause{}
+
+\item Единой структуры блока исполнения, без сопроцессоров и особых регистровых
+наборов.
+
+
+\pause{}
+
+\item Открытости RTL-описания.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Что есть в моём процессоре }
+
+\begin{itemize}
+\item<1->  Развитый набор команд, позволяющий в большинстве случаев обойтись
+без макросов и теневых определений.
+\item<2->  Практически все инструкции исполняются за один такт.
+\item<3->  Все инструкции могут использовать все регистры и иметь мгновенные
+значения для всех входных аргументов.
+\item<3->  Все инструкции относятся к основному набору, т.е. в процессоре нет
+сопроцессоров.
+\item<4->  Составные блоки конвейера достаточно универсальны для того, чтобы
+новый набор инструкций можно было ввести сменой лишь одного декодера.
+\item<5->  Открытое RTL-описание - читать и править можно всем :)
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Чего нет в моём процессоре}
+
+\begin{itemize}
+\item<1->  Достаточного функционала для реализации какого-либо CISC-набора
+инструкций.
+\item<2->  Векторных расширений и работы с плавающими числами двойной и четверной
+точности.
+\item<3->  Упора на малый размер бинарного представления машинного кода.
+\item<4->  Мультиплексирования памяти по частям машинного слова (возможна работа
+только с целым словом).
+\item<5->  Особых свойств (флаги, префиксы) команд и состояний (ошибка, гипервизор,
+быстрое прерывание и т.д.) процессора
+\end{itemize}
+\end{frame}
+
+\subsection{На Что Я Опирался}
+\begin{frame}{Существующие решения }
+
+
+\framesubtitle{ARM Thumb1}
+\begin{itemize}
+\item[+]<1-> Простота (функциональная) набора инструкций.
+\item[+]<1-> Простота строения процессора.
+\item[+]<1-> Большая база поддержки (компиляторы, ОС etc.).
+\item[-]<2-> Сложность бинарного представления машинного кода (из-за упора на
+уменьшенный размер).
+\item[-]<2-> Работа с дробными частями машинного слова.
+\item[-]<2-> Сложность работы с ассемблерным представлением кода (следствие функциональной
+простоты).
+\item[-]<2-> Расширения функционала (работа с плавающей точкой, например) перенесены
+на сопроцессоры и ARM режим.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Существующие решения }
+
+
+\framesubtitle{OpenRISC 1000 (mor1kx)}
+\begin{itemize}
+\item[+]<1->  Полная открытость как RTL-описания, так и базы поддержки.
+\item[+]<1->  Относительная простота набора инструкций.
+\item[+]<1->  Наличие расширений для работы с плавающей точкой.
+\item[+]<1->  Большая база поддержки.
+\item[-]<2->  Наличие большого количества состояний процессора.
+\item[-]<2->  Расширения так или иначе вынесены в сопроцессор.
+\item[-]<2->  Сложность RTL-описания, в основном из-за высокой функциональной
+развитости.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Существующие решения}
+
+
+\framesubtitle{MIPS32}
+\begin{itemize}
+\item[+]<1-> Существует много реализаций, в том числе и свободных
+\item[+]<1-> Большая база поддержки, проверен временем
+\item[+]<1-> Малый размер набора инструкций
+\item[+]<1-> Наличие большого количества расширений, в тч и для работы с плавающей
+точкой
+\item[-]<2-> Отночительно сложное построение инструкции
+\item[-]<2-> Большинство расширений помещено в сопроцессоры
+\item[-]<2-> Далеко не все реализации соответствуют стандарту
+\end{itemize}
+\end{frame}
+
+\section{Процессор УП-1}
+
+
+\subsection{Общее описание}
+\begin{frame}{Характеристики }
+
+\begin{itemize}
+\item {\scriptsize{}32-битная архитектура}{\scriptsize \par}
+\item {\scriptsize{}Набор из 64 (заложено до 128) инструкций}{\scriptsize \par}
+\item {\scriptsize{}32 РОН (Регистра общего назначения) шириной 32 бита
+с четырёхпортовым интерфейсом (2 чтение, 2 запись + особые линии для
+PC, LR и SP)}{\scriptsize \par}
+\item {\scriptsize{}Регистры PC, LR и SP (счётчик инструкций, адрес возврата
+и указатель стека) также являются общими (29, 30 и 31 соответственно)}{\scriptsize \par}
+\item {\scriptsize{}Однотактовый умножитель с возможностью сохранения всего
+результата (2 слова)}{\scriptsize \par}
+\item {\scriptsize{}Однотактовый комбинированный регистр сдвига (циклический,
+арифметический и обыкновенный сдвиг)}{\scriptsize \par}
+\item {\scriptsize{}Раздельные шины памяти и периферический устройств}{\scriptsize \par}
+\item {\scriptsize{}16 кодов условного исполнения}{\scriptsize \par}
+\item {\scriptsize{}Четырёхшаговая архитектура конвейера (Декодирование,
+Исполнение, Память/Периферия и Регистры)}{\scriptsize \par}
+\item {\scriptsize{}4 кб (с возможностью увеличения) двухпортового однотактового
+ОЗУ (1- чтение, 1 - запись)}{\scriptsize \par}
+\item {\scriptsize{}16 кб (с возможностью увеличения) однопортового однотактового
+(как бы) ППЗУ}{\scriptsize \par}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Структурная схема }
+
+
+\begin{center}
+\includegraphics[scale=0.15]{overview}
+\par\end{center}
+
+\end{frame}
+
+\begin{frame}{Структурная схема}
+
+
+\framesubtitle{Устройства}
+\begin{itemize}
+\item {\small{}EPROM - ППЗУ. На выходе 32-битное слово, находящееся по адресу
+на входе. Текущий размер - 16 кб (4096 слов)}{\small \par}
+\item {\small{}Register File - регистровый файл. Имеет 32 регистра, 2 порта
+на чтение (A, B) и 2 порта на запись (С, D) и спецвыходы для IP и
+Status}{\small \par}
+\item {\small{}RAM - ОЗУ. Имеет 1 порт на запись и 1 порт на чтение. Текущий
+размер - 4 кб (1024 слов).}{\small \par}
+\item {\small{}Periph - Двунаправленная шина периферических устройств. Имеет
+два раздельных (адрес+данные) направления - запись и чтение. К ней
+подключены:}{\small \par}
+
+\begin{itemize}
+\item {\small{}GPIO - Ввод-вывод общего назначения - <<ноги>>, с мультиплексорами
+для выбора дополнительных функций.}{\small \par}
+\item {\small{}Interfaces - Различные интерфейсы ввода-вывода (SPI и UART,
+например)}{\small \par}
+\item {\small{}Devices - Различные периферические устройства (RTC и ШИМ-контроллеры,
+например)}{\small \par}
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Структурная схема}
+
+
+\framesubtitle{Стадии конвейера}
+\begin{itemize}
+\item Decode - стадия дешифрования входного слова (инструкции) в набор управляющих
+сигналов. (D)
+
+\begin{itemize}
+\item Interface - специальная стадия задержки, нужна для осуществления многотактовых
+инструкций. (I)
+\end{itemize}
+\item Execute - стадия исполнения инструкции. Содержит АЛУ и блок вычисления
+условных кодов. (EX)
+\item Memory/Periph - стадия комбинированных операций с памятью и шиной
+периферических устройств. (MEM)
+\item Register WB - стадия обратной записи в регистры.
+\item HOLD(n) - специальные подстадии, обеспечивающие удержание управляющих
+сигналов для синхронизации.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Схема АЛУ}
+
+
+\begin{center}
+\includegraphics[scale=0.15]{alu}
+\par\end{center}
+
+\end{frame}
+
+\begin{frame}{Схема АЛУ}
+
+
+\framesubtitle{Устройства}
+\begin{itemize}
+\item Command Decoder - декодер команды АЛУ во внутренние сигналы управления
+\item Condition calculator - вычисляет условный результат из регистра STATUS
+и условного кода
+\item Adder/Subtractor - комбинированный сумматор-вычитатель 32х32=33
+\item Multiplier - беззнаковый умножитель 32х32=64
+\item Barrel shifter - комбинированный сдвиговый регистр 32х5=33
+\item Bitwise logic - комбинированный блок логических операций, 32х32=32
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Флаги (статус)}
+
+\begin{itemize}
+\item (N)egative - отрицательное число, равен 31 биту результата
+\item (Z)ero - нулевой результат
+\item (С)arry - беззнаковое переполнение (перенос), например, FFFFFFFFh
++ FFFFFFFFh (беззнаковое) = C + FFFFFFFE
+\item O(V)erflow - знаковое переполнение, например, 7FFFFFFF + 7FFFFFFF
+(знаковое) = V - 7FFFFFFE
+\end{itemize}
+\end{frame}
+
+\subsection{Набор инструкций}
+\begin{frame}{Характеристики}
+
+\begin{itemize}
+\item 6 логических инструкций ( or, nor, and, nand, inv, xor).
+\item 6 видов сдвига (арифметический, логический и циклический), влево и
+вправо.
+\item Арифметический операции (сумма, разность, беззнаковое произведение,
+инкремент/декремент, сравнение)
+\item Операции потока исполнения (прыжок, вызов и возврат), в т.ч и относительные 
+\item Операции с памятью и стеком (чтение и запись), в т.ч. непрямые
+\item Операция перемещения регистр-регистр (в т.ч двойная) и пустая операция
+\item Операции с шиной периферических устройств\medskip{}
+
+\item Все операции имеют возможность условного исполнения.
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Условные коды}
+
+\begin{itemize}
+\item EQ - равен (первый операнд второму)
+\item NEQ - не равен 
+\item HE - больше либо равен
+\item H - больше
+\item LE - меньше либо равен
+\item L - меньше
+\item SHE - знаковый больше либо равен
+\item SH - знаковый больше
+\item SLE - знаковый меньше либо равен
+\item SL - знаковый меньше
+\item OV - переполнение (знаковое)
+\item NOV - не переполнение (знаковое)
+\item POS - положительное число
+\item NEG - отрицательное число
+\item AL - всегда (безусловно)
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Перечисление инструкций}
+
+
+\framesubtitle{Логические инструкции}
+\begin{itemize}
+\item OR - побитовое ИЛИ двух операндов в третий
+\item NOR - побитовое ИЛИ-НЕ двух операндов в третий
+\item AND - побитовое И двух операндов в третий
+\item NAND - побитовое И-НЕ двух операндов в третий
+\item INV - побитовая инверсия одного операнда во второй
+\item XOR - побитовое ИСКЛ. ИЛИ двух операндов в третий
+\item XNOR - побитовое ИСКЛ. ИЛИ-НЕ двух операндов в третий
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Перечисление инструкций}
+
+
+\framesubtitle{Сдвиговые инструкции}
+\begin{itemize}
+\item LSL - логический сдвиг влево
+\item LSR - логический сдвиг вправо
+\item ASR - арифметический сдвиг вправо
+\item ASL - арифметический сдвиг влево
+\item CSR - циклический сдвиг (вращение) вправо
+\item CSL - циклический сдвиг (вращение) влево
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Перечисление инструкций}
+
+
+\framesubtitle{Арифметические операции}
+\begin{itemize}
+\item ADD - сложение двух операндов в третий
+\item SUB - вычитание двух операндов в третий
+\item MUL - беззнаковое перемножение двух операндов в третий(LO) и четвёртый
+(HI)
+\item CSG - смена знака операнда во второй
+\item INC - инкремент операнда во второй
+\item DEC - декремент операнда во второй
+\item CMP - сравнение двух операндов (вычитание без сохранения результата)
+\item CMN - сравнение операнда с инвертированнным вторым.
+\item TST - тест операндов (побитовое И без сохранения результата)
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Перечисление инструкций}
+
+
+\framesubtitle{Переходы}
+\begin{itemize}
+\item BR - абсолютный переход по адресу в операнде
+\item RBR - относительный (малый) переход по адресу в IP+операнд
+\item BRL - абсолютный переход с запоминанием (в LR) 
+\item RBL - относительный переход с запоминанием (в LR)
+\item RET - возврат (переход по адресу в LR)
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Перечисление инструкций}
+
+
+\framesubtitle{Память и стек}
+\begin{itemize}
+\item LDR - загрузка из адреса в операнде
+\item STR - запись по адресу в операнде
+\item LDRC - непрямая загрузка из адреса операнд1+операнд2
+\item STRC - непрямая запись по адресу операнд1+операнд2
+\item PUSH - помещение операнда на стек
+\item POP - извлечение слова со стека и помещение в операнд
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Перечисление инструкций}
+
+
+\framesubtitle{Периферия и прочее}
+\begin{itemize}
+\item IN - ввод из регистра периферии по адресу в операнде
+\item OUT - вывод в регистр периферии по адресу в операнде
+\item INI - непрямой ввод из регистра периферии по адресу операнд1+операнд2
+\item OUTI - непрямой вывод в регистр периферии по адресу операнд1+операнд2
+\item MOV - скопировать \{операнд1, операнд2\} в \{операнд3, операнд 4\}
+\item NOP - ничего не делать 1 (или операнд1) такт(ов).
+\end{itemize}
+\end{frame}
+
+\section*{Результат}
+\begin{frame}{Результат}
+
+\begin{itemize}
+\item<1-> Создано \alert{RTL-описание} процессора УП-1.
+\item<1-> Создана \alert{документация} к процессору УП-1 .
+\item<1-> Произведено \alert{моделирование} процессора УП-1 в симуляторе Icarus
+Verilog.
+\end{itemize}
+
+\medskip{}
+
+\begin{itemize}
+\item<2-> Что дальше
+
+\begin{itemize}
+\item<2-> Добавить инструкции работы с плавающей точкой одинарной точности.
+\item<2-> Добавить какую-нибудь периферию кроме GPIO и сдвигового регистра
+(<<SPI>>).
+\item<2-> Добавить кэш и спекулятивное исполнение.\end{itemize}
+\end{itemize}
+\end{frame}
+
+\end{document}
