@@ -32,10 +32,12 @@
 		<Unit filename="memory_op.v" />
 		<Unit filename="mult.v" />
 		<Unit filename="mult_stub.v" />
+		<Unit filename="pipeline_interface.v" />
 		<Unit filename="ram.v" />
 		<Unit filename="register_wb.v" />
 		<Unit filename="regs.v" />
 		<Unit filename="shift.v" />
+		<Unit filename="test_pipeline_assembly.v" />
 		<Extensions>
 			<code_completion />
 			<envvars />

@@ -29,9 +29,9 @@ module reg32_2x2_pc(rd0, rd1, ra0, ra1, wa0, wa1, wd0, wd1, read, write, clk, rs
 
     always @(posedge clk or rst) begin
         if(rst) begin
+            integer i;
             rd0 <= 0;
             rd1 <= 0;
-            integer i;
             for( i = 0; i < regsnum; i++) regs[i] <= 0;
         end
 
@@ -45,4 +45,4 @@ module reg32_2x2_pc(rd0, rd1, ra0, ra1, wa0, wa1, wd0, wd1, read, write, clk, rs
         if(pcincr) regs[31] = regs[31] + 1;
 
     end
-end
+endmodule

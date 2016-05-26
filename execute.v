@@ -3,7 +3,7 @@
 `include "alu.v"
 
 module cond_calc(cr, cc, n, z, c, v);
-    input [4:0] cc;
+    input [3:0] cc;
     input n, z, c, v;
 
     output reg cr;
@@ -49,6 +49,8 @@ module execute_stage_passthrough(qm_a1, qm_a2, qm_r1_op, qm_r2_op, qr_a1, qr_a2,
     input [4:0] r_a1, r_a2; //(reg_wb)
     input [3:0] r_op; //(reg_wb)
 
+    input clk, rst;
+
     output reg [31:0] qm_a1, qm_a2; //(mem_op)
     output reg [3:0] qm_r1_op, qm_r2_op; //(mem_op)
 
@@ -63,7 +65,7 @@ module execute_stage_passthrough(qm_a1, qm_a2, qm_r1_op, qm_r2_op, qr_a1, qr_a2,
             qr_op <= 4'b0;
         end
         else begin
-            qm_a1 <= m_a1 qm_a2 <= m_a2;
+            qm_a1 <= m_a1; qm_a2 <= m_a2;
             qm_r1_op <= m_r1_op; qm_r2_op <= m_r2_op;
             qr_a1 <= r_a1; qr_a2 <= r_a2;
             qr_op <= r_op;

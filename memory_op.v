@@ -1,9 +1,11 @@
 `timescale 1 ns / 100 ps
 
-module memory_op_stage_passthrough(q_a1, q_a2, q_op, q_proceed, a1, a2, op, proceed clk, rst);
+module memory_op_stage_passthrough(q_a1, q_a2, q_op, q_proceed, a1, a2, op, proceed, clk, rst);
     input [4:0] a1, a2; //(reg_wb)
     input [3:0] op; //(reg_wb)
     input proceed;
+
+    input clk, rst;
 
     output reg [4:0] q_a1, q_a2; //(reg_wb)
     output reg [3:0] q_op; //(reg_wb)
@@ -13,7 +15,7 @@ module memory_op_stage_passthrough(q_a1, q_a2, q_op, q_proceed, a1, a2, op, proc
         if(rst) begin
             q_a1 <= 5'b0; q_a2 <= 5'b0;
             q_op <= 4'b0;
-            proceed <= 1'b0;
+            q_proceed <= 1'b0;
         end
         else begin
             q_a1 <= a1; q_a2 <= a2;
@@ -23,7 +25,7 @@ module memory_op_stage_passthrough(q_a1, q_a2, q_op, q_proceed, a1, a2, op, proc
     end
 endmodule
 
-module memory_op( m1, m2, ram_w_addr, ram_r_addr, ram_w, ram_r, ram_w_line, sys_w_addr, sys_w_line, sys_w, sys_r, r1, r2, a1, a2, r1_op, r2_op, mop, ram_r_line, sys_r_line, proceed, clk, rst);
+module memory_op( m1, m2, ram_w_addr, ram_r_addr, ram_w, ram_r, ram_w_line, sys_w_addr, sys_w_line, sys_w, sys_r, r1, r2, a1, a2, r1_op, r2_op, ram_r_line, sys_r_line, proceed, clk, rst);
     input [31:0] r1, r2; //inputs
     input [31:0] a1, a2; //memory addresses
 
@@ -53,14 +55,14 @@ module memory_op( m1, m2, ram_w_addr, ram_r_addr, ram_w, ram_r, ram_w_line, sys_
         if(rst) begin
             ram_w_addr <= 32'b0; ram_r_addr <= 32'b0;
             sys_w_addr <= 32'b0; sys_r_addr <= 32'b0;
-            ram_w_line <= 32'b0; ram_r_line <= 32'b0;
+            ram_w_line <= 32'b0; sys_w_line <= 32'b0;
             ram_w <= 1'b0; ram_r <= 1'b0; sys_r <= 1'b0; sys_w <= 1'b0;
         end
 
         ram_w <= 1'b0; ram_r <= 1'b0; sys_r <= 1'b0; sys_w <= 1'b0;
 
         case(r1_op_inner)
-            0: begin //clear NOP
+            0: begin //clean NOP
                 force m1 = 32'b0;
                 end
             1: begin //passthrough NOP
@@ -138,7 +140,7 @@ module memory_op( m1, m2, ram_w_addr, ram_r_addr, ram_w, ram_r, ram_w_line, sys_
         endcase
 
         case(r2_op_inner)
-            0: begin //clear NOP
+            0: begin //clean NOP
                 force m2 = 32'b0;
                 end
             1: begin //passthrough NOP

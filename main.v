@@ -1,8 +1,48 @@
 `timescale 1 ns / 100 ps
 
-`include "execute.v"
-`include "memory_op.v"
-`include "register_wb.v"
+`include "test_processor_assembly.v"
+
+//assembly test
+module main();
+    reg [31:0] insn;
+    wire [31:0] lr, sp, st, pc;
+    wire [31:0] syswl, syswa;
+    wire sysw;
+
+    reg clk;
+    reg rst;
+
+    test_processor_assembly proc0(lr, sp, st, pc, syswl, syswa, sysw,  insn, clk, rst);
+
+    initial begin
+        insn = 32'b0; //nop
+        clk = 0;
+        rst = 0;
+        $dumpfile("dump.fst");
+        $dumpvars(0);
+        $dumpon;
+    end
+
+    always begin
+        integer i, j, k;
+
+        rst = 0;
+        #32
+        rst = 1;
+        #32
+        rst = 0;
+
+        for(i = 0; i < 16; i++) begin //insert 16 nops
+            insn = 32'b0;
+            #32;
+            clk = 1;
+            #32;
+            clk = 0;
+        end
+        $dumpflush;
+        $finish;
+    end
+endmodule
 
 // memory test
 /*module main();
