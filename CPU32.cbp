@@ -38,6 +38,7 @@
 		<Unit filename="regs.v" />
 		<Unit filename="shift.v" />
 		<Unit filename="test_pipeline_assembly.v" />
+		<Unit filename="test_processor_assembly.v" />
 		<Extensions>
 			<code_completion />
 			<envvars />

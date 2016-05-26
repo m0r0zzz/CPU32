@@ -105,14 +105,14 @@ module insn_decoder( e_a, e_b, e_alu_op, e_is_cond, e_cond, e_write_flags, e_swp
             if(fetch) begin
                 opcode = word[31:25];
                 cond <= word[24:21];
-                reg_a_addr <= word[20:16]; reg_b_addr <= word[15:11]; reg_c_addr <= word[10:5]; reg_d_addr <= word[4:0];
-                imm_action <= {1'b0, word[4:3]};
+                reg_a_addr <= word[20:16]; reg_b_addr <= word[15:11]; reg_c_addr <= word[10:6]; reg_d_addr <= word[5:1];
+                imm_action <= {1'b0, word[5:4]};
                 state1 <= opcode;
-                #0
+                #1;
                 d_pcincr <= 1;
                 d_pass <= 1;
             end
-            #0;
+            //#0;
             case(state1)
                 //logic
                 0: begin //nop
@@ -442,7 +442,7 @@ module insn_decoder( e_a, e_b, e_alu_op, e_is_cond, e_cond, e_write_flags, e_swp
                     state1 <= 0;
                 end
             endcase
-            #0;
+            #1;
             if(fetch) begin //reg fetch procedure
                if(r_read[0]) begin
                    if(r_to_mem[0]) m_a1 <= r1;
@@ -453,7 +453,7 @@ module insn_decoder( e_a, e_b, e_alu_op, e_is_cond, e_cond, e_write_flags, e_swp
                    else e_b <= r2;
                end
             end
-            #0;
+            #1;
             if(imm_action != 3'b100 && imm_action != 3'b000) begin //imm fetch procedure
                 if(state1 != 128 && state1 != 129) begin //just got insn
                     old_state1 <= state1; //save state

@@ -25,18 +25,72 @@ module main();
 
     always begin
         integer i, j, k;
-
         rst = 0;
-        #32
+        #16;
         rst = 1;
-        #32
+        #16;
         rst = 0;
-
+        #16;
+        //insert one mov imm to reg 30 (sp)
+        insn[31:25] = 32; insn[24:21] = 4'b1110; insn[20:11] = 0; insn[10:6] = 30; insn[5:1] = 5'b10000; insn[0] = 0;
+        #16;
+        clk = 1;
+        #16;
+        clk = 0;
+        insn = 32'h1488;
+        #16;
+        clk = 1;
+        #16;
+        clk = 0;
+         //insert one mov imm to reg 29 (lr)
+        insn[31:25] = 32; insn[24:21] = 4'b1110; insn[20:11] = 0; insn[10:6] = 29; insn[5:1] = 5'b10000; insn[0] = 0;
+        #16;
+        clk = 1;
+        #16;
+        clk = 0;
+        insn = 32'h228;
+        #16;
+        clk = 1;
+        #16;
+        clk = 0;
+        insn = 32'b0;
+        //insert one nop
+        #16;
+        clk = 1;
+        #16;
+        clk = 0;
+        //insert one nop
+        #16;
+        clk = 1;
+        #16;
+        clk = 0;
+        //insert one add 29 and 30 to 30
+        insn[31:25] = 13; insn[24:21] = 4'b1110; insn[20:16] = 29; insn[15:11] = 30; insn[10:6] = 30; insn[5:1] = 5'b00000; insn[0] = 0;
+        #16;
+        clk = 1;
+        #16;
+        clk = 0;
+        //insert one add imm1 and imm 2 to 29
+        insn[31:25] = 13; insn[24:21] = 4'b1110; insn[20:16] = 0; insn[15:11] = 0; insn[10:6] = 29; insn[5:1] = 5'b11000; insn[0] = 0;
+        #16;
+        clk = 1;
+        #16;
+        clk = 0;
+        insn = 32'h359;
+        #16;
+        clk = 1;
+        #16;
+        clk = 0;
+        insn = 32'hDEAD;
+        #16;
+        clk = 1;
+        #16;
+        clk = 0;
         for(i = 0; i < 16; i++) begin //insert 16 nops
             insn = 32'b0;
-            #32;
+            #16;
             clk = 1;
-            #32;
+            #16;
             clk = 0;
         end
         $dumpflush;

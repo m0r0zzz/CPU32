@@ -37,6 +37,7 @@ module pipeline_interface(
     output reg qd_pcincr;
 
     always @(posedge clk or rst) begin
+        #3;
         if(rst || !d_pass) begin // insert clean NOP
             qe_a <= 31'b0; qe_b <= 31'b0;
             qe_alu_op <= 8'b0; //NOP

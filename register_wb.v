@@ -26,7 +26,7 @@ module register_wb( write, wr1, wr2, wa1, wa2, r1, r2, a1, a2, op, proceed, clk,
         end
 
         write <= 2'b00;
-
+        #1;
         case(op)
             0: write <= 2'b00; //NOP
             1: begin //write r1 to addr a1
