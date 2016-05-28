@@ -88,7 +88,8 @@ module emb_ram(r_addr, w_addr, r_line, w_line, read, write, exc, clk);
         exc = 1'b0;
     end
 
-     always @(posedge clk) begin
+     always @(posedge clk) begin //??????????
+        #1;
         if(read) begin
             if(r_addr >= mem_size) begin
                 r_line <= 32'b0;

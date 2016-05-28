@@ -247,7 +247,7 @@ module insn_decoder( e_a, e_b, e_alu_op, e_is_cond, e_cond, e_write_flags, e_swp
                 17: begin //mul
                     e_alu_op <= 8'h04; e_cond <= cond; e_write_flags <= 4'hF; e_is_cond <= 1; //alu mul, conditional, all flags
                     m_r1_op <= 4'b1; m_r2_op <= 4'b1; //memory passthrough nop
-                    r_op <= 8; r_a1 <= reg_c_addr; r_a2 <= reg_d_addr; // register write c,d to a1,a2
+                    r_op <= 7; r_a1 <= reg_c_addr; r_a2 <= reg_d_addr; // register write c,d to a1,a2
                     r_r1_addr <= reg_a_addr; r_r2_addr <= reg_b_addr; r_read <= 3; //register read both
                     r_to_mem <= 0;//register read to a,b
                     imm_action <= 3'b000; //no imm in this insn
@@ -321,7 +321,7 @@ module insn_decoder( e_a, e_b, e_alu_op, e_is_cond, e_cond, e_write_flags, e_swp
                 26: begin //brl
                     e_alu_op <= 8'h00; e_cond <= cond; e_write_flags <= 4'h0; e_is_cond <= 1; //alu nop, conditional, no flags
                     m_r1_op <= 4'b1; m_r2_op <= 4'b1; //memory passthrough nop
-                    r_op <= 8; r_a1 <= 31; r_a2 <= 29; // register write a,b to pc,lr
+                    r_op <= 7; r_a1 <= 31; r_a2 <= 29; // register write a,b to pc,lr
                     r_r1_addr <= reg_a_addr; r_r2_addr <= 31; r_read <= 3; //register read both, second - pc
                     r_to_mem <= 0;//register read to a,b
                     imm_action[0] <= 0; //no imm for b in this insn
@@ -346,7 +346,7 @@ module insn_decoder( e_a, e_b, e_alu_op, e_is_cond, e_cond, e_write_flags, e_swp
                 end
                 28: begin //ldr
                     e_alu_op <= 8'h00; e_cond <= cond; e_write_flags <= 4'h0; e_is_cond <= 1; //alu nop, conditional, no flags
-                    m_r1_op <= 4'b0010; m_r2_op <= 4'b1; //memory read c from a1
+                    m_r1_op <= 2; m_r2_op <= 1; //memory read c from a1
                     r_op <= 1; r_a1 <= reg_c_addr; // register write c to a1
                     r_r1_addr <= reg_a_addr; r_read <= 1; //register read first
                     r_to_mem <= 2'b01;//register read to m1, b
@@ -355,7 +355,7 @@ module insn_decoder( e_a, e_b, e_alu_op, e_is_cond, e_cond, e_write_flags, e_swp
                 end
                 29: begin //str
                     e_alu_op <= 8'h00; e_cond <= cond; e_write_flags <= 4'h0; e_is_cond <= 1; //alu nop, conditional, no flags
-                    m_r1_op <= 4'b1; m_r2_op <= 4'b0101; //memory write d to a1
+                    m_r1_op <= 1; m_r2_op <= 5; //memory write d to a1
                     r_op <= 0; // register write nop
                     r_r1_addr <= reg_a_addr; r_r2_addr <= reg_b_addr; r_read <= 3; //register read both
                     r_to_mem <= 2'b01;//register read to m1, b
@@ -405,7 +405,7 @@ module insn_decoder( e_a, e_b, e_alu_op, e_is_cond, e_cond, e_write_flags, e_swp
                 33: begin //mov
                     e_alu_op <= 8'h00; e_cond <= cond; e_write_flags <= 4'h0; e_is_cond <= 1; //alu nop, conditional, all flags
                     m_r1_op <= 4'b1; m_r2_op <= 4'b1; //memory passthrough nop
-                    r_op <= 8; r_a1 <= reg_c_addr; r_a2 <= reg_d_addr; // register write c,d to a1,a2
+                    r_op <= 7; r_a1 <= reg_c_addr; r_a2 <= reg_d_addr; // register write c,d to a1,a2
                     r_r1_addr <= reg_a_addr; r_r2_addr <= reg_b_addr; r_read <= 3; //register read both
                     r_to_mem <= 0;//register read to a,b
                     imm_action <= 3'b000; //no imm in this insn
@@ -421,8 +421,8 @@ module insn_decoder( e_a, e_b, e_alu_op, e_is_cond, e_cond, e_write_flags, e_swp
                 128: begin //get first imm
                     if(imm_action == 3'b001) e_b <= word;
                     else if(imm_action == 3'b010 || imm_action == 3'b011) e_a <= word;
-                    else if(imm_action == 3'b101 || imm_action == 3'b111) m_a1 <= word;
-                    else if(imm_action == 3'b110) m_a2 <= word;
+                    else if(imm_action == 3'b110 || imm_action == 3'b111) m_a1 <= word;
+                    else if(imm_action == 3'b101) m_a2 <= word;
                 end
                 129: begin //get second imm
                     if(imm_action == 3'b011) e_b <= word;

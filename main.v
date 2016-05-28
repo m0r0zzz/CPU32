@@ -1,5 +1,7 @@
 `timescale 1 ns / 100 ps
 
+`define INTERFACE_STAGE_NO_DELAY
+
 `include "test_processor_assembly.v"
 
 //assembly test
@@ -26,71 +28,242 @@ module main();
     always begin
         integer i, j, k;
         rst = 0;
-        #16;
+        #20;
         rst = 1;
-        #16;
+        #20;
         rst = 0;
-        #16;
+        #20;
         //insert one mov imm to reg 30 (sp)
         insn[31:25] = 32; insn[24:21] = 4'b1110; insn[20:11] = 0; insn[10:6] = 30; insn[5:1] = 5'b10000; insn[0] = 0;
-        #16;
+        #20;
         clk = 1;
-        #16;
+        #20;
         clk = 0;
-        insn = 32'h1488;
-        #16;
+        insn = 32'h14888;
+        #20;
         clk = 1;
-        #16;
+        #20;
         clk = 0;
          //insert one mov imm to reg 29 (lr)
         insn[31:25] = 32; insn[24:21] = 4'b1110; insn[20:11] = 0; insn[10:6] = 29; insn[5:1] = 5'b10000; insn[0] = 0;
-        #16;
+        #20;
         clk = 1;
-        #16;
+        #20;
         clk = 0;
-        insn = 32'h228;
-        #16;
+        insn = 32'h22888;
+        #20;
         clk = 1;
-        #16;
+        #20;
         clk = 0;
+        //insert one nop
         insn = 32'b0;
-        //insert one nop
-        #16;
+        #20;
         clk = 1;
-        #16;
+        #20;
         clk = 0;
         //insert one nop
-        #16;
+        insn = 32'b0;
+        #20;
         clk = 1;
-        #16;
+        #20;
         clk = 0;
         //insert one add 29 and 30 to 30
         insn[31:25] = 13; insn[24:21] = 4'b1110; insn[20:16] = 29; insn[15:11] = 30; insn[10:6] = 30; insn[5:1] = 5'b00000; insn[0] = 0;
-        #16;
+        #20;
         clk = 1;
-        #16;
+        #20;
         clk = 0;
         //insert one add imm1 and imm 2 to 29
         insn[31:25] = 13; insn[24:21] = 4'b1110; insn[20:16] = 0; insn[15:11] = 0; insn[10:6] = 29; insn[5:1] = 5'b11000; insn[0] = 0;
-        #16;
+        #20;
         clk = 1;
-        #16;
+        #20;
         clk = 0;
-        insn = 32'h359;
-        #16;
+        insn = 32'h35942;
+        #20;
         clk = 1;
-        #16;
+        #20;
         clk = 0;
-        insn = 32'hDEAD;
-        #16;
+        insn = 32'hDEADBEAF;
+        #20;
         clk = 1;
-        #16;
+        #20;
+        clk = 0;
+        //insert one nop
+        insn = 32'b0;
+        #20;
+        clk = 1;
+        #20;
+        clk = 0;
+        //insert one nop
+        insn = 32'b0;
+        #20;
+        clk = 1;
+        #20;
+        clk = 0;
+        //insert one mul 29 and 30 to 29 and 30
+        insn[31:25] = 17; insn[24:21] = 4'b1110; insn[20:16] = 29; insn[15:11] = 30; insn[10:6] = 29; insn[5:1] = 30; insn[0] = 0;
+        #20;
+        clk = 1;
+        #20;
+        clk = 0;
+        //insert one nop
+        insn = 32'b0;
+        #20;
+        clk = 1;
+        #20;
+        clk = 0;
+        //insert one nop
+        insn = 32'b0;
+        #20;
+        clk = 1;
+        #20;
+        clk = 0;
+        //insert one xor 29 and 30 to 30
+        insn[31:25] = 6; insn[24:21] = 4'b1110; insn[20:16] = 29; insn[15:11] = 30; insn[10:6] = 30; insn[5:1] = 00; insn[0] = 0;
+        #20;
+        clk = 1;
+        #20;
+        clk = 0;
+        //insert one nop
+        insn = 32'b0;
+        #20;
+        clk = 1;
+        #20;
+        clk = 0;
+        //insert one nop
+        insn = 32'b0;
+        #20;
+        clk = 1;
+        #20;
+        clk = 0;
+        //insert one csr 30 by imm to 29
+        insn[31:25] = 11; insn[24:21] = 4'b1110; insn[20:16] = 30; insn[15:11] = 0; insn[10:6] = 29; insn[5:1] = 5'b01000; insn[0] = 0;
+        #20;
+        clk = 1;
+        #20;
+        clk = 0;
+        insn = 11;
+        #20;
+        clk = 1;
+        #20;
+        clk = 0;
+        //insert one branch to imm
+        insn[31:25] = 24; insn[24:21] = 4'b1110; insn[20:16] = 0; insn[15:11] = 0; insn[10:6] = 0; insn[5:1] = 5'b10000; insn[0] = 0;
+        #20;
+        clk = 1;
+        #20;
+        clk = 0;
+        insn = 32'h134;
+        #20;
+        clk = 1;
+        #20;
+        clk = 0;
+        //insert one nop
+        insn = 32'b0;
+        #20;
+        clk = 1;
+        #20;
+        clk = 0;
+        //insert one nop
+        insn = 32'b0;
+        #20;
+        clk = 1;
+        #20;
+        clk = 0;
+        //insert one brl to 30
+        insn[31:25] = 26; insn[24:21] = 4'b1110; insn[20:16] = 30; insn[15:11] = 0; insn[10:6] = 0; insn[5:1] = 5'b00000; insn[0] = 0;
+        #20;
+        clk = 1;
+        #20;
+        clk = 0;
+        //insert one nop
+        insn = 32'b0;
+        #20;
+        clk = 1;
+        #20;
+        clk = 0;
+        //insert one nop
+        insn = 32'b0;
+        #20;
+        clk = 1;
+        #20;
+        clk = 0;
+        //insert one br_pos to 0
+        insn[31:25] = 24; insn[24:21] = 4'b0101; insn[20:16] = 0; insn[15:11] = 0; insn[10:6] = 0; insn[5:1] = 5'b00000; insn[0] = 0;
+        #20;
+        clk = 1;
+        #20;
+        clk = 0;
+        //insert one ret_neg
+        insn[31:25] = 27; insn[24:21] = 4'b0100; insn[20:16] = 0; insn[15:11] = 0; insn[10:6] = 0; insn[5:1] = 5'b00000; insn[0] = 0;
+        #20;
+        clk = 1;
+        #20;
+        clk = 0;
+        //insert one str to imm from 30
+        insn[31:25] = 29; insn[24:21] = 4'b1110; insn[20:16] = 0; insn[15:11] = 30; insn[10:6] = 0; insn[5:1] = 5'b10000; insn[0] = 0;
+        #20;
+        clk = 1;
+        #20;
+        clk = 0;
+        insn = 16;
+        #20;
+        clk = 1;
+        #20;
+        clk = 0;
+        //insert one nop
+        insn = 32'b0;
+        #20;
+        clk = 1;
+        #20;
+        clk = 0;
+        //insert one nop
+        insn = 32'b0;
+        #20;
+        clk = 1;
+        #20;
+        clk = 0;
+        //insert mov 29, 30 to 30, 29 (reposition)
+        insn[31:25] = 33; insn[24:21] = 4'b1110; insn[20:16] = 29; insn[15:11] = 30; insn[10:6] = 30; insn[5:1] = 29; insn[0] = 0;
+        #20;
+        clk = 1;
+        #20;
+        clk = 0;
+        //insert one nop
+        insn = 32'b0;
+        #20;
+        clk = 1;
+        #20;
+        clk = 0;
+        //insert one nop
+        insn = 32'b0;
+        #20;
+        clk = 1;
+        #20;
+        clk = 0;
+        //insert out 30 to 29
+        insn[31:25] = 31; insn[24:21] = 4'b1110; insn[20:16] = 29; insn[15:11] = 30; insn[10:6] = 0; insn[5:1] = 0; insn[0] = 0;
+        #20;
+        clk = 1;
+        #20;
+        clk = 0;
+        //insert one ldr from imm to 30
+        insn[31:25] = 28; insn[24:21] = 4'b1110; insn[20:16] = 0; insn[15:11] = 0; insn[10:6] = 30; insn[5:1] = 5'b10000; insn[0] = 0;
+        #20;
+        clk = 1;
+        #20;
+        clk = 0;
+        insn = 16;
+        #20;
+        clk = 1;
+        #20;
         clk = 0;
         for(i = 0; i < 16; i++) begin //insert 16 nops
             insn = 32'b0;
-            #16;
+            #20;
             clk = 1;
-            #16;
+            #20;
             clk = 0;
         end
         $dumpflush;
@@ -314,7 +487,7 @@ endmodule*/
                         17: tl = x1 ~^ x2;
                         18: begin tl = 32'bx; th = 32'bx; end
                     endcase
-                    #16;
+                    #20;
                     if(ql != tl || qh != th) $display("error in op %h for a = %h, b = %h (test: l = %h, h = %h; got l = %h, h = %h)", o, x1, x2, tl, th, ql, qh);
                 end
             end

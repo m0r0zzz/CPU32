@@ -69,189 +69,190 @@ module memory_op( m1, m2, ram_w_addr, ram_r_addr, ram_w, ram_r, ram_w_line, sys_
         else begin
             //ram_w <= 1'b0; ram_r <= 1'b0; sys_r <= 1'b0; sys_w <= 1'b0;
             //#0;
+            ram_w <= 1'b0; ram_r <= 1'b0; sys_r <= 1'b0; sys_w <= 1'b0;
             case(r1_op_inner)
                 0: begin //clean NOP
                     m1_select <= 0; //force m1 = 32'b0;
-                    ram_w <= 1'b0; ram_r <= 1'b0; sys_r <= 1'b0; sys_w <= 1'b0;
+                    //ram_w <= 1'b0; ram_r <= 1'b0; sys_r <= 1'b0; sys_w <= 1'b0;
                     end
                 1: begin //passthrough NOP
                     m1_select <= 1; //force m1 = r1;
-                    ram_w <= 1'b0; ram_r <= 1'b0; sys_r <= 1'b0; sys_w <= 1'b0;
+                    //ram_w <= 1'b0; ram_r <= 1'b0; sys_r <= 1'b0; sys_w <= 1'b0;
                     end
                 2: begin //load from memory address a1
                     m1_select <= 3;  //force m1 = ram_r_line;
                     ram_r_addr <= a1;
                     ram_r <= 1'b1;
-                    ram_w <= 1'b0; sys_r <= 1'b0; sys_w <= 1'b0;
+                    //ram_w <= 1'b0; sys_r <= 1'b0; sys_w <= 1'b0;
                     end
                 3: begin //load from memory address a2
                     m1_select <= 3;  //force m1 = ram_r_line;
                     ram_r_addr <= a2;
                     ram_r <= 1'b1;
-                    ram_w <= 1'b0; sys_r <= 1'b0; sys_w <= 1'b0;
+                    //ram_w <= 1'b0; sys_r <= 1'b0; sys_w <= 1'b0;
                     end
                 4: begin //load from memory address r2
                     m1_select <= 3;  //force m1 = ram_r_line;
-                    ram_r_addr <= r2_inner;
+                    ram_r_addr <= r2;
                     ram_r <= 1'b1;
-                    ram_w <= 1'b0; sys_r <= 1'b0; sys_w <= 1'b0;
+                    //ram_w <= 1'b0; sys_r <= 1'b0; sys_w <= 1'b0;
                     end
                 5: begin //write to memory address a1
                     m1_select <= 1; //force m1 = r1;
-                    ram_w_line <= r1_inner;
+                    ram_w_line <= r1;
                     ram_w_addr <= a1;
                     ram_w <= 1'b1;
-                    ram_r <= 1'b0; sys_r <= 1'b0; sys_w <= 1'b0;
+                    //ram_r <= 1'b0; sys_r <= 1'b0; sys_w <= 1'b0;
                     end
                 6: begin //write to memory address a2
                     m1_select <= 1; //force m1 = r1;
-                    ram_w_line <= r1_inner;
+                    ram_w_line <= r1;
                     ram_w_addr <= a2;
                     ram_w <= 1'b1;
-                    ram_r <= 1'b0; sys_r <= 1'b0; sys_w <= 1'b0;
+                    //ram_r <= 1'b0; sys_r <= 1'b0; sys_w <= 1'b0;
                     end
                 7: begin //write to memory address r2
                     m1_select <= 1; //force m1 = r1;
-                    ram_w_line <= r1_inner;
-                    ram_w_addr <= r2_inner;
+                    ram_w_line <= r1;
+                    ram_w_addr <= r2;
                     ram_w <= 1'b1;
-                    ram_r <= 1'b0; sys_r <= 1'b0; sys_w <= 1'b0;
+                    //ram_r <= 1'b0; sys_r <= 1'b0; sys_w <= 1'b0;
                     end
                 8: begin //load from sys address a1
                     m1_select <= 4; //force m1 = sys_r_line;
                     sys_r_addr <= a1;
                     sys_r <= 1'b1;
-                    ram_w <= 1'b0; ram_r <= 1'b0; sys_w <= 1'b0;
+                    //ram_w <= 1'b0; ram_r <= 1'b0; sys_w <= 1'b0;
                     end
                 9: begin //load from sys address a2
                     m1_select <= 4; //force m1 = sys_r_line;
                     sys_r_addr <= a2;
                     sys_r <= 1'b1;
-                    ram_w <= 1'b0; ram_r <= 1'b0; sys_w <= 1'b0;
+                    //ram_w <= 1'b0; ram_r <= 1'b0; sys_w <= 1'b0;
                     end
                 10: begin //load from sys address r2
                     m1_select <= 4; //force m1 = sys_r_line;
-                    sys_r_addr <= r2_inner;
+                    sys_r_addr <= r2;
                     sys_r <= 1'b1;
-                    ram_w <= 1'b0; ram_r <= 1'b0; sys_w <= 1'b0;
+                    //ram_w <= 1'b0; ram_r <= 1'b0; sys_w <= 1'b0;
                     end
                 11: begin //write to sys address a1
                     m1_select <= 1; //force m1 = r1;
-                    sys_w_line <= r1_inner;
+                    sys_w_line <= r1;
                     sys_w_addr <= a1;
                     sys_w <= 1'b1;
-                    ram_w <= 1'b0; ram_r <= 1'b0; sys_r <= 1'b0;
+                    //ram_w <= 1'b0; ram_r <= 1'b0; sys_r <= 1'b0;
                     end
                 12: begin //write to sys address a2
                     m1_select <= 1; //force m1 = r1;
-                    sys_w_line <= r1_inner;
+                    sys_w_line <= r1;
                     sys_w_addr <= a2;
                     sys_w <= 1'b1;
-                    ram_w <= 1'b0; ram_r <= 1'b0; sys_r <= 1'b0;
+                    //ram_w <= 1'b0; ram_r <= 1'b0; sys_r <= 1'b0;
                     end
                 13: begin //write to sys address r2
                     m1_select <= 1; //force m1 = r1;
-                    sys_w_line <= r1_inner;
-                    sys_w_addr <= r2_inner;
+                    sys_w_line <= r1;
+                    sys_w_addr <= r2;
                     sys_w <= 1'b1;
-                    ram_w <= 1'b0; ram_r <= 1'b0; sys_r <= 1'b0;
+                    //ram_w <= 1'b0; ram_r <= 1'b0; sys_r <= 1'b0;
                     end
                 14: begin //swap regs
                     m1_select <= 2; //force m1 = r2;
-                    ram_w <= 1'b0; ram_r <= 1'b0; sys_r <= 1'b0; sys_w <= 1'b0;
+                   // ram_w <= 1'b0; ram_r <= 1'b0; sys_r <= 1'b0; sys_w <= 1'b0;
                     end
             endcase
 
             case(r2_op_inner)
                 0: begin //clean NOP
                     m2_select <= 0; //force m2 = 32'b0;
-                    ram_w <= 1'b0; ram_r <= 1'b0; sys_r <= 1'b0; sys_w <= 1'b0;
+                    //ram_w <= 1'b0; ram_r <= 1'b0; sys_r <= 1'b0; sys_w <= 1'b0;
                     end
                 1: begin //passthrough NOP
                     m2_select <= 2; //force m2 = r2;
-                    ram_w <= 1'b0; ram_r <= 1'b0; sys_r <= 1'b0; sys_w <= 1'b0;
+                    //ram_w <= 1'b0; ram_r <= 1'b0; sys_r <= 1'b0; sys_w <= 1'b0;
                     end
                 2: begin //load from memory address a1
                     m2_select <= 3; //force m2 = ram_r_line;
                     ram_r_addr <= a1;
                     ram_r <= 1'b1;
-                    ram_w <= 1'b0; sys_r <= 1'b0; sys_w <= 1'b0;
+                    //ram_w <= 1'b0; sys_r <= 1'b0; sys_w <= 1'b0;
                     end
                 3: begin //load from memory address a2
                     m2_select <= 3; //force m2 = ram_r_line;
                     ram_r_addr <= a2;
                     ram_r <= 1'b1;
-                    ram_w <= 1'b0; sys_r <= 1'b0; sys_w <= 1'b0;
+                    //ram_w <= 1'b0; sys_r <= 1'b0; sys_w <= 1'b0;
                     end
                 4: begin //load from memory address r1
                     m2_select <= 3; //force m2 = ram_r_line;
-                    ram_r_addr <= r1_inner;
+                    ram_r_addr <= r1;
                     ram_r <= 1'b1;
-                    ram_w <= 1'b0; sys_r <= 1'b0; sys_w <= 1'b0;
+                    //ram_w <= 1'b0; sys_r <= 1'b0; sys_w <= 1'b0;
                     end
                 5: begin //write to memory address a1
                     m2_select <= 2; //force m2 = r2;
-                    ram_w_line <= r2_inner;
+                    ram_w_line <= r2;
                     ram_w_addr <= a1;
                     ram_w <= 1'b1;
-                    ram_r <= 1'b0; sys_r <= 1'b0; sys_w <= 1'b0;
+                    //ram_r <= 1'b0; sys_r <= 1'b0; sys_w <= 1'b0;
                     end
                 6: begin //write to memory address a2
                     m2_select <= 2; //force m2 = r2;
-                    ram_w_line <= r2_inner;
+                    ram_w_line <= r2;
                     ram_w_addr <= a2;
                     ram_w <= 1'b1;
-                    ram_r <= 1'b0; sys_r <= 1'b0; sys_w <= 1'b0;
+                    //ram_r <= 1'b0; sys_r <= 1'b0; sys_w <= 1'b0;
                     end
                 7: begin //write to memory address r1
                     m2_select <= 2; //force m2 = r2;
-                    ram_w_line <= r2_inner;
-                    ram_w_addr <= r1_inner;
+                    ram_w_line <= r2;
+                    ram_w_addr <= r1;
                     ram_w <= 1'b1;
-                    ram_r <= 1'b0; sys_r <= 1'b0; sys_w <= 1'b0;
+                    //ram_r <= 1'b0; sys_r <= 1'b0; sys_w <= 1'b0;
                     end
                 8: begin //load from sys address a1
                     m2_select <= 4; //force m2 = sys_r_line;
                     sys_r_addr <= a1;
                     sys_r <= 1'b1;
-                    ram_w <= 1'b0; ram_r <= 1'b0; sys_w <= 1'b0;
+                    //ram_w <= 1'b0; ram_r <= 1'b0; sys_w <= 1'b0;
                     end
                 9: begin //load from sys address a2
                     m2_select <= 4; //force m2 = sys_r_line;
                     sys_r_addr <= a2;
                     sys_r <= 1'b1;
-                    ram_w <= 1'b0; ram_r <= 1'b0; sys_w <= 1'b0;
+                    //ram_w <= 1'b0; ram_r <= 1'b0; sys_w <= 1'b0;
                     end
                 10: begin //load from sys address r1
                     m2_select <= 4; //force m2 = sys_r_line;
-                    sys_r_addr <= r1_inner;
+                    sys_r_addr <= r1;
                     sys_r <= 1'b1;
-                    ram_w <= 1'b0; ram_r <= 1'b0; sys_w <= 1'b0;
+                    //ram_w <= 1'b0; ram_r <= 1'b0; sys_w <= 1'b0;
                     end
                 11: begin //write to sys address a1
                     m2_select <= 2; //force m2 = r2;
-                    sys_w_line <= r2_inner;
+                    sys_w_line <= r2;
                     sys_w_addr <= a1;
                     sys_w <= 1'b1;
-                    ram_w <= 1'b0; ram_r <= 1'b0; sys_r <= 1'b0;
+                    //ram_w <= 1'b0; ram_r <= 1'b0; sys_r <= 1'b0;
                     end
                 12: begin //write to sys address a2
                     m2_select <= 2; //force m2 = r2;
-                    sys_w_line <= r2_inner;
+                    sys_w_line <= r2;
                     sys_w_addr <= a2;
                     sys_w <= 1'b1;
-                    ram_w <= 1'b0; ram_r <= 1'b0; sys_r <= 1'b0;
+                    //ram_w <= 1'b0; ram_r <= 1'b0; sys_r <= 1'b0;
                     end
                 13: begin //write to sys address r1
                     m2_select <= 2; //force m2 = r2;
-                    sys_w_line <= r2_inner;
-                    sys_w_addr <= r1_inner;
+                    sys_w_line <= r2;
+                    sys_w_addr <= r1;
                     sys_w <= 1'b1;
-                    ram_w <= 1'b0; ram_r <= 1'b0; sys_r <= 1'b0;
+                    //ram_w <= 1'b0; ram_r <= 1'b0; sys_r <= 1'b0;
                     end
                 14: begin //swap regs
                     m2_select <= 1; //force m2 = r1;
-                    ram_w <= 1'b0; ram_r <= 1'b0; sys_r <= 1'b0; sys_w <= 1'b0;
+                    //ram_w <= 1'b0; ram_r <= 1'b0; sys_r <= 1'b0; sys_w <= 1'b0;
                     end
             endcase
         end
