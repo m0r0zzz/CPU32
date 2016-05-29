@@ -38,7 +38,7 @@ module pipeline_interface(
 
     always @(posedge clk or rst) begin
 `ifdef INTERFACE_STAGE_NO_DELAY
-        #4;
+        #6;
 `endif
         if(rst || !d_pass) begin // insert clean NOP
             qe_a <= 31'b0; qe_b <= 31'b0;
