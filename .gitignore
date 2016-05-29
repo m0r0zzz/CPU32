@@ -46,7 +46,7 @@ Temporary Items
 *.fst
 
 #Output files
-out
+out/*
 *.vvp
 MultiplierGenerator/bin
 MultiplierGenerator/obj
