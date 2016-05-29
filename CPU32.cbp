@@ -27,6 +27,8 @@
 		<Unit filename="adder.v" />
 		<Unit filename="alu.v" />
 		<Unit filename="execute.v" />
+		<Unit filename="gpio.v" />
+		<Unit filename="gpio_mux.v" />
 		<Unit filename="insn_decoder.v" />
 		<Unit filename="main.v" />
 		<Unit filename="memory_op.v" />
@@ -37,6 +39,8 @@
 		<Unit filename="register_wb.v" />
 		<Unit filename="regs.v" />
 		<Unit filename="shift.v" />
+		<Unit filename="spi.v" />
+		<Unit filename="test_periph_assembly.v" />
 		<Unit filename="test_pipeline_assembly.v" />
 		<Unit filename="test_processor_assembly.v" />
 		<Extensions>

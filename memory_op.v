@@ -25,7 +25,7 @@ module memory_op_stage_passthrough(q_a1, q_a2, q_op, q_proceed, a1, a2, op, proc
     end
 endmodule
 
-module memory_op( m1, m2, ram_w_addr, ram_r_addr, ram_w, ram_r, ram_w_line, sys_w_addr, sys_w_line, sys_w, sys_r, r1, r2, a1, a2, r1_op, r2_op, ram_r_line, sys_r_line, proceed, clk, rst);
+module memory_op( m1, m2, ram_w_addr, ram_r_addr, ram_w, ram_r, ram_w_line, sys_w_addr, sys_r_addr, sys_w, sys_r, sys_w_line, r1, r2, a1, a2, r1_op, r2_op, ram_r_line, sys_r_line, proceed, clk, rst);
     input [31:0] r1, r2; //inputs
     input [31:0] a1, a2; //memory addresses
 

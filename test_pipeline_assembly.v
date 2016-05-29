@@ -164,7 +164,7 @@ module test_pipeline_assembly(ram_w_addr, ram_r_addr, ram_w_line, ram_read, ram_
 
     wire mop_ram_w, mop_sys_w, mop_ram_r, mop_sys_r; //read/write signals  //output
     assign ram_write = mop_ram_w, sys_write = mop_sys_w, ram_read = mop_ram_r, sys_read = mop_sys_r;
-    memory_op mop0( mop_m1, mop_m2, mop_ram_w_addr, mop_ram_r_addr, mop_ram_w, mop_ram_r, mop_ram_w_line, mop_sys_w_addr, mop_sys_w_line, mop_sys_w, mop_sys_r, mop_r1, mop_r2, mop_a1, mop_a2, mop_r1_op, mop_r2_op, mop_ram_r_line, mop_sys_r_line, mop_proceed, clk, rst);
+    memory_op mop0( mop_m1, mop_m2, mop_ram_w_addr, mop_ram_r_addr, mop_ram_w, mop_ram_r, mop_ram_w_line, mop_sys_w_addr, mop_sys_r_addr, mop_sys_w, mop_sys_r, mop_sys_w_line, mop_r1, mop_r2, mop_a1, mop_a2, mop_r1_op, mop_r2_op, mop_ram_r_line, mop_sys_r_line, mop_proceed, clk, rst);
 
     wire [4:0] mop_r_a1, mop_r_a2; //(reg_wb)  //output
     wire [3:0] mop_r_op; //(reg_wb)  //output

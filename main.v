@@ -19,13 +19,13 @@ module test_rom(word, addr);
                         /*32'h0: begin //(mov)nop reg 29 to reg 30
                             insn[31:25] <= 00; insn[24:21] <= 4'b1110; insn[20:16] <= 29; insn[15:11] <= 0; insn[10:6] <= 30; insn[5:1] <= 0; insn[0] <= 0;
                         end*/
-                        32'h0: begin //mov imm to reg 30 (sp)
+                        32'h0: begin //movs imm to reg 30 (sp)
                             insn[31:25] <= 32; insn[24:21] <= 4'b1110; insn[20:11] <= 0; insn[10:6] <= 30; insn[5:1] <= 5'b10000; insn[0] <= 0;
                         end
                         32'h1: begin
                             insn <= 32'h14888;
                         end
-                        32'h3: begin //mov imm to reg 29 (lr)
+                        32'h3: begin //movs imm to reg 29 (lr)
                             insn[31:25] <= 32; insn[24:21] <= 4'b1110; insn[20:11] <= 0; insn[10:6] <= 29; insn[5:1] <= 5'b10000; insn[0] <= 0;
                         end
                         32'h4: begin
@@ -88,6 +88,42 @@ module test_rom(word, addr);
                         32'h13A: begin
                             insn <= 16;
                         end
+                        32'h13B:  begin //movs imm to r1
+                            insn[31:25] <= 32; insn[24:21] <= 4'b1110; insn[20:16] <= 0; insn[15:11] <= 0; insn[10:6] <= 1; insn[5:1] <= 5'b10000; insn[0] <= 0;
+                        end
+                        32'h13C: begin
+                            insn <= 32'hFFFFFFFF;
+                        end
+                        32'h13D: begin //out to imm from r1
+                            insn[31:25] <= 31; insn[24:21] <= 4'b1110; insn[20:16] <= 0; insn[15:11] <= 1; insn[10:6] <= 0; insn[5:1] <= 5'b10000; insn[0] <= 0;
+                        end
+                        32'h13E: begin
+                            insn <= 32'hD;
+                        end
+                        32'h13F: begin //out to imm from r1
+                            insn[31:25] <= 31; insn[24:21] <= 4'b1110; insn[20:16] <= 0; insn[15:11] <= 1; insn[10:6] <= 0; insn[5:1] <= 5'b10000; insn[0] <= 0;
+                        end
+                        32'h140: begin
+                            insn <= 32'hF;
+                        end
+                        32'h141: begin //out to imm from r1
+                            insn[31:25] <= 31; insn[24:21] <= 4'b1110; insn[20:16] <= 0; insn[15:11] <= 1; insn[10:6] <= 0; insn[5:1] <= 5'b10000; insn[0] <= 0;
+                        end
+                        32'h142: begin
+                            insn <= 32'h11;
+                        end
+                        32'h143: begin //out to imm from r1
+                            insn[31:25] <= 31; insn[24:21] <= 4'b1110; insn[20:16] <= 0; insn[15:11] <= 1; insn[10:6] <= 0; insn[5:1] <= 5'b10000; insn[0] <= 0;
+                        end
+                        32'h144: begin
+                            insn <= 32'hE;
+                        end
+                        32'h145: begin //in from imm to 30
+                            insn[31:25] <= 30; insn[24:21] <= 4'b1110; insn[20:16] <= 0; insn[15:11] <= 0; insn[10:6] <= 30; insn[5:1] <= 5'b10000; insn[0] <= 0;
+                        end
+                        32'h146: begin
+                            insn <= 32'hA;
+                        end
                         32'h5E771E7D: begin //br_pos to 0
                             insn[31:25] <= 24; insn[24:21] <= 4'b0101; insn[20:16] <= 0; insn[15:11] <= 0; insn[10:6] <= 0; insn[5:1] <= 5'b00000; insn[0] <= 0;
                         end
@@ -106,15 +142,16 @@ endmodule
 module main();
     wire [31:0] insn;
     wire [31:0] lr, sp, st, pc;
-    wire [31:0] syswl, syswa;
-    wire sysw;
+    wire [127:0] pins;
 
     reg clk;
     reg rst;
 
-    test_processor_assembly proc0(lr, sp, st, pc, syswl, syswa, sysw,  insn, clk, rst);
+    test_processor_assembly proc0(lr, sp, st, pc, pins, insn, clk, rst);
 
     test_rom rom0(insn, pc);
+
+    assign pins[15:0] = 16'h1488;
 
     initial begin
         //insn = 32'b0; //nop
@@ -133,8 +170,8 @@ module main();
         #20;
         rst = 0;
         #20;
-        //clock 64 times
-        for(i =0; i < 64; i++) begin
+        //clock 128 times
+        for(i =0; i < 128; i++) begin
             #20;
             clk = 1;
             #20;

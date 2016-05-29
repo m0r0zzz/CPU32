@@ -47,14 +47,14 @@ module bitwise_32(q, z, a, b, op);
 
     always @(a or b or op) begin
         case(op)
-            3'b000: q <= ~a; //NOT A
-            3'b001: q <= a&b; // A AND B
-            3'b010: q <= a|b; // A OR B
-            3'b011: q <= a^b; // A XOR B
-            3'b100: q <= a~&b; // A NAND B
-            3'b101: q <= a~|b; // A NOR B
-            3'b110: q <= a~^b; // A XNOR B
-            3'b111: q <= ~b; // NOT B (placeholder)
+            3'b000: q <= ~ a; //NOT A
+            3'b001: q <= a & b; // A AND B
+            3'b010: q <= a | b; // A OR B
+            3'b011: q <= a ^ b; // A XOR B
+            3'b100: q <= ~(a & b); // A NAND B
+            3'b101: q <= ~(a | b); // A NOR B
+            3'b110: q <= ~(a ^ b); // A XNOR B
+            3'b111: q <= ~ b; // NOT B (placeholder)
         endcase
     end
 endmodule

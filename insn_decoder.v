@@ -40,25 +40,50 @@ module reg_hazard_checker(ex_hazard, mem_hazard, reg_hazard, ex_r1_a, ex_r2_a, e
     wire ex_r1_op_comp = (ex_r_op == 1) || (ex_r_op == 2) || (ex_r_op == 3);
     wire ex_r2_op_comp = (ex_r_op == 4) || (ex_r_op == 5) || (ex_r_op == 6);
     wire ex_r1r2_op_comp = (ex_r_op == 7) || (ex_r_op == 8);
+
     wire ex_r1_comp = (ex_r1_a == dec_r1_addr);
     wire ex_r2_comp = (ex_r2_a == dec_r2_addr);
+    wire ex_r1r2_comp = (ex_r1_a == dec_r2_addr);
+    wire ex_r2r1_comp = (ex_r2_a == dec_r1_addr);
 
-    assign ex_hazard = (((ex_r1_op_comp || ex_r1r2_op_comp) && ex_r1_comp && dec_r1_read_comp) || ((ex_r2_op_comp || ex_r1r2_op_comp) && ex_r2_comp && dec_r2_read_comp)) && ex_proceed;
+    wire ex_hazard_r1 = ((ex_r1_op_comp || ex_r1r2_op_comp) && ex_r1_comp && dec_r1_read_comp);
+    wire ex_hazard_r2 = ((ex_r2_op_comp || ex_r1r2_op_comp) && ex_r2_comp && dec_r2_read_comp);
+    wire ex_hazard_r1r2 = ((ex_r1_op_comp || ex_r1r2_op_comp) && ex_r1r2_comp && dec_r2_read_comp);
+    wire ex_hazard_r2r1 = ((ex_r2_op_comp || ex_r1r2_op_comp) && ex_r2r1_comp && dec_r1_read_comp);
+
+    assign ex_hazard =  (ex_hazard_r1 || ex_hazard_r2 || ex_hazard_r1r2 || ex_hazard_r2r1) && ex_proceed;
 
     wire mem_r1_op_comp = (mem_r_op == 1) || (mem_r_op == 2) || (mem_r_op == 3);
     wire mem_r2_op_comp = (mem_r_op == 4) || (mem_r_op == 5) || (mem_r_op == 6);
     wire mem_r1r2_op_comp = (mem_r_op == 7) || (mem_r_op == 8);
+
     wire mem_r1_comp = (mem_r1_a == dec_r1_addr);
     wire mem_r2_comp = (mem_r2_a == dec_r2_addr);
+    wire mem_r1r2_comp = (mem_r1_a == dec_r2_addr);
+    wire mem_r2r1_comp = (mem_r2_a == dec_r1_addr);
 
-    assign mem_hazard = (((mem_r1_op_comp || mem_r1r2_op_comp) && mem_r1_comp && dec_r1_read_comp) || ((mem_r2_op_comp || mem_r1r2_op_comp) && mem_r2_comp && dec_r2_read_comp)) && mem_proceed;
+    wire mem_hazard_r1 = ((mem_r1_op_comp || mem_r1r2_op_comp) && mem_r1_comp && dec_r1_read_comp);
+    wire mem_hazard_r2 = ((mem_r2_op_comp || mem_r1r2_op_comp) && mem_r2_comp && dec_r2_read_comp);
+    wire mem_hazard_r1r2 = ((mem_r1_op_comp || mem_r1r2_op_comp) && mem_r1r2_comp && dec_r2_read_comp);
+    wire mem_hazard_r2r1 = ((mem_r2_op_comp || mem_r1r2_op_comp) && mem_r2r1_comp && dec_r1_read_comp);
+
+    assign mem_hazard =  (mem_hazard_r1 || mem_hazard_r2 || mem_hazard_r1r2 || mem_hazard_r2r1) && mem_proceed;
 
     wire reg_r1_write_comp = reg_write[0];
     wire reg_r2_write_comp = reg_write[1];
+
     wire reg_r1_comp = (reg_r1_a == dec_r1_addr);
     wire reg_r2_comp = (reg_r2_a == dec_r2_addr);
+    wire reg_r1r2_comp = (reg_r1_a == dec_r2_addr);
+    wire reg_r2r1_comp = (reg_r2_a == dec_r1_addr);
 
-    assign reg_hazard = ((reg_r1_write_comp && reg_r1_comp && dec_r1_read_comp) || (reg_r2_write_comp && reg_r2_comp && dec_r2_read_comp));
+    wire reg_hazard_r1 = (reg_r1_write_comp && reg_r1_comp && dec_r1_read_comp);
+    wire reg_hazard_r2 = (reg_r2_write_comp && reg_r2_comp && dec_r2_read_comp);
+    wire reg_hazard_r1r2 = (reg_r1_write_comp && reg_r1r2_comp && dec_r2_read_comp);
+    wire reg_hazard_r2r1 = (reg_r2_write_comp && reg_r2r1_comp && dec_r1_read_comp);
+
+    assign reg_hazard =  reg_hazard_r1 || reg_hazard_r2 || reg_hazard_r1r2 || reg_hazard_r2r1;
+
 endmodule
 
 module insn_decoder( e_a, e_b, e_alu_op, e_is_cond, e_cond, e_write_flags, e_swp, m_a1, m_a2, m_r1_op, m_r2_op, r_a1, r_a2, r_op, d_pass, d_pcincr, r_r1_addr, r_r2_addr, r_read, word, r1, r2, hazard, rst, clk);

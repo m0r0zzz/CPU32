@@ -73,7 +73,7 @@ module cla_32(a, b, cin, s, cout);
     output wire [31:0] s;
 
     input cin;
-    output wire pg, gg, cout;
+    output wire cout;
 
     wire [3:0] p;
     wire [3:0] g;
