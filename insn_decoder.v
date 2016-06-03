@@ -528,7 +528,7 @@ module insn_decoder( e_a, e_b, e_alu_op, e_is_cond, e_cond, e_write_flags, e_swp
                 end
                 130: begin //delay
                     fetch <= 0; d_pass <= 0; d_pcincr <= 0;
-                    if(delay_counter > 0) delay_counter--;
+                    if(delay_counter > 0) delay_counter<=delay_counter-1;
                     #1;
                     if(delay_counter == 0) begin
                         fetch <= 1; /*d_pass <= 1;*/ d_pcincr <= 1;
@@ -561,10 +561,10 @@ module insn_decoder( e_a, e_b, e_alu_op, e_is_cond, e_cond, e_write_flags, e_swp
             if(imm_action != 3'b100 && imm_action != 3'b000) begin //imm fetch procedure
                 if(state1 != 128 && state1 != 129) begin //just got insn
                     if(imm_action[1]) begin //imm for r1
-                        r_read[0] = 0; //don't read r1
+                        r_read[0] <= 0; //don't read r1
                     end
                     if(imm_action[0]) begin //imm for r2
-                        r_read[1] = 0;  //don't read r2
+                        r_read[1] <= 0;  //don't read r2
                     end
                     old_state1_imm <= state1; //save state
                     old_pass_imm <= d_pass;

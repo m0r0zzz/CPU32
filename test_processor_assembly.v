@@ -1,5 +1,9 @@
 `timescale 1 ns / 100 ps
 
+`define INTERFACE_STAGE_NO_DELAY
+`define RWB_STAGE_HAZARD
+
+
 `include "test_pipeline_assembly.v"
 `include "test_periph_assembly.v"
 `include "ram.v"

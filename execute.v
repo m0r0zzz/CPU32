@@ -8,7 +8,7 @@ module cond_calc(cr, cc, n, z, c, v);
 
     output reg cr;
 
-    always @(cc or n or z or c or v) begin
+    always @* begin
        case(cc)
             4'b0000: cr <= z == 1'b1; //EQ - equal
             4'b0001: cr <= z == 1'b0; //NEQ - not equal
@@ -57,7 +57,7 @@ module execute_stage_passthrough(qm_a1, qm_a2, qm_r1_op, qm_r2_op, qr_a1, qr_a2,
     output reg [4:0] qr_a1, qr_a2; //(reg_wb)
     output reg [3:0] qr_op; //(reg_wb)
 
-    always @(posedge clk or rst) begin
+    always @(posedge clk or posedge rst) begin
         if(rst) begin
             qm_a1 <= 32'b0; qm_a2 <= 32'b0;
             qm_r1_op <= 4'b0; qm_r2_op <= 4'b0;
@@ -108,16 +108,18 @@ module execute(r1, r2, cres, n, z, c, v, cc, a, b, alu_op, is_cond, cond, write_
     assign c = write_flags[1] ? alu_c : cond_c;
     assign v = write_flags[0] ? alu_v : cond_v;
 
-    always @(posedge clk or rst) begin
+    always @(posedge clk or posedge rst) begin
         if(rst) begin
             r1 <= 31'b0;
             r2 <= 31'b0;
             cres <= 1'b0;
         end
-        r1 <= alu_q1;
-        r2 <= alu_q2;
-        if(is_cond) cres <= cond_res;
-        else cres <= 1'b1;
+        else begin
+            r1 <= alu_q1;
+            r2 <= alu_q2;
+            if(is_cond) cres <= cond_res;
+            else cres <= 1'b1;
+        end
     end
 endmodule
 

@@ -16,7 +16,7 @@ module addsub_32(q, a, b, sub, ov, sov, z);
 
     assign z = ~|q;
 
-    assign sov = (!a[31]) && (!b[31]) ? ov : (a[31] && b[31] ? ~q[31] : 0);
+    assign sov = (!a[31]) && (!b[31]) ? ov : (a[31] && b[31] ? ~q[31] : 1'b0);
 
 endmodule
 
@@ -45,7 +45,7 @@ module bitwise_32(q, z, a, b, op);
 
     assign z = ~|q;
 
-    always @(a or b or op) begin
+    always @* begin
         case(op)
             3'b000: q <= ~ a; //NOT A
             3'b001: q <= a & b; // A AND B
@@ -61,14 +61,14 @@ endmodule
 
 module alu32_2x2(q0, q1, st, a, b, op);
     input [31:0] a, b;
-    output [31:0] q0, q1;
-    wire [31:0] q0, q1;
+    output reg [31:0] q0, q1;
+    //wire [31:0] q0, q1;
 
     input [7:0] op;
-    output [3:0] st; //0 - V, 1 - C, 2 - Z, 3 - N
+    output reg [3:0] st; //0 - V, 1 - C, 2 - Z, 3 - N
 
     wire [31:0] addsub;
-    wire [31:0] addsub_a, addsub_b;
+    reg [31:0] addsub_a, addsub_b;
     wire addsub_z, addsub_ov, addsub_sov;
     reg subtract;
     addsub_32 as0(addsub, addsub_a, addsub_b, subtract, addsub_ov, addsub_sov, addsub_z);
@@ -92,135 +92,156 @@ module alu32_2x2(q0, q1, st, a, b, op);
     bitwise_32 bw0(bws, bws_z, a, b, b_op);
     wire [3:0] bws_st = {1'b0, bws_z, 2'b0};
 
-    always @(a or b or op) begin
-        if(op == 8'h00) begin //NOP
-            force q0 = a;
-            force q1 = b;
 
-            force st = 4'b0;
-        end else if (op == 8'h01) begin //ADD
-            subtract <= 0;
-            force addsub_a = a;
-            force addsub_b = b;
-            force q0 = addsub;
-            force q1 = 32'b0;
+    always @* begin
+        case(op)
+        8'h00: begin //NOP
+            q0 = a;
+            q1 = b;
 
-            force st = addsub_st;
-        end else if (op == 8'h02) begin //SUB
-            subtract <= 1;
-            force addsub_a = a;
-            force addsub_b = b;
-            force q0 = addsub;
-            force q1 = 32'b0;
-
-            force st = addsub_st;
-        end else if (op == 8'h03) begin //CPL
-            subtract <= 1;
-            force addsub_a = 32'b0;
-            force addsub_b = a;
-            force q0 = addsub;
-            force q1 = 32'b0;
-
-            force st = addsub_st;
-        end else if (op == 8'h04) begin //MUL
-            force q0 = mull;
-            force q1 = mulh;
-
-            force st = mul_st;
-        end else if (op == 8'h05) begin //SHR
-            rotate <= 0;
-            left <= 0;
-            arithmetic <= 0;
-            force q0 = shift;
-            force q1 = 32'b0;
-
-            force st = shift_st;
-        end else if (op == 8'h06) begin // SHL
-            rotate <= 0;
-            left <= 1;
-            arithmetic <= 0;
-            force q0 = shift;
-            force q1 = 32'b0;
-
-            force st = shift_st;
-        end else if (op == 8'h07) begin // SAR
-            rotate <= 0;
-            left <= 0;
-            arithmetic <= 1;
-            force q0 = shift;
-            force q1 = 32'b0;
-
-            force st = shift_st;
-        end else if (op == 8'h08) begin // SAL
-            rotate <= 0;
-            left <= 1;
-            arithmetic <= 1;
-            force q0 = shift;
-            force q1 = 32'b0;
-
-            force st = shift_st;
-        end else if (op == 8'h09) begin // ROR
-            rotate <= 1;
-            left <= 0;
-            arithmetic <= 0;
-            force q0 = shift;
-            force q1 = 32'b0;
-
-            force st = shift_st;
-        end else if (op == 8'h0A) begin // ROL
-            rotate <= 1;
-            left <= 1;
-            arithmetic <= 0;
-            force q0 = shift;
-            force q1 = 32'b0;
-
-            force st = shift_st;
-        end else if(op == 8'h0B) begin //NOT
-            b_op <= 0;
-            force q0 = bws;
-            force q1 = 32'b0;
-
-            force st = bws_st;
-        end else if(op == 8'h0C) begin //AND
-            b_op <= 1;
-            force q0 = bws;
-            force q1 = 32'b0;
-
-            force st = bws_st;
-        end else if(op == 8'h0D) begin //OR
-            b_op <= 2;
-            force q0 = bws;
-            force q1 = 32'b0;
-
-            force st = bws_st;
-        end else if(op == 8'h0E) begin //XOR
-            b_op <= 3;
-            force q0 = bws;
-            force q1 = 32'b0;
-
-            force st = bws_st;
-        end else if(op == 8'h0F) begin //NAND
-            b_op <= 4;
-            force q0 = bws;
-            force q1 = 32'b0;
-
-            force st = bws_st;
-        end else if(op == 8'h10) begin //NOR
-            b_op <= 5;
-            force q0 = bws;
-            force q1 = 32'b0;
-
-            force st = bws_st;
-        end else if(op == 8'h11) begin //XNOR
-            b_op <= 6;
-            force q0 = bws;
-            force q1 = 32'b0;
-
-            force st = bws_st;
-        end else begin //invalid
-            release q0;
-            release q1;
-            release st;
+            st = 4'b0;
         end
+        8'h01: begin //ADD
+            subtract = 0;
+            addsub_a = a;
+            addsub_b = b;
+            q0 = addsub;
+            q1 = 32'b0;
+
+            st = addsub_st;
+        end
+        8'h02: begin //SUB
+            subtract = 1;
+            addsub_a = a;
+            addsub_b = b;
+            q0 = addsub;
+            q1 = 32'b0;
+
+            st = addsub_st;
+        end
+        8'h03: begin //CPL
+            subtract = 1;
+            addsub_a = 32'b0;
+            addsub_b = a;
+            q0 = addsub;
+            q1 = 32'b0;
+
+            st = addsub_st;
+        end
+        8'h04: begin //MUL
+            q0 = mull;
+            q1 = mulh;
+
+            st = mul_st;
+        end
+        8'h05: begin //SHR
+            rotate = 0;
+            left = 0;
+            arithmetic = 0;
+            q0 = shift;
+            q1 = 32'b0;
+
+            st = shift_st;
+        end
+        8'h06: begin // SHL
+            rotate = 0;
+            left = 1;
+            arithmetic = 0;
+            q0 = shift;
+            q1 = 32'b0;
+
+            st = shift_st;
+        end
+        8'h07: begin // SAR
+            rotate = 0;
+            left = 0;
+            arithmetic = 1;
+            q0 = shift;
+            q1 = 32'b0;
+
+            st = shift_st;
+        end
+        8'h08: begin // SAL
+            rotate = 0;
+            left = 1;
+            arithmetic = 1;
+            q0 = shift;
+            q1 = 32'b0;
+
+            st = shift_st;
+        end
+        8'h09: begin // ROR
+            rotate = 1;
+            left = 0;
+            arithmetic = 0;
+            q0 = shift;
+            q1 = 32'b0;
+
+            st = shift_st;
+        end
+        8'h0A: begin // ROL
+            rotate = 1;
+            left = 1;
+            arithmetic = 0;
+            q0 = shift;
+            q1 = 32'b0;
+
+            st = shift_st;
+        end
+        8'h0B: begin //NOT
+            b_op = 0;
+            q0 = bws;
+            q1 = 32'b0;
+
+            st = bws_st;
+        end
+        8'h0C: begin //AND
+            b_op = 1;
+            q0 = bws;
+            q1 = 32'b0;
+
+            st = bws_st;
+        end
+        8'h0D: begin //OR
+            b_op = 2;
+            q0 = bws;
+            q1 = 32'b0;
+
+            st = bws_st;
+        end
+        8'h0E: begin //XOR
+            b_op = 3;
+            q0 = bws;
+            q1 = 32'b0;
+
+            st = bws_st;
+        end
+        8'h0F: begin //NAND
+            b_op = 4;
+            q0 = bws;
+            q1 = 32'b0;
+
+            st = bws_st;
+        end
+        8'h10: begin //NOR
+            b_op = 5;
+            q0 = bws;
+            q1 = 32'b0;
+
+            st = bws_st;
+        end
+        8'h11: begin //XNOR
+            b_op = 6;
+            q0 = bws;
+            q1 = 32'b0;
+
+            st = bws_st;
+        end
+        default: begin //invalid
+            q0 = 32'bz;
+            q1 = 32'bz;
+            st = 4'bz;
+        end
+    endcase
     end
 endmodule

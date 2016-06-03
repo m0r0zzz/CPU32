@@ -30,23 +30,27 @@ module reg32_2x2_pc(rd0, rd1, ra0, ra1, wa0, wa1, wd0, wd1, read, write, clk, rs
     assign rd0 = regs[ra0];
     assign rd1 = regs[ra1];
 
-    always @(posedge clk or rst) begin
+    always @(posedge clk or posedge rst) begin
         #2;
         if(rst) begin
-            integer i;
             /*rd0 <= 0;
             rd1 <= 0;*/
-            for( i = 0; i < regsnum; i++) regs[i] <= 0;
+            regs[0] <= 32'b0;
+            regs[28] <= 32'b0;
+            regs[29] <= 32'b0;
+            regs[30] <= 32'b0;
+            regs[31] <= 32'b0;
         end
-
+        else begin
         //if(read[0]) rd0 <= regs[ra0];
         //if(read[1]) rd1 <= regs[ra1];
 
-        if(write[0]) regs[wa0] <= wd0;
-        if(write[1]) regs[wa1] <= wd1;
+            if(write[0]) regs[wa0] <= wd0;
+            if(write[1]) regs[wa1] <= wd1;
 
-        if(stwr) regs[28] = stin;
-        if(pcincr) regs[31] = regs[31] + 1;
+            if(stwr) regs[28] <= stin;
+            if(pcincr) regs[31] <= regs[31] + 1;
+        end
 
     end
 endmodule

@@ -8,10 +8,10 @@ module fa_pg(a, b, cin, s, p, g);
 
     wire w1;
 
-	xor #1 x1(p, a, b);
-	xor #1 x2(s, p, cin);
+	xor x1(p, a, b);
+	xor x2(s, p, cin);
 
-    and #1 a1(g, a, b);
+    and a1(g, a, b);
 //    or #1 o1(p, a, b);
 endmodule
 
@@ -99,10 +99,10 @@ module cla_64(a, b, cin, s, cout);
     wire [3:0] g;
     wire [2:0] c;
 
-    cla_4 cla0(a[15:0],   b[15:0],  cin,  s[15:0], p[0], g[0]);
-    cla_4 cla1(a[31:16], b[31:16], c[0], s[31:16], p[1], g[1]);
-    cla_4 cla2(a[47:32], b[47:32], c[1], s[47:32], p[2], g[2]);
-    cla_4 cla3(a[63:48], b[63:48], c[2], s[63:48], p[3], g[3]);
+    cla_16 cla0(a[15:0],   b[15:0],  cin,  s[15:0], p[0], g[0]);
+    cla_16 cla1(a[31:16], b[31:16], c[0], s[31:16], p[1], g[1]);
+    cla_16 cla2(a[47:32], b[47:32], c[1], s[47:32], p[2], g[2]);
+    cla_16 cla3(a[63:48], b[63:48], c[2], s[63:48], p[3], g[3]);
 
     assign c[0] = g[0] | p[0]&cin;
     assign c[1] = g[1] | g[0]&p[1] | cin&p[0]&p[1];

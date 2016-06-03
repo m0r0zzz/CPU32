@@ -1,8 +1,5 @@
 `timescale 1 ns / 100 ps
 
-`define INTERFACE_STAGE_NO_DELAY
-`define RWB_STAGE_HAZARD
-
 `include "test_processor_assembly.v"
 
 module test_rom(word, addr);
@@ -170,6 +167,7 @@ module main();
         #20;
         rst = 0;
         #20;
+
         //clock 128 times
         for(i =0; i < 128; i++) begin
             #20;

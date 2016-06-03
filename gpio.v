@@ -28,7 +28,7 @@ module gpio(gpio_out, gpio_in, gpio_dir, addr, sys_w_addr, sys_r_addr, sys_w_lin
     assign gpio_out = value;
     assign gpio_dir = direction;
 
-    always @(posedge clk or rst) begin
+    always @(posedge clk or posedge rst) begin
         if(rst) begin
             direction <= 32'b0;
             value <= 32'b0;

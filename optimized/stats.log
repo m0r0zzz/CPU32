@@ -1,0 +1,667 @@
+
+7. Printing statistics.
+
+=== addsub_32 ===
+
+   Number of wires:                 42
+   Number of wire bits:            166
+   Number of public wires:           8
+   Number of public wire bits:     132
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                 69
+     $_AND_                         17
+     $_MUX_                          1
+     $_NOR_                         17
+     $_NOT_                          1
+     $_XOR_                         32
+     cla_32                          1
+
+=== alu32_2x2 ===
+
+   Number of wires:                382
+   Number of wire bits:            809
+   Number of public wires:          30
+   Number of public wire bits:     393
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                559
+     $_AND_                         59
+     $_AOI3_                        46
+     $_DLATCH_P_                    71
+     $_MUX_                         96
+     $_NAND_                        18
+     $_NOR_                         44
+     $_NOT_                        137
+     $_OAI3_                        34
+     $_OAI4_                        34
+     $_OR_                          16
+     addsub_32                       1
+     bitwise_32                      1
+     bshift_32                       1
+     mul_32                          1
+
+=== bitwise_32 ===
+
+   Number of wires:                410
+   Number of wire bits:            536
+   Number of public wires:           5
+   Number of public wire bits:     100
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                469
+     $_AND_                         50
+     $_AOI4_                        32
+     $_DLATCH_P_                    32
+     $_MUX_                         32
+     $_NAND_                         3
+     $_NOR_                         20
+     $_NOT_                         66
+     $_OAI3_                        32
+     $_OAI4_                        64
+     $_OR_                         106
+     $_XOR_                         32
+
+=== bshift_32 ===
+
+   Number of wires:                 49
+   Number of wire bits:            301
+   Number of public wires:          16
+   Number of public wire bits:     268
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                 75
+     $_AND_                         18
+     $_AOI4_                        16
+     $_NOR_                          1
+     $_NOT_                          1
+     $_OR_                          32
+     drev_32                         2
+     fmask_32                        1
+     ovf_32                          1
+     right_rot_32                    1
+     tblock_32                       1
+     zmask_32                        1
+
+=== cla_16 ===
+
+   Number of wires:                 26
+   Number of wire bits:             79
+   Number of public wires:           9
+   Number of public wire bits:      62
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                 26
+     $_AND_                          5
+     $_AOI3_                         2
+     $_NAND_                         5
+     $_NOR_                          1
+     $_NOT_                          5
+     $_OAI3_                         2
+     $_OR_                           2
+     cla_4                           4
+
+=== cla_32 ===
+
+   Number of wires:                 12
+   Number of wire bits:            107
+   Number of public wires:           8
+   Number of public wire bits:     103
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                  8
+     $_AOI3_                         1
+     $_NAND_                         2
+     $_NOT_                          2
+     $_OAI3_                         1
+     cla_16                          2
+
+=== cla_4 ===
+
+   Number of wires:                 26
+   Number of wire bits:             43
+   Number of public wires:           9
+   Number of public wire bits:      26
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                 26
+     $_AND_                          5
+     $_AOI3_                         2
+     $_NAND_                         5
+     $_NOR_                          1
+     $_NOT_                          5
+     $_OAI3_                         2
+     $_OR_                           2
+     fa_pg                           4
+
+=== cond_calc ===
+
+   Number of wires:                 60
+   Number of wire bits:             63
+   Number of public wires:           6
+   Number of public wire bits:       9
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                 55
+     $_AND_                          3
+     $_AOI3_                         1
+     $_DLATCH_P_                     1
+     $_MUX_                          2
+     $_NAND_                         5
+     $_NOR_                          6
+     $_NOT_                          7
+     $_OAI4_                         6
+     $_OR_                          23
+     $_XNOR_                         1
+
+=== drev_32 ===
+
+   Number of wires:                  3
+   Number of wire bits:             65
+   Number of public wires:           3
+   Number of public wire bits:      65
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                 32
+     $_MUX_                         32
+
+=== emb_ram ===
+
+   Number of wires:              68842
+   Number of wire bits:         100772
+   Number of public wires:        1033
+   Number of public wire bits:   32932
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:             100673
+     $_AND_                         52
+     $_AOI4_                         1
+     $_DFF_P_                    32833
+     $_MUX_                      65570
+     $_NAND_                        14
+     $_NOR_                         24
+     $_NOT_                         19
+     $_OAI3_                         1
+     $_OR_                        2159
+
+=== execute ===
+
+   Number of wires:                 35
+   Number of wire bits:            327
+   Number of public wires:          31
+   Number of public wire bits:     323
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                140
+     $_AOI3_                         1
+     $_DFF_PP0_                     65
+     $_MUX_                         68
+     $_NAND_                         2
+     $_NOR_                          2
+     alu32_2x2                       1
+     cond_calc                       1
+
+=== execute_stage_passthrough ===
+
+   Number of wires:                 16
+   Number of wire bits:            174
+   Number of public wires:          16
+   Number of public wire bits:     174
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                 86
+     $_DFF_PP0_                     86
+
+=== fa ===
+
+   Number of wires:                  8
+   Number of wire bits:              8
+   Number of public wires:           5
+   Number of public wire bits:       5
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                  5
+     $_NAND_                         1
+     $_NOT_                          1
+     $_OAI3_                         1
+     $_XNOR_                         1
+     $_XOR_                          1
+
+=== fa_pg ===
+
+   Number of wires:                  6
+   Number of wire bits:              6
+   Number of public wires:           6
+   Number of public wire bits:       6
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                  3
+     $_AND_                          1
+     $_XOR_                          2
+
+=== fmask_32 ===
+
+   Number of wires:                147
+   Number of wire bits:            182
+   Number of public wires:           2
+   Number of public wire bits:      37
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                176
+     $_AND_                         50
+     $_AOI3_                         8
+     $_NAND_                        18
+     $_NOR_                          3
+     $_NOT_                          6
+     $_OAI3_                         9
+     $_OR_                          82
+
+=== gpio ===
+
+   Number of wires:                206
+   Number of wire bits:            609
+   Number of public wires:          14
+   Number of public wire bits:     324
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                381
+     $_DFF_PP0_                     96
+     $_MUX_                        224
+     $_OR_                          30
+     $_XOR_                         31
+
+=== gpio_mux ===
+
+   Number of wires:                470
+   Number of wire bits:           1217
+   Number of public wires:          87
+   Number of public wire bits:     740
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                605
+     $_AND_                         32
+     $_DFF_PP0_                     64
+     $_DFF_P_                       32
+     $_MUX_                        320
+     $_NOR_                         64
+     $_NOT_                         32
+     $_OR_                          30
+     $_XOR_                         31
+
+=== ha ===
+
+   Number of wires:                  4
+   Number of wire bits:              4
+   Number of public wires:           4
+   Number of public wire bits:       4
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                  2
+     $_AND_                          1
+     $_XOR_                          1
+
+=== insn_decoder ===
+
+   Number of wires:               1637
+   Number of wire bits:           2148
+   Number of public wires:          44
+   Number of public wire bits:     346
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:               2048
+     $_AND_                        219
+     $_AOI3_                        32
+     $_AOI4_                        20
+     $_DFF_PP0_                    220
+     $_DFF_PP1_                      2
+     $_DFF_P_                       24
+     $_MUX_                       1078
+     $_NAND_                        61
+     $_NOR_                         38
+     $_NOT_                        177
+     $_OAI3_                        51
+     $_OAI4_                        66
+     $_OR_                          57
+     $_XOR_                          3
+
+=== memory_op ===
+
+   Number of wires:               1162
+   Number of wire bits:           1858
+   Number of public wires:          27
+   Number of public wire bits:     537
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:               1655
+     $_AND_                        149
+     $_AOI3_                         2
+     $_AOI4_                       256
+     $_DFF_PP0_                    268
+     $_DFF_PP1_                      2
+     $_MUX_                        576
+     $_NAND_                        33
+     $_NOR_                          6
+     $_NOT_                         47
+     $_OAI3_                       271
+     $_OAI4_                         2
+     $_OR_                          43
+
+=== memory_op_stage_passthrough ===
+
+   Number of wires:                 10
+   Number of wire bits:             32
+   Number of public wires:          10
+   Number of public wire bits:      32
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                 15
+     $_DFF_PP0_                     15
+
+=== mul_32 ===
+
+   Number of wires:                 68
+   Number of wire bits:            255
+   Number of public wires:           7
+   Number of public wire bits:     194
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                 64
+     $_AND_                         28
+     $_NAND_                         2
+     $_NOR_                         33
+     mult_32                         1
+
+=== mult_32 ===
+
+   Number of wires:               3011
+   Number of wire bits:           3136
+   Number of public wires:        3011
+   Number of public wire bits:    3136
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:               2016
+     $_AND_                       1024
+     fa                            960
+     ha                             32
+
+=== ovf_32 ===
+
+   Number of wires:                 95
+   Number of wire bits:            187
+   Number of public wires:           5
+   Number of public wire bits:      97
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                 91
+     $_AND_                         13
+     $_AOI3_                         2
+     $_AOI4_                        14
+     $_NOT_                         30
+     $_OAI4_                         1
+     $_XNOR_                         2
+     $_XOR_                         29
+
+=== pipeline_interface ===
+
+   Number of wires:                 47
+   Number of wire bits:            509
+   Number of public wires:          33
+   Number of public wire bits:     341
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                337
+     $_AND_                        168
+     $_DFF_PP0_                    168
+     $_DFF_PP1_                      1
+
+=== reg32_2x2_pc ===
+
+   Number of wires:               6426
+   Number of wire bits:           8707
+   Number of public wires:          51
+   Number of public wire bits:    1340
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:               8455
+     $_AND_                        190
+     $_AOI3_                         2
+     $_AOI4_                        64
+     $_DFF_PP0_                    160
+     $_DFF_P_                      864
+     $_MUX_                       4224
+     $_NAND_                        10
+     $_NOR_                         14
+     $_NOT_                        940
+     $_OAI3_                        64
+     $_OAI4_                       896
+     $_OR_                         996
+     $_XOR_                         31
+
+=== reg_hazard_checker ===
+
+   Number of wires:                211
+   Number of wire bits:            251
+   Number of public wires:          21
+   Number of public wire bits:      61
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                193
+     $_AND_                         36
+     $_AOI3_                        22
+     $_AOI4_                        32
+     $_NAND_                         4
+     $_NOT_                         44
+     $_OAI3_                         8
+     $_OAI4_                        24
+     $_OR_                          23
+
+=== register_wb ===
+
+   Number of wires:                180
+   Number of wire bits:            395
+   Number of public wires:          13
+   Number of public wire bits:     157
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                314
+     $_AND_                         16
+     $_AOI3_                         5
+     $_AOI4_                         1
+     $_DFF_PP0_                     76
+     $_MUX_                         74
+     $_NAND_                        14
+     $_NOR_                          4
+     $_NOT_                         74
+     $_OAI3_                         7
+     $_OAI4_                        42
+     $_OR_                           1
+
+=== right_rot_32 ===
+
+   Number of wires:                131
+   Number of wire bits:            197
+   Number of public wires:           3
+   Number of public wire bits:      69
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                160
+     $_MUX_                        160
+
+=== status_register_adaptor ===
+
+   Number of wires:                  7
+   Number of wire bits:             38
+   Number of public wires:           7
+   Number of public wire bits:      38
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                  0
+
+=== tblock_32 ===
+
+   Number of wires:                  7
+   Number of wire bits:            100
+   Number of public wires:           6
+   Number of public wire bits:      99
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                 33
+     $_AND_                          1
+     $_MUX_                         32
+
+=== test_periph_assembly ===
+
+   Number of wires:                 45
+   Number of wire bits:           1412
+   Number of public wires:          45
+   Number of public wire bits:    1412
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                  8
+     gpio                            4
+     gpio_mux                        4
+
+=== test_pipeline_assembly ===
+
+   Number of wires:                144
+   Number of wire bits:           2127
+   Number of public wires:         143
+   Number of public wire bits:    2126
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                 12
+     $_OR_                           2
+     execute                         1
+     execute_stage_passthrough       1
+     insn_decoder                    1
+     memory_op                       1
+     memory_op_stage_passthrough      1
+     pipeline_interface              1
+     reg32_2x2_pc                    1
+     reg_hazard_checker              1
+     register_wb                     1
+     status_register_adaptor         1
+
+=== test_processor_assembly ===
+
+   Number of wires:                 32
+   Number of wire bits:            841
+   Number of public wires:          32
+   Number of public wire bits:     841
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                  3
+     emb_ram                         1
+     test_periph_assembly            1
+     test_pipeline_assembly          1
+
+=== zmask_32 ===
+
+   Number of wires:                  3
+   Number of wire bits:             65
+   Number of public wires:           3
+   Number of public wire bits:      65
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                 32
+     $_MUX_                         31
+     $_OR_                           1
+
+=== design hierarchy ===
+
+   test_processor_assembly           1
+     emb_ram                         1
+     test_periph_assembly            1
+       gpio                          4
+       gpio_mux                      4
+     test_pipeline_assembly          1
+       execute                       1
+         alu32_2x2                   1
+           addsub_32                 1
+             cla_32                  1
+               cla_16                2
+                 cla_4               4
+                   fa_pg             4
+           bitwise_32                1
+           bshift_32                 1
+             drev_32                 2
+             fmask_32                1
+             ovf_32                  1
+             right_rot_32            1
+             tblock_32               1
+             zmask_32                1
+           mul_32                    1
+             mult_32                 1
+               fa                  960
+               ha                   32
+         cond_calc                   1
+       execute_stage_passthrough      1
+       insn_decoder                  1
+       memory_op                     1
+       memory_op_stage_passthrough      1
+       pipeline_interface            1
+       reg32_2x2_pc                  1
+       reg_hazard_checker            1
+       register_wb                   1
+       status_register_adaptor       1
+
+   Number of wires:              94181
+   Number of wire bits:         141631
+   Number of public wires:       10236
+   Number of public wire bits:   55200
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:             125904
+     $_AND_                       2335
+     $_AOI3_                       142
+     $_AOI4_                       436
+     $_DFF_PP0_                   1698
+     $_DFF_PP1_                      5
+     $_DFF_P_                    33849
+     $_DLATCH_P_                   104
+     $_MUX_                      74184
+     $_NAND_                      1196
+     $_NOR_                        478
+     $_NOT_                       2689
+     $_OAI3_                      1458
+     $_OAI4_                      1135
+     $_OR_                        3801
+     $_XNOR_                       963
+     $_XOR_                       1431
+

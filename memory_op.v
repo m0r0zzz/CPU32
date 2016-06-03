@@ -11,7 +11,7 @@ module memory_op_stage_passthrough(q_a1, q_a2, q_op, q_proceed, a1, a2, op, proc
     output reg [3:0] q_op; //(reg_wb)
     output reg q_proceed;
 
-    always @(posedge clk or rst) begin
+    always @(posedge clk or posedge rst) begin
         if(rst) begin
             q_a1 <= 5'b0; q_a2 <= 5'b0;
             q_op <= 4'b0;
@@ -57,7 +57,7 @@ module memory_op( m1, m2, ram_w_addr, ram_r_addr, ram_w, ram_r, ram_w_line, sys_
     assign m1 = (m1_select == 0 ? 32'b0 : (m1_select == 1 ? r1_inner : (m1_select == 2 ? r2_inner : (m1_select == 3 ? ram_r_line : (m1_select == 4 ? sys_r_line : 32'hAAAAAAAA)))));
     assign m2 = (m2_select == 0 ? 32'b0 : (m2_select == 1 ? r1_inner : (m2_select == 2 ? r2_inner : (m2_select == 3 ? ram_r_line : (m2_select == 4 ? sys_r_line : 32'hAAAAAAAA)))));
 
-    always @(posedge clk or rst) begin
+    always @(posedge clk or posedge rst) begin
         if(rst) begin
             ram_w_addr <= 32'b0; ram_r_addr <= 32'b0;
             sys_w_addr <= 32'b0; sys_r_addr <= 32'b0;
@@ -255,8 +255,8 @@ module memory_op( m1, m2, ram_w_addr, ram_r_addr, ram_w, ram_r, ram_w_line, sys_
                     //ram_w <= 1'b0; ram_r <= 1'b0; sys_r <= 1'b0; sys_w <= 1'b0;
                     end
             endcase
+            r1_inner <= r1;
+            r2_inner <= r2;
         end
-        r1_inner <= r1;
-        r2_inner <= r2;
     end
 endmodule

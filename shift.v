@@ -139,7 +139,7 @@ module drev_32(q, a, e);
     input e;
 
     genvar i;
-    generate for(i = 0; i < 32; i = i + 1) begin
+    generate for(i = 0; i < 32; i = i + 1) begin : drev_mixer
         assign q[i] = e ? a[31-i] : a[i];
     end
     endgenerate
@@ -150,7 +150,7 @@ module fmask_32(q, a);
     output [31:0] q;
     reg [31:0] q;
 
-    always @(a) begin
+    always @* begin
         case(a)
             5'h00: q = 32'b11111111111111111111111111111111;
             5'h01: q = 32'b01111111111111111111111111111111;
@@ -212,7 +212,7 @@ module zmask_32(q, a, sla);
     assign q[0] = sla | a[31];
 
     genvar i;
-    generate for(i = 1; i < 32; i = i + 1) begin
+    generate for(i = 1; i < 32; i = i + 1) begin : zmask_mixer
         assign q[i] = sla ? a[32-i] : a[31-i];
     end
     endgenerate

@@ -84,7 +84,7 @@ module spi_master(miso, mosi, sck, miso_dir, mosi_dir, sck_dir, addr, sys_w_addr
 
     end
 
-    always @(posedge clk or rst) begin //control and bus utility
+    always @(posedge clk or posedge rst) begin //control and bus utility
         if(rst) begin
             sys_r_line <= 32'bz;
             out_buf <= 32'b0; out <= 32'b0;

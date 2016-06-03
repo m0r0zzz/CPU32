@@ -23,7 +23,7 @@ module ram(r_addr, w_addr, r_line, w_line, read, write, wrdy, rrdy, exc, clk);
     integer i;
 
     initial begin
-        for(i = 0; i < mem_size; i++) begin
+        for(i = 0; i < mem_size; i=i+1) begin
             mem[i] = 32'b0;
         end
         r_line = 32'b0;
@@ -47,7 +47,7 @@ module ram(r_addr, w_addr, r_line, w_line, read, write, wrdy, rrdy, exc, clk);
                 exc <= 1'b0;
             end
         end
-        else r_line = 32'bz;
+        else r_line <= 32'bz;
 
         if(write && !wrdy) begin
             if(w_addr >= mem_size) exc <= 1'b1;
@@ -81,7 +81,7 @@ module emb_ram(r_addr, w_addr, r_line, w_line, read, write, exc, clk);
     integer i;
 
     initial begin
-        for(i = 0; i < mem_size; i++) begin
+        for(i = 0; i < mem_size; i=i+1) begin
             mem[i] = 32'b0;
         end
         r_line = 32'b0;
