@@ -1,0 +1,841 @@
+#LyX 2.1 created this file. For more info see http://www.lyx.org/
+\lyxformat 474
+\begin_document
+\begin_header
+\textclass extarticle
+\begin_preamble
+\usepackage{bitpattern}
+\usepackage{lscape}
+\usepackage[bookmarks]{hyperref}
+\end_preamble
+\use_default_options true
+\begin_modules
+fixltx2e
+fix-cm
+initials
+bicaption
+pdfform
+pdfcomment
+\end_modules
+\maintain_unincluded_children false
+\language russian
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman ccfonts
+\font_sans cmss
+\font_typewriter cmtt
+\font_math newtxmath
+\font_default_family rmdefault
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+\graphics default
+\default_output_format pdf2
+\output_sync 0
+\bibtex_command default
+\index_command default
+\float_placement h
+\paperfontsize 12
+\spacing onehalf
+\use_hyperref false
+\papersize a4paper
+\use_geometry false
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 5
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language french
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Part
+Результаты
+\end_layout
+
+\begin_layout Section
+Симуляция
+\end_layout
+
+\begin_layout Subsection
+Средства симуляции
+\end_layout
+
+\begin_layout Standard
+Загнать про icarus verilog
+\end_layout
+
+\begin_layout Subsection
+Тестовая программа
+\end_layout
+
+\begin_layout Subsubsection
+Описание
+\end_layout
+
+\begin_layout Standard
+Данная программа производит базовое тестирование всех блоков процессора.
+ Алгоритм действий следующий:
+\end_layout
+
+\begin_layout Enumerate
+Проинициализировать регистры 29 и 30 значениями 14888h и 22888h
+\end_layout
+
+\begin_layout Enumerate
+Суммировать эти регистры в регистр 30
+\end_layout
+
+\begin_layout Enumerate
+Суммировать 35942h и DEADBEAFh
+\end_layout
+
+\begin_layout Enumerate
+Перемножить регистры 29 и 30 в них же
+\end_layout
+
+\begin_layout Enumerate
+ИСКЛ.
+ ИЛИ этих регистров с сохранением в тридцатый
+\end_layout
+
+\begin_layout Enumerate
+Циклический сдвиг содержимого 30-го регистра на 11 бит в 29-й
+\end_layout
+
+\begin_layout Enumerate
+Безусловный переход по адресу 132h
+\end_layout
+
+\begin_layout Enumerate
+(смещение 132h)
+\end_layout
+
+\begin_layout Enumerate
+Записать на шину регистры 29 и 30 в прямом и обратном порядке
+\end_layout
+
+\begin_layout Enumerate
+Вызов процедуры по адресу регистре 30
+\end_layout
+
+\begin_layout Enumerate
+Записать в ОЗУ содержимое регистра 30 по адресу 16
+\end_layout
+
+\begin_layout Enumerate
+Переставить регистры 29 и 30
+\end_layout
+
+\begin_layout Enumerate
+Любая операция (здесь, запись на шину)
+\end_layout
+
+\begin_layout Enumerate
+Прочитать ОЗУ по адресу 16 в регистр 30
+\end_layout
+
+\begin_layout Enumerate
+Настроить GPIO0 на чтение, GPIO1 на вывод
+\end_layout
+
+\begin_layout Enumerate
+Вывести на GPIO1 единицы
+\end_layout
+
+\begin_layout Enumerate
+Считать GPIO0 в регистр 30
+\end_layout
+
+\begin_layout Enumerate
+(смещение 5E771E7Dh)
+\end_layout
+
+\begin_layout Enumerate
+Если флаг 
+\begin_inset Formula $N$
+\end_inset
+
+ не стоит - переход по адресу в регистре 0
+\end_layout
+
+\begin_layout Enumerate
+Иначе - возврат
+\end_layout
+
+\begin_layout Subsubsection
+Исходный код
+\end_layout
+
+\begin_layout LyX-Code
+[0x00000000]:
+\end_layout
+
+\begin_layout LyX-Code
+movs 0x14888 -> r30
+\end_layout
+
+\begin_layout LyX-Code
+movs 0x22888 -> r29
+\end_layout
+
+\begin_layout LyX-Code
+add r29, r30 -> r30
+\end_layout
+
+\begin_layout LyX-Code
+add 0x35942, 0xDEADBEAF -> r29
+\end_layout
+
+\begin_layout LyX-Code
+mul r29, r30 -> r29, r30
+\end_layout
+
+\begin_layout LyX-Code
+xor r29, r30 -> r30
+\end_layout
+
+\begin_layout LyX-Code
+csr r30, 0x0B -> r29
+\end_layout
+
+\begin_layout LyX-Code
+br  0x132
+\end_layout
+
+\begin_layout LyX-Code
+(nop)
+\end_layout
+
+\begin_layout LyX-Code
+[0x00000132]:
+\end_layout
+
+\begin_layout LyX-Code
+out r29 -> [r30]
+\end_layout
+
+\begin_layout LyX-Code
+out r30 -> [r29]
+\end_layout
+
+\begin_layout LyX-Code
+brl r30
+\end_layout
+
+\begin_layout LyX-Code
+str r30 -> 0x10
+\end_layout
+
+\begin_layout LyX-Code
+mov r29, r30 -> r30, r29
+\end_layout
+
+\begin_layout LyX-Code
+out r30 -> [r29]
+\end_layout
+
+\begin_layout LyX-Code
+ldr 0x10 -> r30
+\end_layout
+
+\begin_layout LyX-Code
+movs 0xFFFFFFFF -> r1
+\end_layout
+
+\begin_layout LyX-Code
+out r1 -> 0x0D
+\end_layout
+
+\begin_layout LyX-Code
+out r1 -> 0x0F
+\end_layout
+
+\begin_layout LyX-Code
+out r1 -> 0x11
+\end_layout
+
+\begin_layout LyX-Code
+out r1 -> 0x0E
+\end_layout
+
+\begin_layout LyX-Code
+in  0x0A -> r30
+\end_layout
+
+\begin_layout LyX-Code
+(nop)
+\end_layout
+
+\begin_layout LyX-Code
+[0x5E771E7D]:
+\end_layout
+
+\begin_layout LyX-Code
+br
+\begin_inset script subscript
+
+\begin_layout Plain Layout
+pos
+\end_layout
+
+\end_inset
+
+ r0
+\end_layout
+
+\begin_layout LyX-Code
+ret
+\begin_inset script subscript
+
+\begin_layout Plain Layout
+neg
+\end_layout
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout LyX-Code
+(nop)
+\end_layout
+
+\begin_layout Subsubsection
+Временные диаграммы
+\end_layout
+
+\begin_layout Standard
+На изображениях - результат выполнения тестовой программы (полностью)
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage newpage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset External
+	template PDFPages
+	filename test_tim1.pdf
+	rotateAngle 90
+	width 100page%
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage newpage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset External
+	template PDFPages
+	filename test_tim2.pdf
+	rotateAngle 90
+	width 100page%
+	keepAspectRatio
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage newpage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset External
+	template PDFPages
+	filename test_tim3.pdf
+	rotateAngle 90
+	width 100page%
+	keepAspectRatio
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage newpage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset External
+	template PDFPages
+	filename test_tim4.pdf
+	rotateAngle 90
+	width 100page%
+	keepAspectRatio
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage newpage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Программа 
+\begin_inset Quotes fld
+\end_inset
+
+Фибоначчи
+\begin_inset Quotes frd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Описание
+\end_layout
+
+\begin_layout Standard
+Программа вычисляет первые 47 чисел последовательности Фибоначчи.
+ Последовательнось Фибоначчи 
+\begin_inset Formula $F$
+\end_inset
+
+ задаётся следующим образом:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{gather*}
+\mathit{F_{n}=F_{n-1}+F_{n-2}}\\
+\mathit{F_{0}=}0\\
+F_{1}=1
+\end{gather*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Вычисленный член последовательности выводится на ноги чипа GPIO1 (ноги 63..31).
+ При попытке вычисления 48-го члена последовательности (который уже не помещаетс
+я в нативный 32-битный тип, а значит выставляет флаг 
+\begin_inset Formula $C$
+\end_inset
+
+) программа перезапускается.
+\end_layout
+
+\begin_layout Standard
+Алгоритм действий следующий:
+\end_layout
+
+\begin_layout Enumerate
+Проинициализировать регистры:
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Нулевой - нулями
+\end_layout
+
+\begin_layout Enumerate
+Первый - единицами
+\end_layout
+
+\begin_layout Enumerate
+Второй - 0h (Нулевое число Фибоначчи)
+\end_layout
+
+\begin_layout Enumerate
+Третий - 1h (Первое число Фибоначчи)
+\end_layout
+
+\begin_layout Enumerate
+Пятый - Ch (адрес регистра value чипа gpio1)
+\end_layout
+
+\begin_layout Enumerate
+Шестой - 100h (смещение процедуры fib())
+\end_layout
+
+\begin_layout Enumerate
+Седьмой - -0x03 (относительно смещение в цикле)
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Настроить GPIO1 на вывод и вывести первое число Фибоначчи
+\end_layout
+
+\begin_layout Enumerate
+(начало цикла) Вызов процедуры fib()
+\end_layout
+
+\begin_layout Enumerate
+Если переполнения нет - Вывести полученное число на GPIO1
+\end_layout
+
+\begin_layout Enumerate
+Если переполнения нет - Перейти в начало цикла
+\end_layout
+
+\begin_layout Enumerate
+Иначе перейти в начало программы
+\end_layout
+
+\begin_layout Enumerate
+(смещение 100h - fib())
+\end_layout
+
+\begin_layout Enumerate
+Суммировать второй и третий регистр в четвёртый
+\end_layout
+
+\begin_layout Enumerate
+Сместить третий и четвёртый регистр во второй и третий соответственно
+\end_layout
+
+\begin_layout Enumerate
+Возврат
+\end_layout
+
+\begin_layout Subsubsection
+Исходный код
+\end_layout
+
+\begin_layout LyX-Code
+[0x00000000]:
+\end_layout
+
+\begin_layout LyX-Code
+movs 0x00 -> r0
+\end_layout
+
+\begin_layout LyX-Code
+movs 0xFFFFFFFF -> r1
+\end_layout
+
+\begin_layout LyX-Code
+movs r0 -> r2  //F
+\begin_inset script subscript
+
+\begin_layout Plain Layout
+0
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout LyX-Code
+movs 0x01 -> r3  //F
+\begin_inset script subscript
+
+\begin_layout Plain Layout
+1
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout LyX-Code
+movs 0x0C -> r5  //[gpio1.val]
+\end_layout
+
+\begin_layout LyX-Code
+movs 0x100 -> r6  //[fib()]
+\end_layout
+
+\begin_layout LyX-Code
+movs 0xFFFFFFFD -> r7  //-0x03
+\end_layout
+
+\begin_layout LyX-Code
+out r1 -> 0x0D
+\end_layout
+
+\begin_layout LyX-Code
+out r3 -> [r5]
+\end_layout
+
+\begin_layout LyX-Code
+brl [r6]
+\end_layout
+
+\begin_layout LyX-Code
+out
+\begin_inset script subscript
+
+\begin_layout Plain Layout
+lo
+\end_layout
+
+\end_inset
+
+ r4 -> [r5]
+\end_layout
+
+\begin_layout LyX-Code
+rbr
+\begin_inset script subscript
+
+\begin_layout Plain Layout
+lo
+\end_layout
+
+\end_inset
+
+ r7
+\end_layout
+
+\begin_layout LyX-Code
+br  r0
+\end_layout
+
+\begin_layout LyX-Code
+(nop)
+\end_layout
+
+\begin_layout LyX-Code
+[0x00000100]:  //r4 fib(&r2, &r3)
+\end_layout
+
+\begin_layout LyX-Code
+add r2, r3 -> r4
+\end_layout
+
+\begin_layout LyX-Code
+mov r3, r4 -> r2, r3
+\end_layout
+
+\begin_layout LyX-Code
+ret
+\end_layout
+
+\begin_layout LyX-Code
+(nop)
+\end_layout
+
+\begin_layout Subsubsection
+Временные диаграммы
+\end_layout
+
+\begin_layout Standard
+На изображениях:
+\end_layout
+
+\begin_layout Enumerate
+Инициализация
+\end_layout
+
+\begin_layout Enumerate
+Первое число Фибоначчи (1)
+\end_layout
+
+\begin_layout Enumerate
+Второе и третье числа Фибоначчи (1 и 2)
+\end_layout
+
+\begin_layout Enumerate
+Семнадцатое число Фибоначчи (1597)
+\end_layout
+
+\begin_layout Enumerate
+47-е число Фибоначчи (2971215073)
+\end_layout
+
+\begin_layout Enumerate
+Перезагрузка и переинициализация после 47-го числа
+\end_layout
+
+\begin_layout Enumerate
+Первые 29 чисел Фибоначчи (обзорно)
+\end_layout
+
+\begin_layout Enumerate
+30-44 числа Фибоначчи (обзорно)
+\end_layout
+
+\begin_layout Enumerate
+Перзагрузка и счёт сначала (обзорно)
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage newpage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset External
+	template PDFPages
+	filename fib_tim1.pdf
+	rotateAngle 90
+	width 100page%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage newpage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset External
+	template PDFPages
+	filename fib_tim1.pdf
+	rotateAngle 90
+	width 100page%
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Синтез
+\end_layout
+
+\begin_layout Subsection
+Средства синтезирования
+\end_layout
+
+\begin_layout Standard
+Загнать про YOSYS и наверное Quartus Prime китайский
+\end_layout
+
+\begin_layout Subsection
+Результаты синтезирования
+\end_layout
+
+\begin_layout Standard
+шо там вышло при синтезе yosys на три цели и квартусом на какую-нибудь ПЛИС
+ типа MAX10
+\end_layout
+
+\begin_layout Subsection
+Результаты временного анализа
+\end_layout
+
+\begin_layout Standard
+шо там сказал квартус по задержкам в плис
+\end_layout
+
+\end_body
+\end_document

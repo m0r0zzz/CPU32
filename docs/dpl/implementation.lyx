@@ -1,0 +1,2291 @@
+#LyX 2.1 created this file. For more info see http://www.lyx.org/
+\lyxformat 474
+\begin_document
+\begin_header
+\textclass extarticle
+\begin_preamble
+\usepackage{bitpattern}
+\usepackage{lscape}
+\usepackage[bookmarks]{hyperref}
+\end_preamble
+\use_default_options true
+\begin_modules
+fixltx2e
+fix-cm
+initials
+bicaption
+pdfform
+pdfcomment
+\end_modules
+\maintain_unincluded_children false
+\language russian
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman ccfonts
+\font_sans cmss
+\font_typewriter cmtt
+\font_math newtxmath
+\font_default_family rmdefault
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+\graphics default
+\default_output_format pdf2
+\output_sync 0
+\bibtex_command default
+\index_command default
+\float_placement H
+\paperfontsize 12
+\spacing onehalf
+\use_hyperref false
+\papersize a4paper
+\use_geometry false
+\use_package amsmath 1
+\use_package amssymb 1
+\use_package cancel 1
+\use_package esint 1
+\use_package mathdots 1
+\use_package mathtools 1
+\use_package mhchem 1
+\use_package stackrel 1
+\use_package stmaryrd 1
+\use_package undertilde 1
+\cite_engine basic
+\cite_engine_type default
+\biblio_style plain
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\justification true
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 5
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language french
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Part
+Реализация
+\end_layout
+
+\begin_layout Section
+Строение ядра
+\end_layout
+
+\begin_layout Standard
+Ядро процессора - главная структура, в которой заключена вся логика его
+ работы.
+ Сюда входит конвейер, регистровый файл, оперативная память и адаптер к
+ шине периферических устройств.
+ Ядро процессора УП-1 обладает следующими свойствами:
+\end_layout
+
+\begin_layout Itemize
+32-битная архитектура
+\end_layout
+
+\begin_layout Itemize
+Набор из 35 (заложено до 128) инструкций
+\end_layout
+
+\begin_layout Itemize
+32 РОН (Регистра общего назначения) шириной 32 бита с четырёхпортовым интерфейсо
+м (2 чтение, 2 запись + особые линии для PC и LR)
+\end_layout
+
+\begin_layout Itemize
+Регистры PC и LR (счётчик инструкций и адрес возврата) также являются общими
+ (31 и 29 соответственно)
+\end_layout
+
+\begin_layout Itemize
+Однотактовый умножитель с возможностью сохранения всего результата (2 слова)
+\end_layout
+
+\begin_layout Itemize
+Однотактовый комбинированный регистр быстрого сдвига (циклический, арифметически
+й и логический сдвиги)
+\end_layout
+
+\begin_layout Itemize
+Комбинированный однотактовый полный сумматор-вычитатель.
+\end_layout
+
+\begin_layout Itemize
+Раздельные шины памяти и периферический устройств
+\end_layout
+
+\begin_layout Itemize
+16 кодов условного исполнения
+\end_layout
+
+\begin_layout Itemize
+Четырёхшаговая архитектура конвейера (Декодирование, Исполнение, Память/Перифери
+я и Регистры)
+\end_layout
+
+\begin_layout Itemize
+Двухпортовое однотактовое ОЗУ ёмкостью 4 КБ (1 Кс) (1- чтение, 1 - запись)
+\end_layout
+
+\begin_layout Standard
+Схема построения ядра представлена на рисунке 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Core"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Главная логика исполнения инструкций содержится в конвейере.
+ Конвейер построен по типовой
+\begin_inset CommandInset citation
+LatexCommand cite
+key "key-4"
+
+\end_inset
+
+ для RISC процессоров пятистадийной схеме.
+ Однако, в процессоре УП-1 отсутствует выделенная логика получения инструкций
+ от ПЗУ, чем и объясняется наличие только четырёх стадий на схеме ядра.
+ Стадия Decode выполняет роль декодера инструкций, а также подготавливает
+ все необходимые данные для успешного их исполнения.
+ Стадия Execute содержит основную вычислительную логику, а также блок вычисления
+ условных кодов.
+ Стадия Memory/Periph является интерфейсом между ядром и шинами памяти и
+ периферии.
+ Стадия Register WB сохраняет результаты исполнения и завершает конвейер.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename overview.eps
+	height 95theight%
+	rotateAngle 90
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Core"
+
+\end_inset
+
+Ядро (схема)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Конвейер
+\end_layout
+
+\begin_layout Subsection
+Назначение стадий
+\end_layout
+
+\begin_layout Standard
+Конвейер процессора состоит из четырёх стадий, одной 
+\begin_inset Quotes fld
+\end_inset
+
+невидимой
+\begin_inset Quotes frd
+\end_inset
+
+ стадии и набора подстадий:
+\end_layout
+
+\begin_layout Enumerate
+Decode.
+ Получает от ПЗУ (по адресу в pc) инструкцию и подготавливает её к исполнению
+ на остальных стадиях.
+ Для этих целей стадия подготавливает управляющие сигналы для каждой из
+ трёх последующих стадий и помещает их в следующую стадию.
+ Также в этой стадии находится блок обработки ошибок конвейера, который
+ исключает возможность чтения 
+\begin_inset Quotes fld
+\end_inset
+
+не готовых
+\begin_inset Quotes frd
+\end_inset
+
+ данных из регистров.
+\end_layout
+
+\begin_layout Enumerate
+Interface - Вспомогательная стадия, служит для равномерного распределения
+ сигналов по стадиям и подстадиям.
+ Работает синхронно со стадией Decode для обеспечения наивысшей производительнос
+ти.
+ Из-за такого поведения является 
+\begin_inset Quotes fld
+\end_inset
+
+невидимой
+\begin_inset Quotes frd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+Execute.
+ В этой стадии располагается АЛУ, которое и выполняет основную часть вычислений.
+ Также здесь происходит вычисление флагов исполнения и подготовка на основе
+ флагов результатов исполнения услоных кодов.
+ Управляющие сигналы для оставшихся двух стадий помещаются в подстадию Hold.
+\end_layout
+
+\begin_layout Enumerate
+Memory/Periph.
+ Данная стадия является единственной точкой входа-выхода для ОЗУ и периферийных
+ устройств.
+ Благодаря этому отсутствует необходимость в обработке ошибок конвейера
+ по ОЗУ и периферии.
+ В этой стадии происходит запись и чтение ОЗУ и периферийных регистров.
+ Сигналы для последней стадии задерживаются на подстадии Hold
+\end_layout
+
+\begin_layout Enumerate
+Register WB.
+ Данная стадия производит запись результатов выполнения всех стадий в регистровы
+й файл.
+ Так как эта стадия является продуктом разделения операций чтения и записи
+ в регистры, она также является причиной внесения в стадию decode блока
+ разрешения ошибок конвейера.
+\end_layout
+
+\begin_layout Subsection
+Стадия 
+\begin_inset Quotes fld
+\end_inset
+
+Decode
+\begin_inset Quotes frd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Декодер работает по следующему принципу:
+\end_layout
+
+\begin_layout Enumerate
+Получает инструкцию и разделяет ещё на исполняемые части согласно схеме
+ инструкции (см.
+ Приложение 1)
+\end_layout
+
+\begin_layout Enumerate
+Генерирует начальные управляющие сигналы для основных исполняющих блоков
+ в соответствии с номером инструкции (АЛУ, память, регистры)
+\end_layout
+
+\begin_layout Enumerate
+Производит получение содержимого регистров, указанных в инструкции, если
+ необходимо.
+\end_layout
+
+\begin_layout Enumerate
+В случае присутствия в инструкции флагов наличия мгновенных значений, производит
+ постановку задержки исполнения, и во время этой задержки производит получение
+ мгновенных значений из ПЗУ
+\end_layout
+
+\begin_layout Enumerate
+В случае исполнения т.н.
+ 
+\begin_inset Quotes fld
+\end_inset
+
+длинных
+\begin_inset Quotes frd
+\end_inset
+
+ инструкций (инструкции, занимающие больше 1 такта, например инструкции
+ перехода) производит постановку задержки, равной времени исполнения инструкции
+\end_layout
+
+\begin_layout Enumerate
+В случае присутствия ошибки конвейера, производит постановку задержки и
+ запрещает инкремент счётчика инструкций до тех пор, пока сигнал ошибки
+ не вернётся в единицу.
+\end_layout
+
+\begin_layout Subsection
+Стадия 
+\begin_inset Quotes fld
+\end_inset
+
+Interface
+\begin_inset Quotes frd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Интерфейс является 
+\begin_inset Quotes fld
+\end_inset
+
+ширмой
+\begin_inset Quotes frd
+\end_inset
+
+ между декодером и остальными стадиями.
+ 
+\end_layout
+
+\begin_layout Standard
+Специальный сигнал d_pass позволяет подменить операцию, хранящуюся в нем
+ на nop, что очень удобно для постановки всяческого рода задержек.
+ Задержка срабатывания этой стадии подобрана таким образом, чтобы она (стадия)
+ срабатывала одновременно со стадией декодера, что уменьшает эффективную
+ длину конвейера, а значит и задержку срабатывания инструкций, требующих
+ полного сброса конвейера.
+ 
+\end_layout
+
+\begin_layout Standard
+Также интерфейс распределяет управляющие сигналы по соответствующим стадиям
+ и подстадиям.
+\end_layout
+
+\begin_layout Subsection
+Стадия 
+\begin_inset Quotes fld
+\end_inset
+
+Execute
+\begin_inset Quotes frd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Стадия исполнения производит все заявленные в наборе инструкций вычисления.
+ Внутри этой стадии находятся два блока:
+\end_layout
+
+\begin_layout Enumerate
+Блок АЛУ - основная вычислительная сила процессора.
+\end_layout
+
+\begin_layout Enumerate
+Блок условного исполнения - блок, производящий вычисление условного результата
+ (cres) исходя из входного условного кода и флагов исполнения.
+ 
+\end_layout
+
+\begin_layout Standard
+Входными для данной стадии являются следующие сигналы:
+\end_layout
+
+\begin_layout Itemize
+a и b - входные операнды, без изменений проводятся к АЛУ
+\end_layout
+
+\begin_layout Itemize
+alu_op - управляющий кода АЛУ, проводится к нему без изменений
+\end_layout
+
+\begin_layout Itemize
+st - регистр статуса - регистр, содержащий флаги исполнения.
+ Применяется в вычислении условного результата
+\end_layout
+
+\begin_layout Itemize
+cond - условный код.
+\end_layout
+
+\begin_layout Itemize
+is_cond - сигнал, определяющий необходимость вычисления условного результата.
+ В случае, когда этот сигнал равен нулю, условный результат принудительно
+ выставляется в единицу
+\end_layout
+
+\begin_layout Itemize
+write_flags - сигнал, определяющий флаги, которые будут перезаписаны текущей
+ инструкцией
+\end_layout
+
+\begin_layout Standard
+Стадия генерирует следующие сигналы:
+\end_layout
+
+\begin_layout Itemize
+r1 и r2 - результаты вычислений (из АЛУ)
+\end_layout
+
+\begin_layout Itemize
+n, z, c, v - флаги, сгенерированные АЛУ
+\end_layout
+
+\begin_layout Itemize
+cres - условный результат
+\end_layout
+
+\begin_layout Itemize
+cc - сигнал, определяющий необходимость записи флагов в регистр st
+\end_layout
+
+\begin_layout Subsection
+Стадия 
+\begin_inset Quotes fld
+\end_inset
+
+Memory/Periph
+\begin_inset Quotes frd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Эта стадия является точкой входа/выхода для операций с ОЗУ и периферийными
+ устройствами.
+ Управляется эта стадия специальными командными сигналами r1_op и r2_op,
+ для каждого входного операнда свой код управления.
+ Кроме них, также используются следующие сигналы:
+\end_layout
+
+\begin_layout Enumerate
+r1 и r2 - входные операнды, приходят из стадии исполнения
+\end_layout
+
+\begin_layout Enumerate
+a1 и a2 - адресные операнды, заполняются на стадии декодирования.
+\end_layout
+
+\begin_layout Enumerate
+proceed - сигнал условного результата.
+ Если он равен нулю, то командные сигналы принудительно выставляются в 
+\begin_inset Quotes fld
+\end_inset
+
+сквозной NOP
+\begin_inset Quotes frd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+ram_r_line и sys_r_line - линии чтения ОЗУ и периферии соответственно.
+\end_layout
+
+\begin_layout Standard
+Также эта стадия генерирует следующие сигналы:
+\end_layout
+
+\begin_layout Enumerate
+m1 и m2 - выходные операнды
+\end_layout
+
+\begin_layout Enumerate
+ram_w_line, sys_w_line, ram_w_addr, sys_w_addr etc.
+ - линии управления ОЗУ и периферией соответственно 
+\end_layout
+
+\begin_layout Standard
+Набор команд следующий:
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Argument item:1
+status open
+
+\begin_layout Plain Layout
+0:
+\end_layout
+
+\end_inset
+
+ Чистый NOP.
+ Никаких операций не производится.
+ В выходной операнд записывается 0
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Argument item:1
+status open
+
+\begin_layout Plain Layout
+1:
+\end_layout
+
+\end_inset
+
+ Сквозной NOP.
+ Входной операнд просто копируется в выходной без изменений
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Argument item:1
+status open
+
+\begin_layout Plain Layout
+2:
+\end_layout
+
+\end_inset
+
+ Чтение из ОЗУ по адресу a1
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Argument item:1
+status open
+
+\begin_layout Plain Layout
+3:
+\end_layout
+
+\end_inset
+
+ Чтение из ОЗУ по адресу a2
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Argument item:1
+status open
+
+\begin_layout Plain Layout
+4:
+\end_layout
+
+\end_inset
+
+ Чтение из ОЗУ по адресу в другом операнде
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Argument item:1
+status open
+
+\begin_layout Plain Layout
+5:
+\end_layout
+
+\end_inset
+
+ Запись в ОЗУ по адресу a1
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Argument item:1
+status open
+
+\begin_layout Plain Layout
+6:
+\end_layout
+
+\end_inset
+
+ Запись в ОЗУ по адресу a2
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Argument item:1
+status open
+
+\begin_layout Plain Layout
+7:
+\end_layout
+
+\end_inset
+
+ Запись в ОЗУ по адресу в другом операнде
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Argument item:1
+status open
+
+\begin_layout Plain Layout
+8:
+\end_layout
+
+\end_inset
+
+ Чтение из периферии по адресу a1
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Argument item:1
+status open
+
+\begin_layout Plain Layout
+9:
+\end_layout
+
+\end_inset
+
+ Чтение из периферии по адресу a2
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Argument item:1
+status open
+
+\begin_layout Plain Layout
+10:
+\end_layout
+
+\end_inset
+
+ Чтение из периферии по адресу в другом операнде
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Argument item:1
+status open
+
+\begin_layout Plain Layout
+11:
+\end_layout
+
+\end_inset
+
+ Запись в периферию по адресу a1
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Argument item:1
+status open
+
+\begin_layout Plain Layout
+12:
+\end_layout
+
+\end_inset
+
+ Запись в периферию по адресу a2
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Argument item:1
+status open
+
+\begin_layout Plain Layout
+13:
+\end_layout
+
+\end_inset
+
+ Запись в периферию по адресу в другом операнде
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Argument item:1
+status open
+
+\begin_layout Plain Layout
+14:
+\end_layout
+
+\end_inset
+
+ Копирует входной операнд в противоположный выходной.
+\end_layout
+
+\begin_layout Subsection
+Стадия 
+\begin_inset Quotes fld
+\end_inset
+
+Register WB
+\begin_inset Quotes frd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Данная стадия производит сохранение результата, т.е.
+ обратную запись в регистровый файл.
+ Эта стадия также управляется специальным командным сигналом op.
+ Помимо него, также используются следующие сигналы:
+\end_layout
+
+\begin_layout Itemize
+r1 и r2 - входные операнды.
+\end_layout
+
+\begin_layout Itemize
+a1 и a2 - адреса для записи, заполняются декодером.
+\end_layout
+
+\begin_layout Itemize
+proceed - сигнал условного результата.
+ Если он равен нулю, то командный сигнал принудительно переключается в NOP
+\end_layout
+
+\begin_layout Standard
+Выходные сигналы этой стадии контролируют порты записи регистрового файла.
+\end_layout
+
+\begin_layout Standard
+Набор команд представлен следующим образом:
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Argument item:1
+status open
+
+\begin_layout Plain Layout
+0:
+\end_layout
+
+\end_inset
+
+ NOP, записи не происходит
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Argument item:1
+status open
+
+\begin_layout Plain Layout
+1:
+\end_layout
+
+\end_inset
+
+ Запись r1 по адресу a1
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Argument item:1
+status open
+
+\begin_layout Plain Layout
+2:
+\end_layout
+
+\end_inset
+
+ Запись r1 по адресу a2
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Argument item:1
+status open
+
+\begin_layout Plain Layout
+3:
+\end_layout
+
+\end_inset
+
+ Запись r1 по адресу в r2
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Argument item:1
+status open
+
+\begin_layout Plain Layout
+4:
+\end_layout
+
+\end_inset
+
+ Запись r2 по адресу a1
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Argument item:1
+status open
+
+\begin_layout Plain Layout
+5:
+\end_layout
+
+\end_inset
+
+ Запись r2 по адресу a2
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Argument item:1
+status open
+
+\begin_layout Plain Layout
+6:
+\end_layout
+
+\end_inset
+
+ Запись r2 по адресу в r1
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Argument item:1
+status open
+
+\begin_layout Plain Layout
+7:
+\end_layout
+
+\end_inset
+
+ Запись r1 по адресу а1 и r2 по адресу a2
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Argument item:1
+status open
+
+\begin_layout Plain Layout
+7:
+\end_layout
+
+\end_inset
+
+ Запись r1 по адресу а2 и r2 по адресу a1
+\end_layout
+
+\begin_layout Subsection
+Ошибки конвейера
+\end_layout
+
+\begin_layout Standard
+Ошибки конвейера обнаруживаются специальным блоком.
+ Принцип его действия состоит в том, чтобы проверить выходные сигналы регистрово
+й записи каждой стадии и подстадии, обнаружить среди них сигналы активной
+ записи и произвести сравнение адресов назначения при этих сигналах с адресами
+ текущей инструкции в декодере.
+ В случае совпадения сгнал ошибки конвейера выставляется в единицу, и декодер
+ приостанавливает выполнение инструкции пока сигнал не упадёт обратно в
+ ноль (то есть пока запись не произойдёт).
+\end_layout
+
+\begin_layout Section
+АЛУ
+\end_layout
+
+\begin_layout Subsection
+Строение АЛУ
+\end_layout
+
+\begin_layout Standard
+АЛУ разделён на пять основных блоков:
+\end_layout
+
+\begin_layout Enumerate
+Декодер инструкций и селектор результатов/флагов
+\end_layout
+
+\begin_layout Enumerate
+Комбинированный сумматор-вычитатель
+\end_layout
+
+\begin_layout Enumerate
+Комбинированный регистр быстрого сдвига-вращения
+\end_layout
+
+\begin_layout Enumerate
+Полный умножитель
+\end_layout
+
+\begin_layout Enumerate
+Блок побитовых инструкций
+\end_layout
+
+\begin_layout Standard
+Схема соединения блоков представлена на рисунке 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:alu"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+На входе АЛУ присутствуют следующие сигналы:
+\end_layout
+
+\begin_layout Enumerate
+a и b - входные операнды
+\end_layout
+
+\begin_layout Enumerate
+op - управляющий сигнал
+\end_layout
+
+\begin_layout Standard
+АЛУ генерирует следующие сигналы:
+\end_layout
+
+\begin_layout Enumerate
+q1 и q2 - выходные операнды
+\end_layout
+
+\begin_layout Enumerate
+st - выходные флаги исполнения
+\end_layout
+
+\begin_layout Standard
+Следует также заметить, что АЛУ является комбинаторным блоком, то есть работает
+ без внешней синхронизации
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename alu.eps
+	height 95theight%
+	rotateAngle 90
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption Standard
+
+\begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:alu"
+
+\end_inset
+
+АЛУ (схема)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Сумматор/Вычитатель
+\end_layout
+
+\begin_layout Standard
+Сумматор-вычитатель построен по схеме сумматора с параллельным переносом
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "key-2"
+
+\end_inset
+
+.
+ Состоит из следующих исходных блоков:
+\end_layout
+
+\begin_layout Enumerate
+fa_pg - полный сумматор, модифицированный для генерации сигналов Propagate
+ и Generate вместо сигнала переноса
+\end_layout
+
+\begin_layout Enumerate
+cla4 - четырёхбитный сумматор с параллельным переносом.
+ Состоит из четырёх модифицированных полных сумматоров и логики распространения
+ переноса
+\end_layout
+
+\begin_layout Enumerate
+cla16 - 16-битный сумматор, состоит из четырёх четырёбитных и аналогичной
+ логики распространения переноса.
+\end_layout
+
+\begin_layout Enumerate
+cla32 - 32-битный сумматор, конечный продукт, составлен из двух шестнадцатибитны
+х и упрощённой логики распространения переноса.
+\end_layout
+
+\begin_layout Standard
+При вычитании в схему вносятся следующие изменения:
+\end_layout
+
+\begin_layout Enumerate
+На пути второго операнда встаёт блок побитовой инверсии
+\end_layout
+
+\begin_layout Enumerate
+Сигнал нулевого переноса устанавливается в единицу
+\end_layout
+
+\begin_layout Standard
+Данный блок способен генерировать все четыре флага исполнения.
+\end_layout
+
+\begin_layout Subsection
+Комбинированный регистр быстрого сдвига/вращения
+\end_layout
+
+\begin_layout Standard
+Данный блок построен по схеме реверсивного сдвигового регистра, основанного
+ на операции маскирования, представленной в 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "key-3"
+
+\end_inset
+
+.
+ Данная схема позволяет производить все возможные виды сдвигов и вращений
+ (кроме, возможно, операций через бит переноса) за один такт.
+ Управляется эта схема с помощью тройки сигналов {left, rotate, arith} следующим
+ образом:
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Argument item:1
+status open
+
+\begin_layout Plain Layout
+000:
+\end_layout
+
+\end_inset
+
+ Логический сдвиг вправо
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Argument item:1
+status open
+
+\begin_layout Plain Layout
+001:
+\end_layout
+
+\end_inset
+
+ Арифметический сдвиг вправо
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Argument item:1
+status open
+
+\begin_layout Plain Layout
+01Х:
+\end_layout
+
+\end_inset
+
+ Циклический сдвиг (вращение) вправо
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Argument item:1
+status open
+
+\begin_layout Plain Layout
+100:
+\end_layout
+
+\end_inset
+
+ Логический сдвиг влево
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Argument item:1
+status open
+
+\begin_layout Plain Layout
+101:
+\end_layout
+
+\end_inset
+
+ Арифметический сдвиг влево
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Argument item:1
+status open
+
+\begin_layout Plain Layout
+11Х:
+\end_layout
+
+\end_inset
+
+ Циклический сдвиг (вращение) влево
+\end_layout
+
+\begin_layout Standard
+Арифметический сдвиг отличается от логического тем, что сохраняет знаковый
+ бит операнда.
+ Также арифметический сдвиг влево может, в отличие от остальных сдвигов,
+ генерировать флаг переполнения.
+ Все виды сдвигов могут генерировать флаг нулевого результата
+\end_layout
+
+\begin_layout Subsection
+Умножитель
+\end_layout
+
+\begin_layout Standard
+Данный умножитель является полным параллельным умножителем, построенным
+ по схеме дерева Дадды 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "key-1"
+
+\end_inset
+
+.
+ Построением таких умножителей занимается программа MultiplierGenerator.
+ Алгоритм построения следующий:
+\end_layout
+
+\begin_layout Enumerate
+Перемножить (логическое И) каждый бит первого результата с каждым битом
+ второго, с получением 
+\begin_inset Formula $n^{2}$
+\end_inset
+
+ частичных произведений с разным весом.
+\end_layout
+
+\begin_layout Enumerate
+Уменьшить количество частичных произведений по следующим правилам:
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Взять любые три бита с одним весом и пропустить через полный сумматор.
+ В результате получится один бит с текущим весом и один - с весом на единицу
+ больше
+\end_layout
+
+\begin_layout Enumerate
+Если осталось только два бита одного веса, и выходных бит с таким весом
+ равно 1 или 2 по модулю 3, пропустить их через полусумматор, иначе - пробросить
+ на следующий слой без изменений
+\end_layout
+
+\begin_layout Enumerate
+Если остался только один - пробросить его на следующий слой без изменений
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Сгруппировать результат в два числа и просуммировать обыкновенным полным
+ сумматором.
+\end_layout
+
+\begin_layout Standard
+Так как результат умножения в два раза шире его операндов, был предусмотрен
+ механизм разделения результата на два слова и перегрузки их в два регистра.
+\end_layout
+
+\begin_layout Standard
+Данный блок может выставлять флаг переполнения (при ненулевом старшем слове)
+ и флаг нулевого результата (при нулевом младшем слове)
+\end_layout
+
+\begin_layout Subsection
+Блок побитовых операций
+\end_layout
+
+\begin_layout Standard
+Данный блок принимает на вход один-два операнда (A и B соответственно, в
+ зависимости от вида операции) и преобразует их согласно управляющему сигналу
+ следующим образом:
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Argument item:1
+status open
+
+\begin_layout Plain Layout
+000:
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset Formula $Q=\overline{A}$
+\end_inset
+
+ (Инверсия А)
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Argument item:1
+status open
+
+\begin_layout Plain Layout
+001:
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset Formula $Q=A\wedge B$
+\end_inset
+
+ (А И B)
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Argument item:1
+status open
+
+\begin_layout Plain Layout
+010:
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset Formula $Q=A\vee B$
+\end_inset
+
+ (A ИЛИ B)
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Argument item:1
+status open
+
+\begin_layout Plain Layout
+011:
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset Formula $Q=A\veebar B$
+\end_inset
+
+ (А ИСКЛ.
+ ИЛИ B)
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Argument item:1
+status open
+
+\begin_layout Plain Layout
+100:
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset Formula $Q=\overline{A\wedge B}$
+\end_inset
+
+ (А И-НЕ B)
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Argument item:1
+status open
+
+\begin_layout Plain Layout
+101:
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset Formula $Q=\overline{A\vee B}$
+\end_inset
+
+ (A ИЛИ-НЕ B)
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Argument item:1
+status open
+
+\begin_layout Plain Layout
+110:
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset Formula $Q=\overline{A\veebar B}$
+\end_inset
+
+ (А ИСКЛ.
+ ИЛИ-НЕ B)
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Argument item:1
+status open
+
+\begin_layout Plain Layout
+111:
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset Formula $Q=\overline{B}$
+\end_inset
+
+ (Инверсия B)
+\end_layout
+
+\begin_layout Standard
+Данный блок может генерировать только флаг нулевого результата
+\end_layout
+
+\begin_layout Subsection
+Декодер команд
+\end_layout
+
+\begin_layout Standard
+Декодер команд выполняет роль объединителя всех блоков АЛУ и селектора нужного
+ результата.
+ В соответствии со значением сигнала alu_op будет выполняться следующая
+ операция:
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Argument item:1
+status open
+
+\begin_layout Plain Layout
+0x00:
+\end_layout
+
+\end_inset
+
+ NOP - входные операнды без изменений копируются в выходные
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Argument item:1
+status open
+
+\begin_layout Plain Layout
+0x01:
+\end_layout
+
+\end_inset
+
+ ADD - 
+\begin_inset Formula $\mathit{q_{1}}=a+b$
+\end_inset
+
+, 
+\begin_inset Formula $q_{2}=0$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Argument item:1
+status open
+
+\begin_layout Plain Layout
+0x02:
+\end_layout
+
+\end_inset
+
+ SUB - 
+\begin_inset Formula $\mathit{q_{1}}=a-b$
+\end_inset
+
+, 
+\begin_inset Formula $q_{2}=0$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Argument item:1
+status open
+
+\begin_layout Plain Layout
+0x03:
+\end_layout
+
+\end_inset
+
+ CPL - 
+\begin_inset Formula $\mathit{q_{1}}=-a$
+\end_inset
+
+, 
+\begin_inset Formula $q_{2}=0$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Argument item:1
+status open
+
+\begin_layout Plain Layout
+0x04:
+\end_layout
+
+\end_inset
+
+ MUL - 
+\begin_inset Formula $\mathit{\{q_{2},q_{1}\}}=a\cdot b$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Argument item:1
+status open
+
+\begin_layout Plain Layout
+0x05:
+\end_layout
+
+\end_inset
+
+ SHR
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Логический сдвиг вправо
+\end_layout
+
+\end_inset
+
+ - 
+\begin_inset Formula $\mathit{q_{1}}=a\,shr\,b$
+\end_inset
+
+, 
+\begin_inset Formula $q_{2}=0$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Argument item:1
+status open
+
+\begin_layout Plain Layout
+0x06:
+\end_layout
+
+\end_inset
+
+ SHL
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Логический сдвиг влево
+\end_layout
+
+\end_inset
+
+ - 
+\begin_inset Formula $\mathit{q_{1}}=a\,shl\,b$
+\end_inset
+
+, 
+\begin_inset Formula $q_{2}=0$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Argument item:1
+status open
+
+\begin_layout Plain Layout
+0x07:
+\end_layout
+
+\end_inset
+
+ SAR
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Арифметический сдвиг вправо
+\end_layout
+
+\end_inset
+
+ - 
+\begin_inset Formula $\mathit{q_{1}}=a\,sar\,b$
+\end_inset
+
+, 
+\begin_inset Formula $q_{2}=0$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Argument item:1
+status open
+
+\begin_layout Plain Layout
+0x08:
+\end_layout
+
+\end_inset
+
+ SAL
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Арифметический сдвиг влево
+\end_layout
+
+\end_inset
+
+ - 
+\begin_inset Formula $\mathit{q_{1}}=a\,sal\,b$
+\end_inset
+
+, 
+\begin_inset Formula $q_{2}=0$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Argument item:1
+status open
+
+\begin_layout Plain Layout
+0x09:
+\end_layout
+
+\end_inset
+
+ ROR
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Циклический сдвиг вправо
+\end_layout
+
+\end_inset
+
+ - 
+\begin_inset Formula $\mathit{q_{1}}=a\,ror\,b$
+\end_inset
+
+, 
+\begin_inset Formula $q_{2}=0$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Argument item:1
+status open
+
+\begin_layout Plain Layout
+0x0A:
+\end_layout
+
+\end_inset
+
+ ROL
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Циклический сдвиг влево
+\end_layout
+
+\end_inset
+
+ - 
+\begin_inset Formula $\mathit{q_{1}}=a\,rol\,b$
+\end_inset
+
+, 
+\begin_inset Formula $q_{2}=0$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Argument item:1
+status open
+
+\begin_layout Plain Layout
+0x0B:
+\end_layout
+
+\end_inset
+
+ NOT - 
+\begin_inset Formula $\mathit{q_{1}}=\overline{a}$
+\end_inset
+
+, 
+\begin_inset Formula $q_{2}=0$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Argument item:1
+status open
+
+\begin_layout Plain Layout
+0x0C:
+\end_layout
+
+\end_inset
+
+ AND - 
+\begin_inset Formula $\mathit{q_{1}}=a\wedge b$
+\end_inset
+
+, 
+\begin_inset Formula $q_{2}=0$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Argument item:1
+status open
+
+\begin_layout Plain Layout
+0x0D:
+\end_layout
+
+\end_inset
+
+ OR - 
+\begin_inset Formula $\mathit{q_{1}}=a\vee b$
+\end_inset
+
+, 
+\begin_inset Formula $q_{2}=0$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Argument item:1
+status open
+
+\begin_layout Plain Layout
+0x0E:
+\end_layout
+
+\end_inset
+
+ XOR - 
+\begin_inset Formula $\mathit{q_{1}}=a\veebar b$
+\end_inset
+
+, 
+\begin_inset Formula $q_{2}=0$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Argument item:1
+status open
+
+\begin_layout Plain Layout
+0x0F:
+\end_layout
+
+\end_inset
+
+ NAND - 
+\begin_inset Formula $\mathit{q_{1}}=\overline{a\wedge b}$
+\end_inset
+
+, 
+\begin_inset Formula $q_{2}=0$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Argument item:1
+status open
+
+\begin_layout Plain Layout
+0x10:
+\end_layout
+
+\end_inset
+
+ NOR - 
+\begin_inset Formula $\mathit{q_{1}}=\overline{a\vee b}$
+\end_inset
+
+, 
+\begin_inset Formula $q_{2}=0$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Argument item:1
+status open
+
+\begin_layout Plain Layout
+0x10:
+\end_layout
+
+\end_inset
+
+ XNOR - 
+\begin_inset Formula $\mathit{q_{1}}=\overline{a\veebar b}$
+\end_inset
+
+, 
+\begin_inset Formula $q_{2}=0$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Память
+\end_layout
+
+\begin_layout Subsection
+Виды памяти
+\end_layout
+
+\begin_layout Standard
+В ядре процессора присутствует три вида памяти:
+\end_layout
+
+\begin_layout Enumerate
+Регистровый файл
+\end_layout
+
+\begin_layout Enumerate
+Оперативная память
+\end_layout
+
+\begin_layout Enumerate
+Программная память
+\end_layout
+
+\begin_layout Standard
+Самой быстрой среди них является регистровая.
+ Программная является неперезаписываемой и в данном случае не рассматривается.
+\end_layout
+
+\begin_layout Subsection
+Регистровый файл
+\end_layout
+
+\begin_layout Standard
+В ядре присутствует регистровый файл на 32 регистра шириной 32 бита и четырьмя
+ портами (два порта на чтение, два - на запись).
+\end_layout
+
+\begin_layout Standard
+Чтение регулируется сигналом read следующим образом:
+\end_layout
+
+\begin_layout Enumerate
+Если соответствующий бит сигнала равен единице, то на эту линию асинхронно
+ выставляется содержимое регистра по адресу, заданному на адресной линии
+ данного порта
+\end_layout
+
+\begin_layout Enumerate
+Иначе на эту линию выставляется состояние Z
+\end_layout
+
+\begin_layout Standard
+Запись регулируется похожим образом, различие в том, что запись - процесс
+ синхронный.
+\end_layout
+
+\begin_layout Standard
+Также организованы слеующие внеочередные вводы-выводы:
+\end_layout
+
+\begin_layout Enumerate
+Регистр 28 (st) имеет собственный ввод, вывод и сигнал записи
+\end_layout
+
+\begin_layout Enumerate
+Регистр 29 (lr) имеет собственный вывод
+\end_layout
+
+\begin_layout Enumerate
+Регистр 31 (pc) имеет собственный вывод и логику инкрементирования.
+\end_layout
+
+\begin_layout Subsection
+ОЗУ
+\end_layout
+
+\begin_layout Standard
+В ядре находится двухпортовая ОЗУ немедленного действия (1 - чтение, 1 -
+ запись).
+ Чтение регулируется сигналом read, запись - сигналом write в манере, похожей
+ на чтение/запись в регистровом файле.
+ Использование z-состояния в неактивном режиме позволяет упростить объединение
+ нескольких однотипных блоков ОЗУ при расширении памяти.
+\end_layout
+
+\begin_layout Standard
+Следует также заметить, что в отличии от регистрового файла, в ОЗУ обе операции
+ (чтение и запись) синхронные.
+\end_layout
+
+\begin_layout Section
+Периферия
+\end_layout
+
+\begin_layout Subsection
+Строение шины
+\end_layout
+
+\begin_layout Standard
+Все периферические устройства в данной системе подключены к шине периферийных
+ устройств.
+ Она представляет собой параллельную внутреннюю шину с multidrop топологией
+ и двумя раздельными линиями приёма/передачи - одна линия 
+\begin_inset Quotes fld
+\end_inset
+
+записи
+\begin_inset Quotes frd
+\end_inset
+
+, одна - 
+\begin_inset Quotes fld
+\end_inset
+
+чтения
+\begin_inset Quotes frd
+\end_inset
+
+.
+ В каждой линии передаются параллельно адрес и данные, а также ассоциированный
+ с данной линией сигнал (т.е.
+ сигналы записи и чтения).
+ По своему строению шина поддерживает любые MultiMaster - MultiSlave конфигураци
+и, однако в данном процессоре единственным мастером является стадия 
+\begin_inset Quotes fld
+\end_inset
+
+Memory/Periph
+\begin_inset Quotes frd
+\end_inset
+
+ конвейера, а периферийные устройства являются подчинёнными.
+ Подразумевается, что при заполнении пула устройств каждому из них (в т.ч.
+ каждому из его регистров, если их несколько) назначается уникальный адрес,
+ для устранения возможных коллизий на шине.
+\end_layout
+
+\begin_layout Standard
+На данный момент в процессоре присутствуют следующие устройства:
+\end_layout
+
+\begin_layout Itemize
+Выходной мультиплексор пинов на 4 функции
+\end_layout
+
+\begin_layout Itemize
+Контроллер GPIO
+\end_layout
+
+\begin_layout Subsection
+Выходной мультиплексор
+\end_layout
+
+\begin_layout Standard
+Данное устройство призвано обеспечить многофункциональность каждого пина
+ процессора, путём возможности мультиплексирования на один пин до четырёх
+ различных функций.
+ Эта цель достигается путём назначения на каждый из четырёх входов модуля
+ мультиплексора функции ввода (чтения с ноги) и вывода (установки уровня
+ на ноге) и определения текущей функции ноги во внутреннем регистре.
+\end_layout
+
+\begin_layout Standard
+На шину периферийных устройств, на линии чтения и записи мультиплексор выставляе
+т два регистра, которые являются частями одного 64-битного регистра control.
+ Младший адрес (самый младший бит равен нулю) ссответствует младшей части
+ регистра, старший (самый младший бит равен единице) - старшей части.
+ Каждые два бита этого регистра (начиная с самого младшего бита) управляют
+ функцией каждой ноги, подключенной к этому мультиплексору (начиная с самой
+ первой) следующим образом:
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Argument item:1
+status open
+
+\begin_layout Plain Layout
+00:
+\end_layout
+
+\end_inset
+
+ Выбор первой функции
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Argument item:1
+status open
+
+\begin_layout Plain Layout
+01:
+\end_layout
+
+\end_inset
+
+ Выбор второй функции
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Argument item:1
+status open
+
+\begin_layout Plain Layout
+10:
+\end_layout
+
+\end_inset
+
+ Выбор третьей функции
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Argument item:1
+status open
+
+\begin_layout Plain Layout
+11:
+\end_layout
+
+\end_inset
+
+ Выбор четвёртой фукции
+\end_layout
+
+\begin_layout Standard
+Переключение функции ноги происходит незамедлительно, т.е.
+ сразу после записи в регистр control.
+\end_layout
+
+\begin_layout Standard
+В текущей версии сборки процессора присутствует 128 ног, на каждой по мультиплек
+сору, что означает присутствие четырёх блоков выходных мультиплексоров на
+ 32 ноги каждый.
+ 
+\end_layout
+
+\begin_layout Subsection
+Контроллер GPIO
+\end_layout
+
+\begin_layout Standard
+Данное устройство призвано обеспечить базовый универсальный контроль над
+ всеми пинами процессора.
+ Эта цель достигается путём предоставления регистров, подключенных непосредствен
+но к путям управления и считывания состояния пинов.
+ 
+\end_layout
+
+\begin_layout Standard
+На шину периферийных устройств данный контроллер выставляет два регистра:
+\end_layout
+
+\begin_layout Enumerate
+direction.
+ Располагается в старшем регистре.
+ Задаёт направление данных на пинах.
+ Каждый бит ассоциирован с одной ногой.
+ Значение 
+\begin_inset Quotes fld
+\end_inset
+
+0
+\begin_inset Quotes frd
+\end_inset
+
+ определяет ногу как 
+\begin_inset Quotes fld
+\end_inset
+
+Вход
+\begin_inset Quotes frd
+\end_inset
+
+, т.е.
+ переключает её в высокоинмедансное состояние, в котором она готова для
+ чтения; Значение 
+\begin_inset Quotes fld
+\end_inset
+
+1
+\begin_inset Quotes frd
+\end_inset
+
+ определяет ногу как 
+\begin_inset Quotes fld
+\end_inset
+
+Выход
+\begin_inset Quotes frd
+\end_inset
+
+, т.е.
+ её состояние определяется значением в регистре value
+\end_layout
+
+\begin_layout Enumerate
+value.
+ Располагается в младшем регистре.
+ При записи определяет состояние ноги в случае настройки её на выход; При
+ чтении возвращает текущее состояние ноги.
+ Каждый бит также ассоциирован с одной ногой.
+\end_layout
+
+\begin_layout Standard
+Следует также заметить, что при попытке чтения ноги с состоянием 
+\begin_inset Quotes fld
+\end_inset
+
+Выход
+\begin_inset Quotes frd
+\end_inset
+
+ корректность и действительность возвращаемого значения не гарантируется,
+ однако в 
+\shape italic
+большинстве 
+\shape default
+случаев будет возвращено её текущее состояние.
+\end_layout
+
+\begin_layout Standard
+В текущей версии сборки процессора контроллеры GPIO подключены в качестве
+ первой функции для всех ног.
+\end_layout
+
+\begin_layout Subsection
+Адресация
+\end_layout
+
+\begin_layout Standard
+В настоящей версии сборки процессора устройства распределены по адресам
+ следующим образом:
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Argument item:1
+status open
+
+\begin_layout Plain Layout
+00000 - 00001:
+\end_layout
+
+\end_inset
+
+ Пусто (защита от случайной перезаписи)
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Argument item:1
+status open
+
+\begin_layout Plain Layout
+00010 - 00011:
+\end_layout
+
+\end_inset
+
+ Мультиплексор на ноги 0-31
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Argument item:1
+status open
+
+\begin_layout Plain Layout
+00100 - 00101:
+\end_layout
+
+\end_inset
+
+ Мультиплексор на ноги 63-32
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Argument item:1
+status open
+
+\begin_layout Plain Layout
+00110 - 00111:
+\end_layout
+
+\end_inset
+
+ Мультиплексор на ноги 95-64 
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Argument item:1
+status open
+
+\begin_layout Plain Layout
+01000 - 01001:
+\end_layout
+
+\end_inset
+
+ Мультиплексор на ноги 127-96
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Argument item:1
+status open
+
+\begin_layout Plain Layout
+01010 - 01011:
+\end_layout
+
+\end_inset
+
+ Контроллер GPIO на первый мультиплексор (ноги 0-31)
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Argument item:1
+status open
+
+\begin_layout Plain Layout
+01100 - 01101:
+\end_layout
+
+\end_inset
+
+ Контроллер GPIO на второй мультиплексор (ноги 63-32)
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Argument item:1
+status open
+
+\begin_layout Plain Layout
+01110 - 01111:
+\end_layout
+
+\end_inset
+
+ Контроллер GPIO на третий мультиплексор (ноги 95-64)
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Argument item:1
+status open
+
+\begin_layout Plain Layout
+10000 - 10001:
+\end_layout
+
+\end_inset
+
+ Контроллер GPIO на четвёртый мультиплексор (ноги 127-96)
+\end_layout
+
+\end_body
+\end_document

@@ -129,8 +129,10 @@ module insn_decoder( e_a, e_b, e_alu_op, e_is_cond, e_cond, e_write_flags, e_swp
 //    reg [1:0] imm;
     reg [4:0] reg_a_addr, reg_b_addr;
     reg [4:0] reg_c_addr, reg_d_addr;
+    reg stage1,stage2, stage3, stage4;
 
     always @(posedge clk or posedge rst) begin
+        #1;
         if(rst) begin
             e_a <= 31'b0; e_b <= 31'b0;
             e_alu_op <= 8'b0; //NOP
@@ -154,6 +156,7 @@ module insn_decoder( e_a, e_b, e_alu_op, e_is_cond, e_cond, e_write_flags, e_swp
             delay_counter <= 4'b0;
             imm_action <= 3'b0;
             r_to_mem <= 0;
+            stage1 <= 0;stage2 <= 0;stage3 <= 0; stage4 <= 0;
         end
         else begin
             /*case(state1)
@@ -193,8 +196,12 @@ module insn_decoder( e_a, e_b, e_alu_op, e_is_cond, e_cond, e_write_flags, e_swp
                 d_pass <= 1;
                 reg_fetch <= 1;
             end
-            //#0;
+            stage1 <= 1;
+        end
+    end
 
+    always @(posedge stage1) begin
+            #0.1;
             case(state1)
                 //logic
                 0: begin //nop
@@ -203,6 +210,7 @@ module insn_decoder( e_a, e_b, e_alu_op, e_is_cond, e_cond, e_write_flags, e_swp
                     r_op <= 0; //register write nop
                     r_read <= 0; //register read none
                     r_to_mem <= 0;//register read to a,b
+                    imm_action <= 3'b000; //no imm in this insn
                 end
                 1: begin //or
                     e_alu_op <= 8'h0D; e_cond <= cond; e_write_flags <= 4'hF; e_is_cond <= 1; //alu or, conditional, all flags
@@ -247,7 +255,7 @@ module insn_decoder( e_a, e_b, e_alu_op, e_is_cond, e_cond, e_write_flags, e_swp
                     r_r1_addr <= reg_a_addr; r_r2_addr <= reg_b_addr; r_read <= 3; //register read both
                     r_to_mem <= 0;//register read to a,b
                 end
-                6: begin //xnor
+                7: begin //xnor
                     e_alu_op <= 8'h11; e_cond <= cond; e_write_flags <= 4'hF; e_is_cond <= 1; //alu xnor, conditional, all flags
                     m_r1_op <= 4'b1; m_r2_op <= 4'b1; //memory passthrough nop
                     r_op <= 1; r_a1 <= reg_c_addr; // register write c to a1
@@ -255,42 +263,42 @@ module insn_decoder( e_a, e_b, e_alu_op, e_is_cond, e_cond, e_write_flags, e_swp
                     r_to_mem <= 0;//register read to a,b
                 end
                 //shifts
-                7: begin //lsl
+                8: begin //lsl
                     e_alu_op <= 8'h06; e_cond <= cond; e_write_flags <= 4'hF; e_is_cond <= 1; //alu shl, conditional, all flags
                     m_r1_op <= 4'b1; m_r2_op <= 4'b1; //memory passthrough nop
                     r_op <= 1; r_a1 <= reg_c_addr; // register write c to a1
                     r_r1_addr <= reg_a_addr; r_r2_addr <= reg_b_addr; r_read <= 3; //register read both
                     r_to_mem <= 0;//register read to a,b
                 end
-                8: begin //lsr
+                9: begin //lsr
                     e_alu_op <= 8'h05; e_cond <= cond; e_write_flags <= 4'hF; e_is_cond <= 1; //alu shr, conditional, all flags
                     m_r1_op <= 4'b1; m_r2_op <= 4'b1; //memory passthrough nop
                     r_op <= 1; r_a1 <= reg_c_addr; // register write c to a1
                     r_r1_addr <= reg_a_addr; r_r2_addr <= reg_b_addr; r_read <= 3; //register read both
                     r_to_mem <= 0;//register read to a,b
                 end
-                9: begin //asr
+                10: begin //asr
                     e_alu_op <= 8'h07; e_cond <= cond; e_write_flags <= 4'hF; e_is_cond <= 1; //alu sar, conditional, all flags
                     m_r1_op <= 4'b1; m_r2_op <= 4'b1; //memory passthrough nop
                     r_op <= 1; r_a1 <= reg_c_addr; // register write c to a1
                     r_r1_addr <= reg_a_addr; r_r2_addr <= reg_b_addr; r_read <= 3; //register read both
                     r_to_mem <= 0;//register read to a,b
                 end
-                10: begin //asl
+                11: begin //asl
                     e_alu_op <= 8'h08; e_cond <= cond; e_write_flags <= 4'hF; e_is_cond <= 1; //alu sal, conditional, all flags
                     m_r1_op <= 4'b1; m_r2_op <= 4'b1; //memory passthrough nop
                     r_op <= 1; r_a1 <= reg_c_addr; // register write c to a1
                     r_r1_addr <= reg_a_addr; r_r2_addr <= reg_b_addr; r_read <= 3; //register read both
                     r_to_mem <= 0;//register read to a,b
                 end
-                11: begin //csr
+                12: begin //csr
                     e_alu_op <= 8'h09; e_cond <= cond; e_write_flags <= 4'hF; e_is_cond <= 1; //alu ror, conditional, all flags
                     m_r1_op <= 4'b1; m_r2_op <= 4'b1; //memory passthrough nop
                     r_op <= 1; r_a1 <= reg_c_addr; // register write c to a1
                     r_r1_addr <= reg_a_addr; r_r2_addr <= reg_b_addr; r_read <= 3; //register read both
                     r_to_mem <= 0;//register read to a,b
                 end
-                12: begin //csl
+                13: begin //csl
                     e_alu_op <= 8'h0A; e_cond <= cond; e_write_flags <= 4'hF; e_is_cond <= 1; //alu rol, conditional, all flags
                     m_r1_op <= 4'b1; m_r2_op <= 4'b1; //memory passthrough nop
                     r_op <= 1; r_a1 <= reg_c_addr; // register write c to a1
@@ -298,35 +306,35 @@ module insn_decoder( e_a, e_b, e_alu_op, e_is_cond, e_cond, e_write_flags, e_swp
                     r_to_mem <= 0;//register read to a,b
                 end
                 //arithmetics
-                13: begin //add
+                14: begin //add
                     e_alu_op <= 8'h01; e_cond <= cond; e_write_flags <= 4'hF; e_is_cond <= 1; //alu add, conditional, all flags
                     m_r1_op <= 4'b1; m_r2_op <= 4'b1; //memory passthrough nop
                     r_op <= 1; r_a1 <= reg_c_addr; // register write c to a1
                     r_r1_addr <= reg_a_addr; r_r2_addr <= reg_b_addr; r_read <= 3; //register read both
                     r_to_mem <= 0;//register read to a,b
                 end
-                14: begin //sub
+                15: begin //sub
                     e_alu_op <= 8'h02; e_cond <= cond; e_write_flags <= 4'hF; e_is_cond <= 1; //alu sub, conditional, all flags
                     m_r1_op <= 4'b1; m_r2_op <= 4'b1; //memory passthrough nop
                     r_op <= 1; r_a1 <= reg_c_addr; // register write c to a1
                     r_r1_addr <= reg_a_addr; r_r2_addr <= reg_b_addr; r_read <= 3; //register read both
                     r_to_mem <= 0;//register read to a,b
                 end
-                15: begin //mull
+                16: begin //mull
                     e_alu_op <= 8'h04; e_cond <= cond; e_write_flags <= 4'hF; e_is_cond <= 1; //alu mul, conditional, all flags
                     m_r1_op <= 4'b1; m_r2_op <= 4'b1; //memory passthrough nop
                     r_op <= 1; r_a1 <= reg_c_addr; // register write c to a1
                     r_r1_addr <= reg_a_addr; r_r2_addr <= reg_b_addr; r_read <= 3; //register read both
                     r_to_mem <= 0;//register read to a,b
                 end
-                16: begin //mulh
+                17: begin //mulh
                     e_alu_op <= 8'h04; e_cond <= cond; e_write_flags <= 4'hF; e_is_cond <= 1; //alu mul, conditional, all flags
                     m_r1_op <= 4'b1; m_r2_op <= 4'b1; //memory passthrough nop
                     r_op <= 4; r_a1 <= reg_c_addr; // register write d to a1
                     r_r1_addr <= reg_a_addr; r_r2_addr <= reg_b_addr; r_read <= 3; //register read both
                     r_to_mem <= 0;//register read to a,b
                 end
-                17: begin //mul
+                18: begin //mul
                     e_alu_op <= 8'h04; e_cond <= cond; e_write_flags <= 4'hF; e_is_cond <= 1; //alu mul, conditional, all flags
                     m_r1_op <= 4'b1; m_r2_op <= 4'b1; //memory passthrough nop
                     r_op <= 7; r_a1 <= reg_c_addr; r_a2 <= reg_d_addr; // register write c,d to a1,a2
@@ -334,7 +342,7 @@ module insn_decoder( e_a, e_b, e_alu_op, e_is_cond, e_cond, e_write_flags, e_swp
                     r_to_mem <= 0;//register read to a,b
                     imm_action <= 3'b000; //no imm in this insn
                 end
-                18: begin //csg
+                19: begin //csg
                     e_alu_op <= 8'h03; e_cond <= cond; e_write_flags <= 4'hF; e_is_cond <= 1; //alu cpl, conditional, all flags
                     m_r1_op <= 4'b1; m_r2_op <= 4'b1; //memory passthrough nop
                     r_op <= 1; r_a1 <= reg_c_addr; // register write c to a1
@@ -342,7 +350,7 @@ module insn_decoder( e_a, e_b, e_alu_op, e_is_cond, e_cond, e_write_flags, e_swp
                     r_to_mem <= 0;//register read to a,b
                     imm_action[0] <= 0; //no imm for b in this insn
                 end
-                19: begin //inc
+                20: begin //inc
                     e_alu_op <= 8'h01; e_cond <= cond; e_write_flags <= 4'hF; e_is_cond <= 1; //alu add, conditional, all flags
                     m_r1_op <= 4'b1; m_r2_op <= 4'b1; //memory passthrough nop
                     r_op <= 1; r_a1 <= reg_c_addr; // register write c to a1
@@ -351,7 +359,7 @@ module insn_decoder( e_a, e_b, e_alu_op, e_is_cond, e_cond, e_write_flags, e_swp
                     e_b <= 1; //force b operand to be 1
                     imm_action[0] <= 0; //no imm for b in this insn
                 end
-                20: begin //dec
+                21: begin //dec
                     e_alu_op <= 8'h02; e_cond <= cond; e_write_flags <= 4'hF; e_is_cond <= 1; //alu sub, conditional, all flags
                     m_r1_op <= 4'b1; m_r2_op <= 4'b1; //memory passthrough nop
                     r_op <= 1; r_a1 <= reg_c_addr; // register write c to a1
@@ -360,21 +368,21 @@ module insn_decoder( e_a, e_b, e_alu_op, e_is_cond, e_cond, e_write_flags, e_swp
                     e_b <= 1; //force b operand to be 1
                     imm_action[0] <= 0; //no imm for b in this insn
                 end
-                21: begin //cmp
+                22: begin //cmp
                     e_alu_op <= 8'h02; e_cond <= cond; e_write_flags <= 4'hF; e_is_cond <= 1; //alu sub, conditional, all flags
                     m_r1_op <= 4'b1; m_r2_op <= 4'b1; //memory passthrough nop
                     r_op <= 0; // register write nop
                     r_r1_addr <= reg_a_addr; r_r2_addr <= reg_b_addr; r_read <= 3; //register read both
                     r_to_mem <= 0;//register read to a,b
                 end
-                22: begin //cmn
+                23: begin //cmn
                     e_alu_op <= 8'h01; e_cond <= cond; e_write_flags <= 4'hF; e_is_cond <= 1; //alu add, conditional, all flags
                     m_r1_op <= 4'b1; m_r2_op <= 4'b1; //memory passthrough nop
                     r_op <= 0; // register write nop
                     r_r1_addr <= reg_a_addr; r_r2_addr <= reg_b_addr; r_read <= 3; //register read both
                     r_to_mem <= 0;//register read to a,b
                 end
-                23: begin //tst
+                24: begin //tst
                     e_alu_op <= 8'h0C; e_cond <= cond; e_write_flags <= 4'hF; e_is_cond <= 1; //alu and, conditional, all flags
                     m_r1_op <= 4'b1; m_r2_op <= 4'b1; //memory passthrough nop
                     r_op <= 0; // register write nop
@@ -382,7 +390,7 @@ module insn_decoder( e_a, e_b, e_alu_op, e_is_cond, e_cond, e_write_flags, e_swp
                     r_to_mem <= 0;//register read to a,b
                 end
                 //branches
-                24: begin //br
+                25: begin //br
                     e_alu_op <= 8'h00; e_cond <= cond; e_write_flags <= 4'h0; e_is_cond <= 1; //alu nop, conditional, no flags
                     m_r1_op <= 4'b1; m_r2_op <= 4'b1; //memory passthrough nop
                     r_op <= 1; r_a1 <= 31; // register write to pc
@@ -395,7 +403,7 @@ module insn_decoder( e_a, e_b, e_alu_op, e_is_cond, e_cond, e_write_flags, e_swp
                     state1 <= 130;
                     delay_counter <= 3;
                 end
-                25: begin //rbr
+                26: begin //rbr
                     e_alu_op <= 8'h01; e_cond <= cond; e_write_flags <= 4'h0; e_is_cond <= 1; //alu add, conditional, no flags
                     m_r1_op <= 4'b1; m_r2_op <= 4'b1; //memory passthrough nop
                     r_op <= 1; r_a1 <= 31; // register write to pc
@@ -408,7 +416,7 @@ module insn_decoder( e_a, e_b, e_alu_op, e_is_cond, e_cond, e_write_flags, e_swp
                     state1 <= 130;
                     delay_counter <= 3;
                 end
-                26: begin //brl
+                27: begin //brl
                     e_alu_op <= 8'h00; e_cond <= cond; e_write_flags <= 4'h0; e_is_cond <= 1; //alu nop, conditional, no flags
                     m_r1_op <= 4'b1; m_r2_op <= 4'b1; //memory passthrough nop
                     r_op <= 7; r_a1 <= 31; r_a2 <= 29; // register write a,b to pc,lr
@@ -429,7 +437,7 @@ module insn_decoder( e_a, e_b, e_alu_op, e_is_cond, e_cond, e_write_flags, e_swp
                     imm_action[0] <= 0; //no imm for b in this insn
                     //delay!
                 end*/
-                27: begin //ret
+                28: begin //ret
                     e_alu_op <= 8'h00; e_cond <= cond; e_write_flags <= 4'h0; e_is_cond <= 1; //alu nop, conditional, no flags
                     m_r1_op <= 4'b1; m_r2_op <= 4'b1; //memory passthrough nop
                     r_op <= 1; r_a1 <= 31; // register write to pc
@@ -442,7 +450,7 @@ module insn_decoder( e_a, e_b, e_alu_op, e_is_cond, e_cond, e_write_flags, e_swp
                     state1 <= 130;
                     delay_counter <= 3;
                 end
-                28: begin //ldr
+                29: begin //ldr
                     e_alu_op <= 8'h00; e_cond <= cond; e_write_flags <= 4'h0; e_is_cond <= 1; //alu nop, conditional, no flags
                     m_r1_op <= 2; m_r2_op <= 1; //memory read c from a1
                     r_op <= 1; r_a1 <= reg_c_addr; // register write c to a1
@@ -451,7 +459,7 @@ module insn_decoder( e_a, e_b, e_alu_op, e_is_cond, e_cond, e_write_flags, e_swp
                     imm_action[0] <= 0; //no imm for b in this insn
                     imm_action[2] <= 1; //imm goes into m
                 end
-                29: begin //str
+                30: begin //str
                     e_alu_op <= 8'h00; e_cond <= cond; e_write_flags <= 4'h0; e_is_cond <= 1; //alu nop, conditional, no flags
                     m_r1_op <= 1; m_r2_op <= 5; //memory write d to a1
                     r_op <= 0; // register write nop
@@ -469,7 +477,7 @@ module insn_decoder( e_a, e_b, e_alu_op, e_is_cond, e_cond, e_write_flags, e_swp
                 //one of this needs advanced management in memory_op stage
                 //or make as in x86 - pop only decrements, not returning result
 
-                30: begin //in
+                31: begin //in
                     e_alu_op <= 8'h00; e_cond <= cond; e_write_flags <= 4'h0; e_is_cond <= 1; //alu nop, conditional, no flags
                     m_r1_op <= 4'b1000; m_r2_op <= 4'b1; //sys read c from a1
                     r_op <= 1; r_a1 <= reg_c_addr; // register write c to a1
@@ -478,7 +486,7 @@ module insn_decoder( e_a, e_b, e_alu_op, e_is_cond, e_cond, e_write_flags, e_swp
                     imm_action[0] <= 0; //no imm for b in this insn
                     imm_action[2] <= 1; //imm goes into m
                 end
-                31: begin //out
+                32: begin //out
                     e_alu_op <= 8'h00; e_cond <= cond; e_write_flags <= 4'h0; e_is_cond <= 1; //alu nop, conditional, no flags
                     m_r1_op <= 4'b1; m_r2_op <= 4'b1011; //sys write d to a1
                     r_op <= 0; // register write nop
@@ -492,7 +500,7 @@ module insn_decoder( e_a, e_b, e_alu_op, e_is_cond, e_cond, e_write_flags, e_swp
                 //outi
                 //needs more elaborate management of operands (3, but have only 2, perhaps use imm ?
 
-                32: begin //movs
+                33: begin //movs
                     e_alu_op <= 8'h00; e_cond <= cond; e_write_flags <= 4'h0; e_is_cond <= 1; //alu nop, conditional, no flags
                     m_r1_op <= 4'b1; m_r2_op <= 4'b1; //memory passthrough nop
                     r_op <= 1; r_a1 <= reg_c_addr; // register write c to a1
@@ -500,7 +508,7 @@ module insn_decoder( e_a, e_b, e_alu_op, e_is_cond, e_cond, e_write_flags, e_swp
                     r_to_mem <= 0;//register read to a,b
                     imm_action[0] <= 0; //no imm for b in this insn
                 end
-                33: begin //mov
+                34: begin //mov
                     e_alu_op <= 8'h00; e_cond <= cond; e_write_flags <= 4'h0; e_is_cond <= 1; //alu nop, conditional, all flags
                     m_r1_op <= 4'b1; m_r2_op <= 4'b1; //memory passthrough nop
                     r_op <= 7; r_a1 <= reg_c_addr; r_a2 <= reg_d_addr; // register write c,d to a1,a2
@@ -529,14 +537,14 @@ module insn_decoder( e_a, e_b, e_alu_op, e_is_cond, e_cond, e_write_flags, e_swp
                 130: begin //delay
                     fetch <= 0; d_pass <= 0; d_pcincr <= 0;
                     if(delay_counter > 0) delay_counter<=delay_counter-1;
-                    #1;
+                    #0;
                     if(delay_counter == 0) begin
                         fetch <= 1; /*d_pass <= 1;*/ d_pcincr <= 1;
                         state1 <= 0;
                     end
                 end
                 131: begin //hazard hold
-                    #1;
+                    #0;
                     if(!hazard) begin
                        d_pcincr <= old_pcincr_hz;
                        d_pass <= old_pass_hz;
@@ -551,13 +559,15 @@ module insn_decoder( e_a, e_b, e_alu_op, e_is_cond, e_cond, e_write_flags, e_swp
                     state1 <= 0;
                 end
             endcase
-            #1;
+            #0;
             if(set_delay) begin
                 fetch <= 0; d_pcincr <= 0;
                 state1 <= 130;
                 set_delay <= 0;
             end
-            #1;
+            stage1 <= 0;
+            stage2 <= 1;
+            /*@(posedge stage2) begin
             if(imm_action != 3'b100 && imm_action != 3'b000) begin //imm fetch procedure
                 if(state1 != 128 && state1 != 129) begin //just got insn
                     if(imm_action[1]) begin //imm for r1
@@ -602,7 +612,7 @@ module insn_decoder( e_a, e_b, e_alu_op, e_is_cond, e_cond, e_write_flags, e_swp
                         imm_action <= 3'b000; //don't fetch imm
                 end
             end
-            #1;
+            #0;
             if(hazard && reg_fetch) begin //hazard op
                 old_pcincr_hz <= d_pcincr;
                 old_pass_hz <= d_pass;
@@ -614,7 +624,7 @@ module insn_decoder( e_a, e_b, e_alu_op, e_is_cond, e_cond, e_write_flags, e_swp
                 reg_fetch <= 0;
                 state1 <= 131;
             end
-            #1;
+            #0;
             if(reg_fetch) begin //reg fetch procedure
                if(r_read[0]) begin
                    if(r_to_mem[0]) m_a1 <= r1;
@@ -626,6 +636,86 @@ module insn_decoder( e_a, e_b, e_alu_op, e_is_cond, e_cond, e_write_flags, e_swp
                end
                reg_fetch <= 0;
             end
-        end
+            stage2 <= 0;
+            end*/
     end
+
+    always @(posedge stage2) begin
+        #0;
+            if(imm_action != 3'b100 && imm_action != 3'b000) begin //imm fetch procedure
+                if(state1 != 128 && state1 != 129) begin //just got insn
+                    if(imm_action[1]) begin //imm for r1
+                        r_read[0] <= 0; //don't read r1
+                    end
+                    if(imm_action[0]) begin //imm for r2
+                        r_read[1] <= 0;  //don't read r2
+                    end
+                    old_state1_imm <= state1; //save state
+                    old_pass_imm <= d_pass;
+                    old_fetch_imm <= fetch;
+                    old_pcincr_imm <= d_pcincr;
+                    d_pass <= 0; //don't issue insn
+                    fetch <= 0; //don't decode insn
+                    reg_fetch <= 0; //don't fetch regs
+                    d_pcincr <= 1; //increment pc
+                    state1 <= 128; //fetch first imm
+                end
+                else if(state1 == 128) begin //first imm fetched
+                    if(imm_action == 3'b011 || imm_action == 3'b111) begin //need to fetch second imm
+                        d_pass <= 0; //don't issue insn
+                        fetch <= 0; //don't decode insn
+                        reg_fetch <= 0; //don't fetch regs
+                        d_pcincr <= 1; //increment pc
+                        state1 <= 129; //fetch second imm
+                    end
+                    else begin //don't need to fetch second imm
+                        state1 <= old_state1_imm; //restore state
+                        d_pass <= old_pass_imm; //restore issue
+                        fetch <= old_fetch_imm; //restore fetch
+                        d_pcincr <= old_pcincr_imm; //restore incr pc
+                        reg_fetch <= 1; //fetch regs
+                        imm_action <= 3'b000; //don't fetch imm
+                    end
+                end
+                else if(state1 == 129) begin //second imm fetched
+                        state1 <= old_state1_imm; //restore state
+                        d_pass <= old_pass_imm; //restore issue
+                        fetch <= old_fetch_imm; //restore fetch
+                        d_pcincr <= old_pcincr_imm; //restore incr pc
+                        reg_fetch <= 1; //fetch regs
+                        imm_action <= 3'b000; //don't fetch imm
+                end
+            end
+            stage2 <= 0;
+            stage3 <= 1;
+    end
+
+    always @(posedge stage3) begin
+        #0;
+            if(hazard && reg_fetch) begin //hazard op
+                old_pcincr_hz <= d_pcincr;
+                old_pass_hz <= d_pass;
+                old_fetch_hz <= fetch;
+                old_state1_hz <= state1;
+                d_pcincr <= 0;
+                d_pass <= 0;
+                fetch <= 0;
+                reg_fetch <= 0;
+                state1 <= 131;
+            end
+            #0;
+            if(reg_fetch) begin //reg fetch procedure
+               if(r_read[0]) begin
+                   if(r_to_mem[0]) m_a1 <= r1;
+                   else e_a <= r1;
+               end
+               if(r_read[1]) begin
+                   if(r_to_mem[1]) m_a2 <= r2;
+                   else e_b <= r2;
+               end
+               reg_fetch <= 0;
+            end
+            stage3 <= 0;
+    end
+
 endmodule

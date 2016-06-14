@@ -8,6 +8,8 @@
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{graphicx}
+\usepackage{setspace}
+\usepackage{subscript}
 
 \makeatletter
 
@@ -87,10 +89,10 @@ c RISC-архитектурой}
 
 \end{frame}
 
-\section{Мотвация}
+\section{Мотивация}
 
 
-\subsection[Причина]{Почему Я Решил Сделать Ещё Один RISC Процессор}
+\subsection[Причина]{Причины создания нового RISC процессора}
 \begin{frame}{Чего не хватает другим процессорам }
 
 
@@ -111,7 +113,7 @@ c RISC-архитектурой}
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Что есть в моём процессоре }
+\begin{frame}{Что есть в этом процессоре }
 
 \begin{itemize}
 \item<1->  Развитый набор команд, позволяющий в большинстве случаев обойтись
@@ -127,7 +129,7 @@ c RISC-архитектурой}
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Чего нет в моём процессоре}
+\begin{frame}{Чего нет в этом процессоре}
 
 \begin{itemize}
 \item<1->  Достаточного функционала для реализации какого-либо CISC-набора
@@ -142,54 +144,37 @@ c RISC-архитектурой}
 \end{itemize}
 \end{frame}
 
-\subsection{На Что Я Опирался}
-\begin{frame}{Существующие решения }
+\subsection{Существующие решения}
+\begin{frame}{ARM Thumb1 }
 
 
-\framesubtitle{ARM Thumb1}
+\framesubtitle{Главные недостатки}
 \begin{itemize}
-\item[+]<1-> Простота (функциональная) набора инструкций.
-\item[+]<1-> Простота строения процессора.
-\item[+]<1-> Большая база поддержки (компиляторы, ОС etc.).
-\item[-]<2-> Сложность бинарного представления машинного кода (из-за упора на
-уменьшенный размер).
-\item[-]<2-> Работа с дробными частями машинного слова.
-\item[-]<2-> Сложность работы с ассемблерным представлением кода (следствие функциональной
+\item Сложность бинарного представления машинного кода (из-за упора на уменьшенный
+размер).
+\item Работа с дробными частями машинного слова.
+\item Сложность работы с ассемблерным представлением кода (следствие функциональной
 простоты).
-\item[-]<2-> Расширения функционала (работа с плавающей точкой, например) перенесены
-на сопроцессоры и ARM режим.
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Существующие решения }
+\begin{frame}{OpenRISC 1000 (mor1kx)}
 
 
-\framesubtitle{OpenRISC 1000 (mor1kx)}
+\framesubtitle{Главные недостатки}
 \begin{itemize}
-\item[+]<1->  Полная открытость как RTL-описания, так и базы поддержки.
-\item[+]<1->  Относительная простота набора инструкций.
-\item[+]<1->  Наличие расширений для работы с плавающей точкой.
-\item[+]<1->  Большая база поддержки.
-\item[-]<2->  Наличие большого количества состояний процессора.
-\item[-]<2->  Расширения так или иначе вынесены в сопроцессор.
-\item[-]<2->  Сложность RTL-описания, в основном из-за высокой функциональной
-развитости.
+\item Наличие большого количества состояний процессора.
+\item Сложность RTL-описания, в основном из-за высокой функциональной развитости.
 \end{itemize}
 \end{frame}
 
-\begin{frame}{Существующие решения}
+\begin{frame}{MIPS32}
 
 
-\framesubtitle{MIPS32}
+\framesubtitle{Главные недостатки}
 \begin{itemize}
-\item[+]<1-> Существует много реализаций, в том числе и свободных
-\item[+]<1-> Большая база поддержки, проверен временем
-\item[+]<1-> Малый размер набора инструкций
-\item[+]<1-> Наличие большого количества расширений, в тч и для работы с плавающей
-точкой
-\item[-]<2-> Отночительно сложное построение инструкции
-\item[-]<2-> Большинство расширений помещено в сопроцессоры
-\item[-]<2-> Далеко не все реализации соответствуют стандарту
+\item Относительно сложное построение инструкции
+\item Большинство реализаций не совместимы друг с другом
 \end{itemize}
 \end{frame}
 
@@ -201,12 +186,12 @@ c RISC-архитектурой}
 
 \begin{itemize}
 \item {\scriptsize{}32-битная архитектура}{\scriptsize \par}
-\item {\scriptsize{}Набор из 64 (заложено до 128) инструкций}{\scriptsize \par}
+\item {\scriptsize{}Набор из 33 (заложено до 128) инструкций}{\scriptsize \par}
 \item {\scriptsize{}32 РОН (Регистра общего назначения) шириной 32 бита
 с четырёхпортовым интерфейсом (2 чтение, 2 запись + особые линии для
-PC, LR и SP)}{\scriptsize \par}
-\item {\scriptsize{}Регистры PC, LR и SP (счётчик инструкций, адрес возврата
-и указатель стека) также являются общими (29, 30 и 31 соответственно)}{\scriptsize \par}
+PC и LR)}{\scriptsize \par}
+\item {\scriptsize{}Регистры PC и LR (счётчик инструкций и адрес возврата)
+также являются общими (31 и 29 соответственно)}{\scriptsize \par}
 \item {\scriptsize{}Однотактовый умножитель с возможностью сохранения всего
 результата (2 слова)}{\scriptsize \par}
 \item {\scriptsize{}Однотактовый комбинированный регистр сдвига (циклический,
@@ -215,10 +200,8 @@ PC, LR и SP)}{\scriptsize \par}
 \item {\scriptsize{}16 кодов условного исполнения}{\scriptsize \par}
 \item {\scriptsize{}Четырёхшаговая архитектура конвейера (Декодирование,
 Исполнение, Память/Периферия и Регистры)}{\scriptsize \par}
-\item {\scriptsize{}4 кб (с возможностью увеличения) двухпортового однотактового
-ОЗУ (1- чтение, 1 - запись)}{\scriptsize \par}
-\item {\scriptsize{}16 кб (с возможностью увеличения) однопортового однотактового
-(как бы) ППЗУ}{\scriptsize \par}
+\item {\scriptsize{}Двухпортовое однотактовое ОЗУ ёмкостью 4 КБ (1 Кс) (1-
+чтение, 1 - запись)}{\scriptsize \par}
 \end{itemize}
 \end{frame}
 
@@ -226,7 +209,7 @@ PC, LR и SP)}{\scriptsize \par}
 
 
 \begin{center}
-\includegraphics[scale=0.15]{overview}
+\includegraphics[width=1\textwidth,height=1\textwidth,keepaspectratio]{overview}
 \par\end{center}
 
 \end{frame}
@@ -284,8 +267,15 @@ Status}{\small \par}
 
 
 \begin{center}
-\includegraphics[scale=0.15]{alu}
+\includegraphics[width=1\textwidth,height=1\paperheight,keepaspectratio]{alu}
 \par\end{center}
+
+\end{frame}
+
+\begin{frame}{Схема АЛУ (синтез)}
+
+
+\includegraphics[width=1\textwidth,height=1\textheight,keepaspectratio]{alu_synth}
 
 \end{frame}
 
@@ -302,6 +292,69 @@ Status}{\small \par}
 \item Barrel shifter - комбинированный сдвиговый регистр 32х5=33
 \item Bitwise logic - комбинированный блок логических операций, 32х32=32
 \end{itemize}
+\end{frame}
+
+\begin{frame}{Периферийные устройства}
+
+
+\framesubtitle{Адреса}
+\begin{itemize}
+\item 0000x - не назначены ( защита от случайной перезаписи)
+\item 0001x - gpio\_mux0 (пины 31:0)
+\item 0010x - gpio\_mux1 (пины 63:32)
+\item 0011x - gpio\_mux2 (пины 95:64)
+\item 0100х - gpio\_mux4 (пины 127:96)
+\item 0101x - gpio\_chip1 (gpio\_mux0, func0)
+\item 0110x - gpio\_chip2 (gpio\_mux1, func0)
+\item 0111x - gpio\_chip3 (gpio\_mux2, func0)
+\item 1000x - gpio\_chip4 (gpio\_mux3, func0)
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Периферийные устройства}
+
+
+\framesubtitle{Краткое описание}
+
+
+
+\begin{exampleblock}{gpio\_mux}
+{\tiny{} }{\tiny \par}
+
+{\tiny{}Мультиплексор ноги устройства на 4 функции на вход и выход.
+Размер - 32 пина.}{\tiny \par}
+
+
+{\tiny{}На каждый пин отведены два бита, значение которых определяет
+его функцию.}{\tiny \par}
+
+
+{\tiny{}Регистры:}{\tiny \par}
+\begin{itemize}
+\item {\tiny{}xxxx0 - Младшая часть регистра управления }{\tiny \par}
+\item {\tiny{}xxxx1 - Старшая часть регистра управления}{\tiny \par}
+\end{itemize}
+\end{exampleblock}
+
+
+\begin{exampleblock}{gpio\_chip}
+{\tiny{} }{\tiny \par}
+
+{\tiny{}Контроллер GPIO с поддержкой чтения/записи. Размер - 32 в/в.}{\tiny \par}
+
+
+{\tiny{}Состояние каждого в/в управляется соответствующими битами
+в двух регистрах}{\tiny \par}
+
+
+{\tiny{}Регистры:}{\tiny \par}
+\begin{itemize}
+\item {\tiny{}xxxx0 - Регистр VALUE - значение уровня на выходе в/в. 0 -
+низкий, 1 - высокий}{\tiny \par}
+\item {\tiny{}xxxx1 - Регистр DIR - направление в/в (0 - вход, (значение
+на выходе - z), 1 - выход)}{\tiny \par}
+\end{itemize}
+\end{exampleblock}
 \end{frame}
 
 \begin{frame}{Флаги (статус)}
@@ -410,7 +463,6 @@ Status}{\small \par}
 \item BR - абсолютный переход по адресу в операнде
 \item RBR - относительный (малый) переход по адресу в IP+операнд
 \item BRL - абсолютный переход с запоминанием (в LR) 
-\item RBL - относительный переход с запоминанием (в LR)
 \item RET - возврат (переход по адресу в LR)
 \end{itemize}
 \end{frame}
@@ -423,9 +475,6 @@ Status}{\small \par}
 \item LDR - загрузка из адреса в операнде
 \item STR - запись по адресу в операнде
 \item LDRC - непрямая загрузка из адреса операнд1+операнд2
-\item STRC - непрямая запись по адресу операнд1+операнд2
-\item PUSH - помещение операнда на стек
-\item POP - извлечение слова со стека и помещение в операнд
 \end{itemize}
 \end{frame}
 
@@ -436,34 +485,95 @@ Status}{\small \par}
 \begin{itemize}
 \item IN - ввод из регистра периферии по адресу в операнде
 \item OUT - вывод в регистр периферии по адресу в операнде
-\item INI - непрямой ввод из регистра периферии по адресу операнд1+операнд2
-\item OUTI - непрямой вывод в регистр периферии по адресу операнд1+операнд2
 \item MOV - скопировать \{операнд1, операнд2\} в \{операнд3, операнд 4\}
 \item NOP - ничего не делать 1 (или операнд1) такт(ов).
 \end{itemize}
 \end{frame}
 
-\section*{Результат}
+\section{Результат}
+\begin{frame}{Моделирование}
+
+
+\noindent \includegraphics[width=1\textwidth,height=1\textheight,keepaspectratio]{sim}
+
+\end{frame}
+
+\begin{frame}{Моделирование}
+
+
+\framesubtitle{Тестовые воздействия}
+\begin{description}
+\begin{spacing}{0.9}
+\item [{{\tiny{}movs}}] {\tiny{}0x14888 -> r30}{\tiny \par}
+\item [{{\tiny{}nop}}]~{\tiny \par}
+\item [{{\tiny{}movs}}] {\tiny{}0x22888 -> lr}{\tiny \par}
+\item [{{\tiny{}add}}] {\tiny{}lr, r30 -> r30}{\tiny \par}
+\item [{{\tiny{}add}}] {\tiny{}0x35942, 0xDEADBEAF -> lr}{\tiny \par}
+\item [{{\tiny{}mul}}] {\tiny{}lr, r30 -> lr, r30}{\tiny \par}
+\item [{{\tiny{}xor}}] {\tiny{}lr, r30 -> r30}{\tiny \par}
+\item [{{\tiny{}csr}}] {\tiny{}r30 by 11 -> lr}{\tiny \par}
+\item [{{\tiny{}br}}] {\tiny{}to 0x132}{\tiny \par}
+\item [{{\tiny{}{[}0x132{]}}}]~{\tiny \par}
+\item [{{\tiny{}out}}] {\tiny{}lr to r30}{\tiny \par}
+\item [{{\tiny{}out}}] {\tiny{}r30 to lr}{\tiny \par}
+\item [{{\tiny{}brl}}] {\tiny{}to r30}{\tiny \par}
+\item [{{\tiny{}str}}] {\tiny{}to 16 from r30}{\tiny \par}
+\item [{{\tiny{}mov}}] {\tiny{}lr, r30 -> r30, lr}{\tiny \par}
+\item [{{\tiny{}out}}] {\tiny{}r30 to lr}{\tiny \par}
+\item [{{\tiny{}movs}}] {\tiny{}0xFFFFFFFF -> r1}{\tiny \par}
+\item [{{\tiny{}out}}] {\tiny{}to 0xD from r1}{\tiny \par}
+\item [{{\tiny{}out}}] {\tiny{}to 0xF from r1}{\tiny \par}
+\item [{{\tiny{}out}}] {\tiny{}to 0x11 from r1}{\tiny \par}
+\item [{{\tiny{}out}}] {\tiny{}to 0xE from r1}{\tiny \par}
+\item [{{\tiny{}in}}] {\tiny{}from 0xA -> r30}{\tiny \par}
+\item [{{\tiny{}{[}0x5E771E7D{]}}}]~{\tiny \par}
+\item [{{\tiny{}br\textsubscript{pos }}}] {\tiny{}to r0}{\tiny \par}
+\item [{{\tiny{}ret\textsubscript{neg }}}]~{\tiny \par}\end{spacing}
+
+\end{description}
+\end{frame}
+
+\begin{frame}{Синтез}
+
+
+\framesubtitle{Статистика}
+
+
+Был произведён синтез в 3 различные цели:
+\begin{itemize}
+\item Xilinx 7-Series FPGA:
+
+\begin{itemize}
+\item Количество ячеек - 16761
+\item Количество внутренних путей - 18586
+\item Количество внешних путей - 9179
+\end{itemize}
+\item iCE40 FPGA:
+
+\begin{itemize}
+\item Количество ячеек - 74852
+\item Количество внутренних путей - 73418
+\item Количество внешних путей - 908
+\end{itemize}
+\item ASIC (библиотека osu025\_stdcells):
+
+\begin{itemize}
+\item Количество ячеек - 125904 (из них ram - 100673)
+\item Количество внутренних путей - 94181 (из них ram - 68842)
+\item Количество внешних путей - 10236 (из них ram - 1033)
+\end{itemize}
+\end{itemize}
+\end{frame}
+
 \begin{frame}{Результат}
 
 \begin{itemize}
-\item<1-> Создано \alert{RTL-описание} процессора УП-1.
-\item<1-> Создана \alert{документация} к процессору УП-1 .
-\item<1-> Произведено \alert{моделирование} процессора УП-1 в симуляторе Icarus
+\item Создано \alert{RTL-описание} процессора УП-1.
+\item Создана \alert{документация} к процессору УП-1 .
+\item Произведено \alert{моделирование} процессора УП-1 в симуляторе Icarus
 Verilog.
-\end{itemize}
-
-\medskip{}
-
-\begin{itemize}
-\item<2-> Что дальше
-
-\begin{itemize}
-\item<2-> Добавить инструкции работы с плавающей точкой одинарной точности.
-\item<2-> Добавить какую-нибудь периферию кроме GPIO и сдвигового регистра
-(<<SPI>>).
-\item<2-> Добавить кэш и спекулятивное исполнение.\end{itemize}
-\end{itemize}
+\item Произведён \alert{синтез} процессора с помощью набора синтезаторов
+Yosys.\end{itemize}
 \end{frame}
 
 \end{document}

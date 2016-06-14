@@ -1,0 +1,16 @@
+adder.v
+alu.v
+execute.v
+gpio.v
+gpio_mux.v
+insn_decoder.v
+main.v
+memory_op.v
+pipeline_interface.v
+ram.v
+register_wb.v
+regs.v
+shift.v
+test_periph_assembly.v
+test_pipeline_assembly.v
+test_processor_assembly.v

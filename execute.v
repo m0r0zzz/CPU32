@@ -10,22 +10,22 @@ module cond_calc(cr, cc, n, z, c, v);
 
     always @* begin
        case(cc)
-            4'b0000: cr <= z == 1'b1; //EQ - equal
-            4'b0001: cr <= z == 1'b0; //NEQ - not equal
-            4'b0010: cr <= c == 1'b1; //HS - higher or same (unsigned)
-            4'b0011: cr <= c == 1'b0; //LO - strictly lower (unsigned)
-            4'b0100: cr <= n == 1'b1; //NEG - negative
-            4'b0101: cr <= n == 1'b0; //POS - positive
-            4'b0110: cr <= v == 1'b1; //SOV - signed overflow
-            4'b0111: cr <= v == 1'b0; //NSOV - no signed overflow
-            4'b1000: cr <= (c == 1'b1) && (z == 1'b0); //HI - strictly higher (unsigned)
-            4'b1001: cr <= (c == 1'b0) || (z == 1'b1); //LS - lower or same (unsigned)
-            4'b1010: cr <= n == v; //GE - greater or equal (signed)
-            4'b1011: cr <= n != v; //LT - strictly less (signed)
-            4'b1100: cr <= (z == 1'b0) && (n == v); //GT - strictly greater (signed)
-            4'b1101: cr <= (z == 1'b1) || (n != v); //LE - lower or equal (signed)
-            4'b1110: cr <= 1'b1; //AL - always
-            4'b1111: cr <= 1'b0; //NV - never
+            4'b0000: cr = z == 1'b1; //EQ - equal
+            4'b0001: cr = z == 1'b0; //NEQ - not equal
+            4'b0010: cr = c == 1'b1; //HS - higher or same (unsigned)
+            4'b0011: cr = c == 1'b0; //LO - strictly lower (unsigned)
+            4'b0100: cr = n == 1'b1; //NEG - negative
+            4'b0101: cr = n == 1'b0; //POS - positive
+            4'b0110: cr = v == 1'b1; //SOV - signed overflow
+            4'b0111: cr = v == 1'b0; //NSOV - no signed overflow
+            4'b1000: cr = (c == 1'b1) && (z == 1'b0); //HI - strictly higher (unsigned)
+            4'b1001: cr = (c == 1'b0) || (z == 1'b1); //LS - lower or same (unsigned)
+            4'b1010: cr = n == v; //GE - greater or equal (signed)
+            4'b1011: cr = n != v; //LT - strictly less (signed)
+            4'b1100: cr = (z == 1'b0) && (n == v); //GT - strictly greater (signed)
+            4'b1101: cr = (z == 1'b1) || (n != v); //LE - lower or equal (signed)
+            4'b1110: cr = 1'b1; //AL - always
+            4'b1111: cr = 1'b0; //NV - never
         endcase
     end
 endmodule

@@ -31,7 +31,7 @@ module reg32_2x2_pc(rd0, rd1, ra0, ra1, wa0, wa1, wd0, wd1, read, write, clk, rs
     assign rd1 = regs[ra1];
 
     always @(posedge clk or posedge rst) begin
-        #2;
+        #1;
         if(rst) begin
             /*rd0 <= 0;
             rd1 <= 0;*/

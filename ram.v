@@ -22,7 +22,7 @@ module ram(r_addr, w_addr, r_line, w_line, read, write, wrdy, rrdy, exc, clk);
 
     integer i;
 
-    initial begin
+    /*initial begin
         for(i = 0; i < mem_size; i=i+1) begin
             mem[i] = 32'b0;
         end
@@ -30,7 +30,7 @@ module ram(r_addr, w_addr, r_line, w_line, read, write, wrdy, rrdy, exc, clk);
         exc = 1'b0;
         wrdy = 1'b0;
         rrdy = 1'b0;
-    end
+    end*/
 
     always @(posedge clk) begin
         if(wrdy) wrdy <= 1'b0;
@@ -80,13 +80,13 @@ module emb_ram(r_addr, w_addr, r_line, w_line, read, write, exc, clk);
 
     integer i;
 
-    initial begin
+    /*initial begin
         for(i = 0; i < mem_size; i=i+1) begin
             mem[i] = 32'b0;
         end
         r_line = 32'b0;
         exc = 1'b0;
-    end
+    end*/
 
      always @(posedge clk) begin //??????????
         #1;
