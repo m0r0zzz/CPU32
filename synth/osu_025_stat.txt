@@ -1,0 +1,702 @@
+
+8. Printing statistics.
+
+=== addsub_32 ===
+
+   Number of wires:                 41
+   Number of wire bits:            165
+   Number of public wires:           8
+   Number of public wire bits:     132
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                 68
+     INVX1                           1
+     NAND2X1                        12
+     NOR2X1                         21
+     OAI22X1                         1
+     XOR2X1                         32
+     cla_32                          1
+
+=== alu32_2x2 ===
+
+   Number of wires:                387
+   Number of wire bits:            879
+   Number of public wires:          30
+   Number of public wire bits:     393
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                629
+     $_DLATCH_P_                   139
+     AND2X1                          3
+     AOI21X1                        19
+     AOI22X1                        43
+     INVX1                          94
+     NAND2X1                        29
+     NAND3X1                       102
+     NOR2X1                         55
+     NOR3X1                          1
+     OAI21X1                       136
+     OAI22X1                         1
+     OR2X2                           3
+     addsub_32                       1
+     bitwise_32                      1
+     bshift_32                       1
+     mul_32                          1
+
+=== bitwise_32 ===
+
+   Number of wires:                458
+   Number of wire bits:            553
+   Number of public wires:           5
+   Number of public wire bits:     100
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                486
+     AND2X1                         41
+     AOI21X1                        32
+     AOI22X1                        47
+     INVX1                          60
+     NAND2X1                       104
+     NAND3X1                        37
+     NOR2X1                         88
+     NOR3X1                          1
+     OAI22X1                        65
+     OR2X2                          11
+
+=== bshift_32 ===
+
+   Number of wires:                 50
+   Number of wire bits:            302
+   Number of public wires:          16
+   Number of public wire bits:     268
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                 76
+     AND2X1                          1
+     AOI22X1                        14
+     NAND2X1                        13
+     NAND3X1                         2
+     NOR2X1                          7
+     OR2X2                          32
+     drev_32                         2
+     fmask_32                        1
+     ovf_32                          1
+     right_rot_32                    1
+     tblock_32                       1
+     zmask_32                        1
+
+=== cla_16 ===
+
+   Number of wires:                 23
+   Number of wire bits:             76
+   Number of public wires:           9
+   Number of public wire bits:      62
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                 23
+     AND2X1                          2
+     AOI21X1                         2
+     INVX1                           4
+     NAND2X1                         2
+     NAND3X1                         5
+     NOR2X1                          2
+     OAI21X1                         2
+     cla_4                           4
+
+=== cla_32 ===
+
+   Number of wires:                 12
+   Number of wire bits:            107
+   Number of public wires:           8
+   Number of public wire bits:     103
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                  8
+     AOI21X1                         1
+     INVX1                           1
+     NAND2X1                         3
+     NAND3X1                         1
+     cla_16                          2
+
+=== cla_4 ===
+
+   Number of wires:                 23
+   Number of wire bits:             40
+   Number of public wires:           9
+   Number of public wire bits:      26
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                 23
+     AND2X1                          2
+     AOI21X1                         2
+     INVX1                           4
+     NAND2X1                         2
+     NAND3X1                         5
+     NOR2X1                          2
+     OAI21X1                         2
+     fa_pg                           4
+
+=== cond_calc ===
+
+   Number of wires:                 51
+   Number of wire bits:             54
+   Number of public wires:           6
+   Number of public wire bits:       9
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                 46
+     AND2X1                          4
+     AOI22X1                         2
+     INVX1                           8
+     NAND2X1                         5
+     NAND3X1                         8
+     NOR2X1                         10
+     OAI21X1                         5
+     OAI22X1                         2
+     OR2X2                           2
+
+=== drev_32 ===
+
+   Number of wires:                 67
+   Number of wire bits:            129
+   Number of public wires:           3
+   Number of public wire bits:      65
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                 96
+     INVX1                          32
+     NAND2X1                        32
+     OAI21X1                        32
+
+=== emb_ram ===
+
+   Number of wires:             120377
+   Number of wire bits:         152307
+   Number of public wires:        1033
+   Number of public wire bits:   32932
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:             152208
+     AND2X1                         38
+     AOI21X1                      4451
+     AOI22X1                      1021
+     BUFX2                          32
+     DFFPOSX1                    32833
+     INVX1                       32838
+     MUX2X1                      35083
+     NAND2X1                      7971
+     NAND3X1                      3190
+     NOR2X1                      10017
+     NOR3X1                         32
+     OAI21X1                     19307
+     OAI22X1                      5062
+     OR2X2                         333
+
+=== execute ===
+
+   Number of wires:                204
+   Number of wire bits:            496
+   Number of public wires:          31
+   Number of public wire bits:     323
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                309
+     AOI21X1                        33
+     DFFSR                          65
+     INVX1                         101
+     NAND2X1                        38
+     NOR2X1                         34
+     OAI21X1                        36
+     alu32_2x2                       1
+     cond_calc                       1
+
+=== execute_stage_passthrough ===
+
+   Number of wires:                102
+   Number of wire bits:            260
+   Number of public wires:          16
+   Number of public wire bits:     174
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                172
+     DFFSR                          86
+     INVX1                          86
+
+=== fa ===
+
+   Number of wires:                 12
+   Number of wire bits:             12
+   Number of public wires:           5
+   Number of public wire bits:       5
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                  9
+     AND2X1                          1
+     INVX1                           1
+     NAND2X1                         2
+     NAND3X1                         1
+     NOR2X1                          1
+     OAI21X1                         2
+     OR2X2                           1
+
+=== fa_pg ===
+
+   Number of wires:                 12
+   Number of wire bits:             12
+   Number of public wires:           6
+   Number of public wire bits:       6
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                  9
+     AND2X1                          1
+     INVX1                           1
+     NAND2X1                         2
+     NAND3X1                         1
+     NOR2X1                          2
+     OAI21X1                         1
+     OR2X2                           1
+
+=== fmask_32 ===
+
+   Number of wires:                 29
+   Number of wire bits:             64
+   Number of public wires:           2
+   Number of public wire bits:      37
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                 58
+     AND2X1                          1
+     AOI21X1                         4
+     INVX1                          15
+     NAND2X1                         7
+     NAND3X1                         7
+     NOR2X1                         10
+     OAI21X1                        14
+
+=== gpio ===
+
+   Number of wires:                626
+   Number of wire bits:           1029
+   Number of public wires:          14
+   Number of public wire bits:     324
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                801
+     AND2X1                          4
+     AOI21X1                        32
+     AOI22X1                        15
+     DFFSR                          96
+     INVX1                         209
+     NAND2X1                       161
+     NAND3X1                        76
+     NOR2X1                         55
+     OAI21X1                       129
+     OAI22X1                        17
+     OR2X2                           6
+     XNOR2X1                         1
+
+=== gpio_mux ===
+
+   Number of wires:                746
+   Number of wire bits:           1493
+   Number of public wires:          87
+   Number of public wire bits:     740
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                881
+     AND2X1                          4
+     AOI21X1                        16
+     AOI22X1                        15
+     DFFPOSX1                       32
+     DFFSR                          64
+     INVX1                         193
+     MUX2X1                         96
+     NAND2X1                       177
+     NAND3X1                        76
+     NOR2X1                         39
+     OAI21X1                       145
+     OAI22X1                        17
+     OR2X2                           6
+     XNOR2X1                         1
+
+=== ha ===
+
+   Number of wires:                  4
+   Number of wire bits:              4
+   Number of public wires:           4
+   Number of public wire bits:       4
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                  2
+     AND2X1                          1
+     XOR2X1                          1
+
+=== insn_decoder ===
+
+   Number of wires:                 25
+   Number of wire bits:            281
+   Number of public wires:          25
+   Number of public wire bits:     281
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                  0
+
+=== memory_op ===
+
+   Number of wires:               1942
+   Number of wire bits:           2638
+   Number of public wires:          27
+   Number of public wire bits:     537
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:               2435
+     AND2X1                          1
+     AOI21X1                       180
+     AOI22X1                        96
+     DFFSR                         270
+     INVX1                         526
+     MUX2X1                          4
+     NAND2X1                       231
+     NAND3X1                       359
+     NOR2X1                         69
+     NOR3X1                          4
+     OAI21X1                       533
+     OAI22X1                       162
+
+=== memory_op_stage_passthrough ===
+
+   Number of wires:                 25
+   Number of wire bits:             47
+   Number of public wires:          10
+   Number of public wire bits:      32
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                 30
+     DFFSR                          15
+     INVX1                          15
+
+=== mul_32 ===
+
+   Number of wires:                 66
+   Number of wire bits:            253
+   Number of public wires:           7
+   Number of public wire bits:     194
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                 62
+     AND2X1                         14
+     NAND2X1                         8
+     NAND3X1                         2
+     NOR2X1                         37
+     mult_32                         1
+
+=== mult_32 ===
+
+   Number of wires:               3011
+   Number of wire bits:           3136
+   Number of public wires:        3011
+   Number of public wire bits:    3136
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:               2016
+     AND2X1                       1024
+     fa                            960
+     ha                             32
+
+=== ovf_32 ===
+
+   Number of wires:                110
+   Number of wire bits:            202
+   Number of public wires:           5
+   Number of public wire bits:      97
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                106
+     AND2X1                          1
+     AOI21X1                         2
+     AOI22X1                         5
+     INVX1                          22
+     NAND2X1                        21
+     NAND3X1                         7
+     NOR2X1                          9
+     OAI21X1                        10
+     OAI22X1                        11
+     OR2X2                           8
+     XNOR2X1                        10
+
+=== pipeline_interface ===
+
+   Number of wires:                216
+   Number of wire bits:            678
+   Number of public wires:          33
+   Number of public wire bits:     341
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                506
+     AND2X1                        168
+     DFFSR                         169
+     INVX1                         169
+
+=== reg32_2x2_pc ===
+
+   Number of wires:               5568
+   Number of wire bits:           7849
+   Number of public wires:          51
+   Number of public wire bits:    1340
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:               7597
+     AND2X1                         40
+     AOI21X1                       333
+     AOI22X1                       489
+     DFFPOSX1                      864
+     DFFSR                         160
+     INVX1                        1058
+     MUX2X1                        603
+     NAND2X1                       979
+     NAND3X1                       316
+     NOR2X1                        736
+     NOR3X1                        106
+     OAI21X1                      1269
+     OAI22X1                       627
+     OR2X2                          14
+     XNOR2X1                         2
+     XOR2X1                          1
+
+=== reg_hazard_checker ===
+
+   Number of wires:                216
+   Number of wire bits:            256
+   Number of public wires:          21
+   Number of public wire bits:      61
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                198
+     AND2X1                          4
+     AOI21X1                        14
+     AOI22X1                        29
+     INVX1                          44
+     NAND2X1                        50
+     NAND3X1                        13
+     NOR2X1                         11
+     NOR3X1                          9
+     OAI21X1                        15
+     OAI22X1                         9
+
+=== register_wb ===
+
+   Number of wires:                302
+   Number of wire bits:            517
+   Number of public wires:          13
+   Number of public wire bits:     157
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                436
+     AND2X1                          2
+     AOI21X1                         6
+     AOI22X1                        32
+     DFFSR                          76
+     INVX1                         147
+     NAND2X1                        28
+     NAND3X1                        34
+     NOR2X1                          5
+     OAI21X1                       105
+     OAI22X1                         1
+
+=== right_rot_32 ===
+
+   Number of wires:                328
+   Number of wire bits:            394
+   Number of public wires:           3
+   Number of public wire bits:      69
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                357
+     INVX1                           5
+     NAND2X1                        96
+     NAND3X1                       256
+
+=== status_register_adaptor ===
+
+   Number of wires:                  7
+   Number of wire bits:             38
+   Number of public wires:           7
+   Number of public wire bits:      38
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                  0
+
+=== tblock_32 ===
+
+   Number of wires:                 40
+   Number of wire bits:            133
+   Number of public wires:           6
+   Number of public wire bits:      99
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                 66
+     INVX1                           1
+     NAND2X1                        33
+     OAI21X1                        32
+
+=== test_periph_assembly ===
+
+   Number of wires:                 45
+   Number of wire bits:           1412
+   Number of public wires:          45
+   Number of public wire bits:    1412
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                  8
+     gpio                            4
+     gpio_mux                        4
+
+=== test_pipeline_assembly ===
+
+   Number of wires:                146
+   Number of wire bits:           2129
+   Number of public wires:         143
+   Number of public wire bits:    2126
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                 14
+     INVX1                           3
+     NAND3X1                         1
+     execute                         1
+     execute_stage_passthrough       1
+     insn_decoder                    1
+     memory_op                       1
+     memory_op_stage_passthrough      1
+     pipeline_interface              1
+     reg32_2x2_pc                    1
+     reg_hazard_checker              1
+     register_wb                     1
+     status_register_adaptor         1
+
+=== test_processor_assembly ===
+
+   Number of wires:                 32
+   Number of wire bits:            841
+   Number of public wires:          32
+   Number of public wire bits:     841
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                  3
+     emb_ram                         1
+     test_periph_assembly            1
+     test_pipeline_assembly          1
+
+=== zmask_32 ===
+
+   Number of wires:                 65
+   Number of wire bits:            127
+   Number of public wires:           3
+   Number of public wire bits:      65
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                 94
+     INVX1                          31
+     NAND2X1                        31
+     OAI21X1                        31
+     OR2X2                           1
+
+=== design hierarchy ===
+
+   test_processor_assembly           1
+     emb_ram                         1
+     test_periph_assembly            1
+       gpio                          4
+       gpio_mux                      4
+     test_pipeline_assembly          1
+       execute                       1
+         alu32_2x2                   1
+           addsub_32                 1
+             cla_32                  1
+               cla_16                2
+                 cla_4               4
+                   fa_pg             4
+           bitwise_32                1
+           bshift_32                 1
+             drev_32                 2
+             fmask_32                1
+             ovf_32                  1
+             right_rot_32            1
+             tblock_32               1
+             zmask_32                1
+           mul_32                    1
+             mult_32                 1
+               fa                  960
+               ha                   32
+         cond_calc                   1
+       execute_stage_passthrough      1
+       insn_decoder                  1
+       memory_op                     1
+       memory_op_stage_passthrough      1
+       pipeline_interface            1
+       reg32_2x2_pc                  1
+       reg_hazard_checker            1
+       register_wb                   1
+       status_register_adaptor       1
+
+   Number of wires:             151739
+   Number of wire bits:         198968
+   Number of public wires:       10217
+   Number of public wire bits:   55135
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:             183060
+     $_DLATCH_P_                   139
+     AND2X1                       2418
+     AOI21X1                      5287
+     AOI22X1                      1898
+     BUFX2                          32
+     DFFPOSX1                    33825
+     DFFSR                        1481
+     INVX1                       37929
+     MUX2X1                      36074
+     NAND2X1                     13079
+     NAND3X1                      5985
+     NOR2X1                      12529
+     NOR3X1                        153
+     OAI21X1                     24625
+     OAI22X1                      6077
+     OR2X2                        1444
+     XNOR2X1                        20
+     XOR2X1                         65
+
