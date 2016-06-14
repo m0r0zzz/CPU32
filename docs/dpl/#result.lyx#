@@ -22,12 +22,12 @@ pdfcomment
 \language_package babel
 \inputencoding auto
 \fontencoding global
-\font_roman ccfonts
-\font_sans cmss
-\font_typewriter cmtt
+\font_roman Times New Roman
+\font_sans default
+\font_typewriter default
 \font_math auto
-\font_default_family rmdefault
-\use_non_tex_fonts false
+\font_default_family default
+\use_non_tex_fonts true
 \font_sc false
 \font_osf false
 \font_sf_scale 100
@@ -946,6 +946,7 @@ status open
 \begin_inset External
 	template PDFPages
 	filename fib_tim5.pdf
+	rotateAngle 90
 	width 100page%
 
 \end_inset
@@ -975,6 +976,7 @@ status open
 \begin_inset External
 	template PDFPages
 	filename fib_tim6.pdf
+	rotateAngle 90
 	width 100page%
 
 \end_inset
@@ -1004,6 +1006,7 @@ status open
 \begin_inset External
 	template PDFPages
 	filename fib_tim7.pdf
+	rotateAngle 90
 	width 100page%
 
 \end_inset
@@ -1033,6 +1036,7 @@ status open
 \begin_inset External
 	template PDFPages
 	filename fib_tim8.pdf
+	rotateAngle 90
 	width 100page%
 
 \end_inset
@@ -1062,6 +1066,7 @@ status open
 \begin_inset External
 	template PDFPages
 	filename fib_tim9.pdf
+	rotateAngle 90
 	width 100page%
 
 \end_inset

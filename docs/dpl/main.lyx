@@ -19,15 +19,15 @@ pdfcomment
 \end_modules
 \maintain_unincluded_children true
 \language russian
-\language_package default
+\language_package babel
 \inputencoding auto
 \fontencoding global
-\font_roman cmr
-\font_sans cmss
-\font_typewriter cmtt
+\font_roman Times New Roman
+\font_sans DejaVu Sans
+\font_typewriter Ubuntu Mono
 \font_math auto
-\font_default_family rmdefault
-\use_non_tex_fonts false
+\font_default_family default
+\use_non_tex_fonts true
 \font_sc false
 \font_osf false
 \font_sf_scale 100
