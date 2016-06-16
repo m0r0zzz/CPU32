@@ -8,13 +8,16 @@
 \usepackage{lscape}
 \usepackage[bookmarks]{hyperref}
  
-\textwidth=155mm
-\oddsidemargin=4mm
+\textwidth=164mm
+\oddsidemargin=5mm
 
 \topmargin=-5mm
 \setlength{\textheight}{28\baselineskip}
 \setlength{\textheight}{\baselinestretch\textheight}
 \addtolength{\textheight}{\topskip}
+
+\usepackage{chngcntr}
+\counterwithin*{section}{part}
 \end_preamble
 \use_default_options true
 \begin_modules
@@ -25,15 +28,6 @@ bicaption
 pdfform
 pdfcomment
 \end_modules
-\begin_includeonly
-cover.lyx
-intro.lyx
-implementation.lyx
-result.lyx
-conclusion.lyx
-isa.lyx
-bib.lyx
-\end_includeonly
 \maintain_unincluded_children true
 \language russian
 \language_package babel

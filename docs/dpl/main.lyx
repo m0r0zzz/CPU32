@@ -9,12 +9,15 @@
 \usepackage[bookmarks]{hyperref}
  
 \textwidth=155mm
-\oddsidemargin=4mm
+\oddsidemargin=5mm
 
 \topmargin=-5mm
 \setlength{\textheight}{28\baselineskip}
 \setlength{\textheight}{\baselinestretch\textheight}
 \addtolength{\textheight}{\topskip}
+
+\usepackage{chngcntr}
+\counterwithin*{section}{part}
 \end_preamble
 \use_default_options true
 \begin_modules

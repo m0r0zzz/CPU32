@@ -6980,7 +6980,7 @@ addtocontents{toc}{
 \backslash
 protect
 \backslash
-setcounter{tocdepth}{2}}
+setcounter{tocdepth}{0}}
 \end_layout
 
 \end_inset

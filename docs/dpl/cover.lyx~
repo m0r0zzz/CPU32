@@ -84,23 +84,11 @@ pdfcomment
 \begin_body
 
 \begin_layout Standard
-\begin_inset Float figure
-placement h
-wide false
-sideways false
-status open
-
-\begin_layout Plain Layout
 \begin_inset External
 	template PDFPages
 	filename title_list.pdf
 	width 100page%
 	height 100pheight%
-
-\end_inset
-
-
-\end_layout
 
 \end_inset
 

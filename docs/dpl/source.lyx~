@@ -115,6 +115,13 @@ status open
 setcounter{secnumdepth}{5}
 \end_layout
 
+\begin_layout Plain Layout
+
+
+\backslash
+setcounter{tocdepth}{5}
+\end_layout
+
 \end_inset
 
 
