@@ -2210,75 +2210,39 @@ value.
 \end_layout
 
 \begin_layout Enumerate
-
-\series bold
-00000 - 00001
-\series default
-: Пусто (защита от случайной перезаписи)
+00000 - 00001: Пусто (защита от случайной перезаписи)
 \end_layout
 
 \begin_layout Enumerate
-
-\series bold
-00010 - 00011
-\series default
-: Мультиплексор на ноги 0-31
+00010 - 00011: Мультиплексор на ноги 0-31
 \end_layout
 
 \begin_layout Enumerate
-
-\series bold
-00100 - 00101
-\series default
-: Мультиплексор на ноги 63-32
+00100 - 00101: Мультиплексор на ноги 63-32
 \end_layout
 
 \begin_layout Enumerate
-
-\series bold
-00110 - 00111
-\series default
-: Мультиплексор на ноги 95-64 
+00110 - 00111: Мультиплексор на ноги 95-64 
 \end_layout
 
 \begin_layout Enumerate
-
-\series bold
-01000 - 01001
-\series default
-: Мультиплексор на ноги 127-96
+01000 - 01001: Мультиплексор на ноги 127-96
 \end_layout
 
 \begin_layout Enumerate
-
-\series bold
-01010 - 01011
-\series default
-: Контроллер GPIO на первый мультиплексор (ноги 0-31)
+01010 - 01011: Контроллер GPIO на первый мультиплексор (ноги 0-31)
 \end_layout
 
 \begin_layout Enumerate
-
-\series bold
-01100 - 01101
-\series default
-: Контроллер GPIO на второй мультиплексор (ноги 63-32)
+01100 - 01101: Контроллер GPIO на второй мультиплексор (ноги 63-32)
 \end_layout
 
 \begin_layout Enumerate
-
-\series bold
-01110 - 01111
-\series default
-: Контроллер GPIO на третий мультиплексор (ноги 95-64)
+01110 - 01111: Контроллер GPIO на третий мультиплексор (ноги 95-64)
 \end_layout
 
 \begin_layout Enumerate
-
-\series bold
-10000 - 10001
-\series default
-: Контроллер GPIO на четвёртый мультиплексор (ноги 127-96)
+10000 - 10001: Контроллер GPIO на четвёртый мультиплексор (ноги 127-96)
 \end_layout
 
 \end_body

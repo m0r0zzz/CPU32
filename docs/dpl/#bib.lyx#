@@ -86,8 +86,8 @@ pdfcomment
 \begin_layout Bibliography
 \begin_inset CommandInset bibitem
 LatexCommand bibitem
-label "1"
-key "dadda"
+label "dadda"
+key "key-1"
 
 \end_inset
 
@@ -105,8 +105,8 @@ Dadda L.
 \begin_layout Bibliography
 \begin_inset CommandInset bibitem
 LatexCommand bibitem
-label "2"
-key "cla"
+label "cla"
+key "key-2"
 
 \end_inset
 
@@ -125,8 +125,8 @@ Lynch T., Swartzlander Jr E.
 \begin_layout Bibliography
 \begin_inset CommandInset bibitem
 LatexCommand bibitem
-label "3"
-key "shifter"
+label "shifter"
+key "key-3"
 
 \end_inset
 
@@ -144,8 +144,8 @@ Pillmeier M.
 \begin_layout Bibliography
 \begin_inset CommandInset bibitem
 LatexCommand bibitem
-label "4"
-key "design"
+label "design"
+key "key-4"
 
 \end_inset
 

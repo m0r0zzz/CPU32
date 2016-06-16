@@ -1,41 +1,29 @@
-
-3. Printing statistics.
+6. Printing statistics.
 
 === addsub_32 ===
 
-   Number of wires:                 36
-   Number of wire bits:            160
+   Number of wires:                 18
+   Number of wire bits:            142
    Number of public wires:           8
    Number of public wire bits:     132
    Number of memories:               0
    Number of memory bits:            0
    Number of processes:              0
-   Number of cells:                 63
-     LUT2                           32
-     LUT4                            2
-     LUT6                           16
-     MUXF7                           8
-     MUXF8                           4
+   Number of cells:                 45
+     SB_LUT4                        44
      cla_32                          1
 
 === alu32_2x2 ===
 
-   Number of wires:                120
-   Number of wire bits:            612
+   Number of wires:                280
+   Number of wire bits:            643
    Number of public wires:          30
    Number of public wire bits:     393
    Number of memories:               0
    Number of memory bits:            0
    Number of processes:              0
-   Number of cells:                362
-     $_DLATCH_P_                   139
-     LUT2                           40
-     LUT3                           36
-     LUT4                           38
-     LUT5                           32
-     LUT6                           58
-     MUXF7                          10
-     MUXF8                           5
+   Number of cells:                393
+     SB_LUT4                       389
      addsub_32                       1
      bitwise_32                      1
      bshift_32                       1
@@ -43,35 +31,27 @@
 
 === bitwise_32 ===
 
-   Number of wires:                 33
-   Number of wire bits:            128
+   Number of wires:                151
+   Number of wire bits:            246
    Number of public wires:           5
    Number of public wire bits:     100
    Number of memories:               0
    Number of memory bits:            0
    Number of processes:              0
-   Number of cells:                 61
-     LUT4                            1
-     LUT5                           32
-     LUT6                           16
-     MUXF7                           8
-     MUXF8                           4
+   Number of cells:                179
+     SB_LUT4                       179
 
 === bshift_32 ===
 
-   Number of wires:                 78
-   Number of wire bits:            330
+   Number of wires:                 36
+   Number of wire bits:            288
    Number of public wires:          16
    Number of public wire bits:     268
    Number of memories:               0
    Number of memory bits:            0
    Number of processes:              0
-   Number of cells:                104
-     LUT2                           32
-     LUT3                            2
-     LUT6                           36
-     MUXF7                          18
-     MUXF8                           9
+   Number of cells:                 62
+     SB_LUT4                        55
      drev_32                         2
      fmask_32                        1
      ovf_32                          1
@@ -81,65 +61,54 @@
 
 === cla_16 ===
 
-   Number of wires:                 13
-   Number of wire bits:             66
+   Number of wires:                 12
+   Number of wire bits:             65
    Number of public wires:           9
    Number of public wire bits:      62
    Number of memories:               0
    Number of memory bits:            0
    Number of processes:              0
-   Number of cells:                 13
-     LUT3                            1
-     LUT4                            1
-     LUT5                            1
-     LUT6                            4
-     MUXF7                           2
+   Number of cells:                 12
+     SB_LUT4                         8
      cla_4                           4
 
 === cla_32 ===
 
-   Number of wires:                  8
-   Number of wire bits:            103
+   Number of wires:                  9
+   Number of wire bits:            104
    Number of public wires:           8
    Number of public wire bits:     103
    Number of memories:               0
    Number of memory bits:            0
    Number of processes:              0
-   Number of cells:                  4
-     LUT3                            1
-     LUT5                            1
+   Number of cells:                  5
+     SB_LUT4                         3
      cla_16                          2
 
 === cla_4 ===
 
-   Number of wires:                 13
-   Number of wire bits:             30
+   Number of wires:                 12
+   Number of wire bits:             29
    Number of public wires:           9
    Number of public wire bits:      26
    Number of memories:               0
    Number of memory bits:            0
    Number of processes:              0
-   Number of cells:                 13
-     LUT3                            1
-     LUT4                            1
-     LUT5                            1
-     LUT6                            4
-     MUXF7                           2
+   Number of cells:                 12
+     SB_LUT4                         8
      fa_pg                           4
 
 === cond_calc ===
 
-   Number of wires:                 12
-   Number of wire bits:             15
+   Number of wires:                 18
+   Number of wire bits:             21
    Number of public wires:           6
    Number of public wire bits:       9
    Number of memories:               0
    Number of memory bits:            0
    Number of processes:              0
-   Number of cells:                  7
-     LUT6                            4
-     MUXF7                           2
-     MUXF8                           1
+   Number of cells:                 13
+     SB_LUT4                        13
 
 === drev_32 ===
 
@@ -151,44 +120,35 @@
    Number of memory bits:            0
    Number of processes:              0
    Number of cells:                 32
-     LUT3                           32
+     SB_LUT4                        32
 
 === emb_ram ===
 
-   Number of wires:               1413
-   Number of wire bits:           1599
-   Number of public wires:           8
-   Number of public wire bits:     132
+   Number of wires:              30635
+   Number of wire bits:          62596
+   Number of public wires:        1033
+   Number of public wire bits:   32932
    Number of memories:               0
    Number of memory bits:            0
    Number of processes:              0
-   Number of cells:               1498
-     FDRE                          164
-     LUT1                           64
-     LUT2                           35
-     LUT3                            1
-     LUT4                            6
-     LUT5                          138
-     LUT6                          333
-     MUXCY                          64
-     MUXF7                         142
-     MUXF8                           7
-     RAM64X1D                      544
+   Number of cells:              62493
+     SB_CARRY                       62
+     SB_DFFE                     32801
+     SB_DFFSR                       32
+     SB_LUT4                     29598
 
 === execute ===
 
-   Number of wires:                 32
-   Number of wire bits:            324
+   Number of wires:                 33
+   Number of wire bits:            325
    Number of public wires:          31
    Number of public wire bits:     323
    Number of memories:               0
    Number of memory bits:            0
    Number of processes:              0
-   Number of cells:                137
-     FDCE                           65
-     LUT2                            1
-     LUT3                           68
-     LUT6                            1
+   Number of cells:                138
+     SB_DFFR                        65
+     SB_LUT4                        71
      alu32_2x2                       1
      cond_calc                       1
 
@@ -202,7 +162,7 @@
    Number of memory bits:            0
    Number of processes:              0
    Number of cells:                 86
-     FDCE                           86
+     SB_DFFR                        86
 
 === fa ===
 
@@ -214,7 +174,7 @@
    Number of memory bits:            0
    Number of processes:              0
    Number of cells:                  2
-     LUT3                            2
+     SB_LUT4                         2
 
 === fa_pg ===
 
@@ -226,59 +186,47 @@
    Number of memory bits:            0
    Number of processes:              0
    Number of cells:                  3
-     LUT2                            2
-     LUT3                            1
+     SB_LUT4                         3
 
 === fmask_32 ===
 
-   Number of wires:                  2
-   Number of wire bits:             37
+   Number of wires:                  8
+   Number of wire bits:             43
    Number of public wires:           2
    Number of public wire bits:      37
    Number of memories:               0
    Number of memory bits:            0
    Number of processes:              0
-   Number of cells:                 31
-     LUT1                            1
-     LUT2                            2
-     LUT3                            4
-     LUT4                            8
-     LUT5                           16
+   Number of cells:                 37
+     SB_LUT4                        37
 
 === gpio ===
 
-   Number of wires:                 74
-   Number of wire bits:            477
+   Number of wires:                 38
+   Number of wire bits:            379
    Number of public wires:          14
    Number of public wire bits:     324
    Number of memories:               0
    Number of memory bits:            0
    Number of processes:              0
-   Number of cells:                249
-     FDCE                           96
-     LUT3                           32
-     LUT5                           64
-     LUT6                           33
-     MUXF7                          16
-     MUXF8                           8
+   Number of cells:                151
+     SB_DFFER                       64
+     SB_DFFR                        32
+     SB_LUT4                        55
 
 === gpio_mux ===
 
-   Number of wires:                177
-   Number of wire bits:            893
+   Number of wires:                175
+   Number of wire bits:            859
    Number of public wires:          87
    Number of public wire bits:     740
    Number of memories:               0
    Number of memory bits:            0
    Number of processes:              0
-   Number of cells:                281
-     FDCE                           64
-     FDRE                           32
-     LUT3                           32
-     LUT5                           64
-     LUT6                           65
-     MUXF7                          16
-     MUXF8                           8
+   Number of cells:                247
+     SB_DFF                         32
+     SB_DFFER                       64
+     SB_LUT4                       151
 
 === ha ===
 
@@ -290,7 +238,7 @@
    Number of memory bits:            0
    Number of processes:              0
    Number of cells:                  2
-     LUT2                            2
+     SB_LUT4                         2
 
 === insn_decoder ===
 
@@ -305,22 +253,18 @@
 
 === memory_op ===
 
-   Number of wires:               1834
-   Number of wire bits:           2530
+   Number of wires:                602
+   Number of wire bits:           1298
    Number of public wires:          27
    Number of public wire bits:     537
    Number of memories:               0
    Number of memory bits:            0
    Number of processes:              0
-   Number of cells:               2327
-     FDCE                          268
-     FDPE                            2
-     LUT2                            3
-     LUT4                           64
-     LUT5                          123
-     LUT6                         1163
-     MUXF7                         496
-     MUXF8                         208
+   Number of cells:               1095
+     SB_DFFER                      192
+     SB_DFFR                        76
+     SB_DFFS                         2
+     SB_LUT4                       825
 
 === memory_op_stage_passthrough ===
 
@@ -332,22 +276,19 @@
    Number of memory bits:            0
    Number of processes:              0
    Number of cells:                 15
-     FDCE                           15
+     SB_DFFR                        15
 
 === mul_32 ===
 
-   Number of wires:                 69
-   Number of wire bits:            256
+   Number of wires:                 27
+   Number of wire bits:            214
    Number of public wires:           7
    Number of public wire bits:     194
    Number of memories:               0
    Number of memory bits:            0
    Number of processes:              0
-   Number of cells:                 65
-     LUT4                            1
-     LUT6                           36
-     MUXF7                          18
-     MUXF8                           9
+   Number of cells:                 23
+     SB_LUT4                        22
      mult_32                         1
 
 === mult_32 ===
@@ -360,23 +301,21 @@
    Number of memory bits:            0
    Number of processes:              0
    Number of cells:               2016
-     LUT2                         1024
+     SB_LUT4                      1024
      fa                            960
      ha                             32
 
 === ovf_32 ===
 
-   Number of wires:                 29
-   Number of wire bits:            121
+   Number of wires:                 45
+   Number of wire bits:            137
    Number of public wires:           5
    Number of public wire bits:      97
    Number of memories:               0
    Number of memory bits:            0
    Number of processes:              0
-   Number of cells:                 25
-     LUT3                           11
-     LUT5                            9
-     LUT6                            5
+   Number of cells:                 41
+     SB_LUT4                        41
 
 === pipeline_interface ===
 
@@ -388,75 +327,63 @@
    Number of memory bits:            0
    Number of processes:              0
    Number of cells:                337
-     FDCE                          168
-     FDPE                            1
-     LUT2                          168
+     SB_DFFR                       168
+     SB_DFFS                         1
+     SB_LUT4                       168
 
 === reg32_2x2_pc ===
 
-   Number of wires:               4645
-   Number of wire bits:           5283
-   Number of public wires:          24
-   Number of public wire bits:     476
+   Number of wires:               2653
+   Number of wire bits:           4965
+   Number of public wires:          51
+   Number of public wire bits:    1340
    Number of memories:               0
    Number of memory bits:            0
    Number of processes:              0
-   Number of cells:               5030
-     FDCE                          160
-     FDRE                          864
-     LUT1                            1
-     LUT2                            6
-     LUT3                           64
-     LUT4                           89
-     LUT5                         1124
-     LUT6                         1953
-     MUXCY                          31
-     MUXF7                         706
-     XORCY                          32
+   Number of cells:               4711
+     SB_CARRY                       30
+     SB_DFF                        864
+     SB_DFFER                        1
+     SB_DFFR                       159
+     SB_LUT4                      3657
 
 === reg_hazard_checker ===
 
-   Number of wires:                 56
-   Number of wire bits:             96
+   Number of wires:                 71
+   Number of wire bits:            111
    Number of public wires:          21
    Number of public wire bits:      61
    Number of memories:               0
    Number of memory bits:            0
    Number of processes:              0
-   Number of cells:                 38
-     LUT4                            6
-     LUT5                            4
-     LUT6                           27
-     MUXF7                           1
+   Number of cells:                 53
+     SB_LUT4                        53
 
 === register_wb ===
 
-   Number of wires:                152
-   Number of wire bits:            367
+   Number of wires:                 41
+   Number of wire bits:            225
    Number of public wires:          13
    Number of public wire bits:     157
    Number of memories:               0
    Number of memory bits:            0
    Number of processes:              0
-   Number of cells:                286
-     FDCE                           76
-     LUT3                           69
-     LUT5                            5
-     LUT6                           94
-     MUXF7                          42
+   Number of cells:                144
+     SB_DFFER                       74
+     SB_DFFR                         2
+     SB_LUT4                        68
 
 === right_rot_32 ===
 
-   Number of wires:                 67
-   Number of wire bits:            133
+   Number of wires:                131
+   Number of wire bits:            197
    Number of public wires:           3
    Number of public wire bits:      69
    Number of memories:               0
    Number of memory bits:            0
    Number of processes:              0
-   Number of cells:                 96
-     LUT3                           32
-     LUT6                           64
+   Number of cells:                160
+     SB_LUT4                       160
 
 === status_register_adaptor ===
 
@@ -479,8 +406,7 @@
    Number of memory bits:            0
    Number of processes:              0
    Number of cells:                 32
-     LUT3                            1
-     LUT4                           31
+     SB_LUT4                        32
 
 === test_periph_assembly ===
 
@@ -505,7 +431,7 @@
    Number of memory bits:            0
    Number of processes:              0
    Number of cells:                 11
-     LUT3                            1
+     SB_LUT4                         1
      execute                         1
      execute_stage_passthrough       1
      insn_decoder                    1
@@ -541,8 +467,7 @@
    Number of memory bits:            0
    Number of processes:              0
    Number of cells:                 32
-     LUT2                            1
-     LUT3                           31
+     SB_LUT4                        32
 
 === design hierarchy ===
 
@@ -582,27 +507,20 @@
        register_wb                   1
        status_register_adaptor       1
 
-   Number of wires:              18191
-   Number of wire bits:          31909
-   Number of public wires:        9165
-   Number of public wire bits:   21471
+   Number of wires:              44201
+   Number of wire bits:          90832
+   Number of public wires:       10217
+   Number of public wire bits:   55135
    Number of memories:               0
    Number of memory bits:            0
    Number of processes:              0
-   Number of cells:              15998
-     $_DLATCH_P_                   139
-     FDCE                         1478
-     FDPE                            3
-     FDRE                         1156
-     LUT1                           66
-     LUT2                         1472
-     LUT3                         2603
-     LUT4                          256
-     LUT5                         2006
-     LUT6                         4238
-     MUXCY                          95
-     MUXF7                        1599
-     MUXF8                         311
-     RAM64X1D                      544
-     XORCY                          32
+   Number of cells:              74918
+     SB_CARRY                       92
+     SB_DFF                        992
+     SB_DFFE                     32801
+     SB_DFFER                      779
+     SB_DFFR                       699
+     SB_DFFS                         3
+     SB_DFFSR                       32
+     SB_LUT4                     39520
 
