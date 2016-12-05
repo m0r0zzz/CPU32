@@ -4,7 +4,7 @@
 `include "memory_op.v"
 `include "register_wb.v"
 `include "pipeline_interface.v"
-`include "insn_decoder.v"
+`include "insn_decoder_new.v"
 `include "regs.v"
 
 /*module test_pipeline_assembly(e_a, e_b, e_alu_op, e_is_cond, e_cond, e_write_flags, e_swp, m_a1, m_a2, m_r1_op, m_r2_op, r_a1, r_a2, r_op, pass, pcincr, clk, rst);
