@@ -64,9 +64,9 @@ module gpio_mux(pins, func0_in, func1_in, func2_in, func3_in, func0_out, func1_o
             if(sys_r) begin //read requested
                 if(sys_r_addr[31:1] == addr[31:1]) begin //if r addr is same
                     if(sys_r_addr[0]) begin //high part
-                        sys_r_line <= control[63:32];
+                        sys_r_line = control[63:32];
                     end else begin //low part
-                        sys_r_line <= control[31:0];
+                        sys_r_line = control[31:0];
                     end
                 end else begin
                     sys_r_line = 32'bz; //don't scramble other devices
@@ -77,9 +77,9 @@ module gpio_mux(pins, func0_in, func1_in, func2_in, func3_in, func0_out, func1_o
             if(sys_w) begin //write requested
                 if(sys_w_addr[31:1] == addr[31:1]) begin //if w addr is same
                     if(sys_w_addr[0]) begin //high part
-                        control[63:32] <= sys_w_line;
+                        control[63:32] = sys_w_line;
                     end else begin //low part
-                        control[31:0] <= sys_w_line;
+                        control[31:0] = sys_w_line;
                     end
                 end
             end

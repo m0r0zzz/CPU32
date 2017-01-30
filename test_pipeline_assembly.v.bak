@@ -75,9 +75,8 @@ module test_pipeline_assembly(ram_w_addr, ram_r_addr, ram_w_line, ram_read, ram_
     wire [4:0] r_a1, r_a2; //output
     wire [3:0] r_op; //output
 
-    //wire d_pass; //output
+    wire d_pass; //output
     wire d_pcincr; //output
-    assign reg_pcincr = d_pcincr;
 
     wire [4:0] r_r1_a, r_r2_a; //output
     assign reg_a_a = r_r1_a, reg_a_b = r_r2_a;
@@ -87,10 +86,10 @@ module test_pipeline_assembly(ram_w_addr, ram_r_addr, ram_w_line, ram_read, ram_
     wire [31:0] d_word = word; //input
     wire [31:0] d_r1 = reg_a, d_r2 = reg_b; //input
     wire d_hazard; //input
-    insn_decoder dec0(e_a, e_b, e_alu_op, e_is_cond, e_cond, e_write_flags, e_swp, m_a1, m_a2, m_r1_op, m_r2_op, r_a1, r_a2, r_op, d_pcincr, r_r1_a, r_r2_a, r_read, d_word, d_r1, d_r2, d_hazard, rst, clk);
+    insn_decoder dec0(e_a, e_b, e_alu_op, e_is_cond, e_cond, e_write_flags, e_swp, m_a1, m_a2, m_r1_op, m_r2_op, r_a1, r_a2, r_op, d_pass, d_pcincr, r_r1_a, r_r2_a, r_read, d_word, d_r1, d_r2, d_hazard, rst, clk);
 
 
-    /*wire [31:0] pi_e_a, pi_e_b; //output
+    wire [31:0] pi_e_a, pi_e_b; //output
     wire [7:0] pi_e_alu_op; //output
     wire [3:0] pi_e_cond; //output
     wire [3:0] pi_e_write_flags; //output
@@ -108,16 +107,16 @@ module test_pipeline_assembly(ram_w_addr, ram_r_addr, ram_w_line, ram_read, ram_
 
     pipeline_interface pi0(
     pi_e_a, pi_e_b, pi_e_alu_op, pi_e_is_cond, pi_e_cond, pi_e_write_flags, pi_e_swp, pi_m_a1, pi_m_a2, pi_m_r1_op, pi_m_r2_op, pi_r_a1, pi_r_a2, pi_r_op, pi_d_pcincr,
-    e_a, e_b, e_alu_op, e_is_cond, e_cond, e_write_flags, e_swp, m_a1, m_a2, m_r1_op, m_r2_op, r_a1, r_a2, r_op, d_pass, d_pcincr, clk, rst);*/
+    e_a, e_b, e_alu_op, e_is_cond, e_cond, e_write_flags, e_swp, m_a1, m_a2, m_r1_op, m_r2_op, r_a1, r_a2, r_op, d_pass, d_pcincr, clk, rst);
 
 
-    wire [31:0] ex_a = e_a, ex_b = e_b; //operands  //input
+    wire [31:0] ex_a = pi_e_a, ex_b = pi_e_b; //operands  //input
     wire [31:0] ex_st = reg_stout; //status register  //input
-    wire [7:0] ex_alu_op = e_alu_op; // alu operation  //input
-    wire ex_is_cond = e_is_cond; //is a conditional command signal  //input
-    wire [3:0] ex_cond = e_cond; //cc  //input
-    wire [3:0] ex_write_flags = e_write_flags; //write n/z/c/v  //input
-    wire ex_swp = e_swp; //swap ops?  //input
+    wire [7:0] ex_alu_op = pi_e_alu_op; // alu operation  //input
+    wire ex_is_cond = pi_e_is_cond; //is a conditional command signal  //input
+    wire [3:0] ex_cond = pi_e_cond; //cc  //input
+    wire [3:0] ex_write_flags = pi_e_write_flags; //write n/z/c/v  //input
+    wire ex_swp = pi_e_swp; //swap ops?  //input
 
     wire [31:0] ex_r1, ex_r2; //results, sync  //output
     wire ex_n, ex_z, ex_c, ex_v; //flags, async  //output
@@ -141,7 +140,7 @@ module test_pipeline_assembly(ram_w_addr, ram_r_addr, ram_w_line, ram_read, ram_
 
     wire [4:0] ex_r_a1, ex_r_a2; //(reg_wb) //output
     wire [3:0] ex_r_op; //(reg_wb) //output
-    execute_stage_passthrough exh0(ex_m_a1, ex_m_a2, ex_m_r1_op, ex_m_r2_op, ex_r_a1, ex_r_a2, ex_r_op, m_a1, m_a2, m_r1_op, m_r2_op, r_a1, r_a2, r_op, clk, rst);
+    execute_stage_passthrough exh0(ex_m_a1, ex_m_a2, ex_m_r1_op, ex_m_r2_op, ex_r_a1, ex_r_a2, ex_r_op, pi_m_a1, pi_m_a2, pi_m_r1_op, pi_m_r2_op, pi_r_a1, pi_r_a2, pi_r_op, clk, rst);
 
 
     wire [31:0] mop_r1 = ex_r1, mop_r2 = ex_r2; //inputs  //input

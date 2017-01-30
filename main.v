@@ -11,124 +11,124 @@ module test_rom(word, addr);
         assign word = insn;
 
         always @(addr) begin
-                #1;
+                //#1;
                 case(addr)
                         /*32'h0: begin //(mov)nop reg 29 to reg 30
-                            insn[31:25] <= 00; insn[24:21] <= 4'b1110; insn[20:16] <= 29; insn[15:11] <= 0; insn[10:6] <= 30; insn[5:1] <= 0; insn[0] <= 0;
+                            insn[31:25] = 00; insn[24:21] = 4'b1110; insn[20:16] = 29; insn[15:11] = 0; insn[10:6] = 30; insn[5:1] = 0; insn[0] = 0;
                         end*/
                         32'h0: begin //movs imm to reg 30 (sp)
-                            insn[31:25] <= 33; insn[24:21] <= 4'b1110; insn[20:11] <= 0; insn[10:6] <= 30; insn[5:1] <= 5'b10000; insn[0] <= 0;
+                            insn[31:25] = 33; insn[24:21] = 4'b1110; insn[20:11] = 0; insn[10:6] = 30; insn[5:1] = 5'b10000; insn[0] = 0;
                         end
                         32'h1: begin
-                            insn <= 32'h14888;
+                            insn = 32'h14888;
                         end
                         32'h3: begin //movs imm to reg 29 (lr)
-                            insn[31:25] <= 33; insn[24:21] <= 4'b1110; insn[20:11] <= 0; insn[10:6] <= 29; insn[5:1] <= 5'b10000; insn[0] <= 0;
+                            insn[31:25] = 33; insn[24:21] = 4'b1110; insn[20:11] = 0; insn[10:6] = 29; insn[5:1] = 5'b10000; insn[0] = 0;
                         end
                         32'h4: begin
-                            insn <= 32'h22888;
+                            insn = 32'h22888;
                         end
                         32'h5: begin //add 29 and 30 to 30
-                            insn[31:25] <= 14; insn[24:21] <= 4'b1110; insn[20:16] <= 29; insn[15:11] <= 30; insn[10:6] <= 30; insn[5:1] <= 5'b00000; insn[0] <= 0;
+                            insn[31:25] = 14; insn[24:21] = 4'b1110; insn[20:16] = 29; insn[15:11] = 30; insn[10:6] = 30; insn[5:1] = 5'b00000; insn[0] = 0;
                         end
                         32'h6: begin //add imm1 and imm2 to 29
-                            insn[31:25] <= 14; insn[24:21] <= 4'b1110; insn[20:16] <= 0; insn[15:11] <= 0; insn[10:6] <= 29; insn[5:1] <= 5'b11000; insn[0] <= 0;
+                            insn[31:25] = 14; insn[24:21] = 4'b1110; insn[20:16] = 0; insn[15:11] = 0; insn[10:6] = 29; insn[5:1] = 5'b11000; insn[0] = 0;
                         end
                         32'h7: begin
-                            insn <= 32'h35942;
+                            insn = 32'h35942;
                         end
                         32'h8: begin
-                            insn <= 32'hDEADBEAF;
+                            insn = 32'hDEADBEAF;
                         end
                         32'h9: begin //mul 29 and 30 to 29 and 30
-                            insn[31:25] <= 18; insn[24:21] <= 4'b1110; insn[20:16] <= 29; insn[15:11] <= 30; insn[10:6] <= 29; insn[5:1] <= 30; insn[0] <= 0;
+                            insn[31:25] = 18; insn[24:21] = 4'b1110; insn[20:16] = 29; insn[15:11] = 30; insn[10:6] = 29; insn[5:1] = 30; insn[0] = 0;
                         end
                         32'hA: begin //xor 29 and 30 to 30
-                            insn[31:25] <= 6; insn[24:21] <= 4'b1110; insn[20:16] <= 29; insn[15:11] <= 30; insn[10:6] <= 30; insn[5:1] <= 00; insn[0] <= 0;
+                            insn[31:25] = 6; insn[24:21] = 4'b1110; insn[20:16] = 29; insn[15:11] = 30; insn[10:6] = 30; insn[5:1] = 00; insn[0] = 0;
                         end
                         32'hB: begin //csr 30 by imm to 29
-                            insn[31:25] <= 12; insn[24:21] <= 4'b1110; insn[20:16] <= 30; insn[15:11] <= 0; insn[10:6] <= 29; insn[5:1] <= 5'b01000; insn[0] <= 0;
+                            insn[31:25] = 12; insn[24:21] = 4'b1110; insn[20:16] = 30; insn[15:11] = 0; insn[10:6] = 29; insn[5:1] = 5'b01000; insn[0] = 0;
                         end
                         32'hC: begin
-                            insn <= 11;
+                            insn = 11;
                         end
                         32'hD: begin //branch to imm
-                            insn[31:25] <= 25; insn[24:21] <= 4'b1110; insn[20:16] <= 0; insn[15:11] <= 0; insn[10:6] <= 0; insn[5:1] <= 5'b10000; insn[0] <= 0;
+                            insn[31:25] = 25; insn[24:21] = 4'b1110; insn[20:16] = 0; insn[15:11] = 0; insn[10:6] = 0; insn[5:1] = 5'b10000; insn[0] = 0;
                         end
                         32'hE: begin
-                            insn <= 32'h132;
+                            insn = 32'h132;
                         end
                         32'h132: begin //out 29 to 30
-                            insn[31:25] <= 32; insn[24:21] <= 4'b1110; insn[20:16] <= 30; insn[15:11] <= 29; insn[10:6] <= 0; insn[5:1] <= 0; insn[0] <= 0;
+                            insn[31:25] = 32; insn[24:21] = 4'b1110; insn[20:16] = 30; insn[15:11] = 29; insn[10:6] = 0; insn[5:1] = 0; insn[0] = 0;
                         end
                         32'h133: begin //out 30 to 29
-                            insn[31:25] <= 32; insn[24:21] <= 4'b1110; insn[20:16] <= 29; insn[15:11] <= 30; insn[10:6] <= 0; insn[5:1] <= 0; insn[0] <= 0;
+                            insn[31:25] = 32; insn[24:21] = 4'b1110; insn[20:16] = 29; insn[15:11] = 30; insn[10:6] = 0; insn[5:1] = 0; insn[0] = 0;
                         end
                         32'h134: begin //brl to 30
-                            insn[31:25] <= 27; insn[24:21] <= 4'b1110; insn[20:16] <= 30; insn[15:11] <= 0; insn[10:6] <= 0; insn[5:1] <= 5'b00000; insn[0] <= 0;
+                            insn[31:25] = 27; insn[24:21] = 4'b1110; insn[20:16] = 30; insn[15:11] = 0; insn[10:6] = 0; insn[5:1] = 5'b00000; insn[0] = 0;
                         end
                         32'h135: begin //str to imm from 30
-                            insn[31:25] <= 30; insn[24:21] <= 4'b1110; insn[20:16] <= 0; insn[15:11] <= 30; insn[10:6] <= 0; insn[5:1] <= 5'b10000; insn[0] <= 0;
+                            insn[31:25] = 30; insn[24:21] = 4'b1110; insn[20:16] = 0; insn[15:11] = 30; insn[10:6] = 0; insn[5:1] = 5'b10000; insn[0] = 0;
                         end
                         32'h136: begin
-                            insn <= 16;
+                            insn = 16;
                         end
                         32'h137: begin //mov 29, 30 to 30, 29
-                            insn[31:25] <= 34; insn[24:21] <= 4'b1110; insn[20:16] <= 29; insn[15:11] <= 30; insn[10:6] <= 30; insn[5:1] <= 29; insn[0] <= 0;
+                            insn[31:25] = 34; insn[24:21] = 4'b1110; insn[20:16] = 29; insn[15:11] = 30; insn[10:6] = 30; insn[5:1] = 29; insn[0] = 0;
                         end
                         32'h138: begin //out 30 to 29
-                            insn[31:25] <= 32; insn[24:21] <= 4'b1110; insn[20:16] <= 29; insn[15:11] <= 30; insn[10:6] <= 0; insn[5:1] <= 0; insn[0] <= 0;
+                            insn[31:25] = 32; insn[24:21] = 4'b1110; insn[20:16] = 29; insn[15:11] = 30; insn[10:6] = 0; insn[5:1] = 0; insn[0] = 0;
                         end
                         32'h139: begin //ldr from imm to 30
-                            insn[31:25] <= 29; insn[24:21] <= 4'b1110; insn[20:16] <= 0; insn[15:11] <= 0; insn[10:6] <= 30; insn[5:1] <= 5'b10000; insn[0] <= 0;
+                            insn[31:25] = 29; insn[24:21] = 4'b1110; insn[20:16] = 0; insn[15:11] = 0; insn[10:6] = 30; insn[5:1] = 5'b10000; insn[0] = 0;
                         end
                         32'h13A: begin
-                            insn <= 16;
+                            insn = 16;
                         end
                         32'h13B:  begin //movs imm to r1
-                            insn[31:25] <= 33; insn[24:21] <= 4'b1110; insn[20:16] <= 0; insn[15:11] <= 0; insn[10:6] <= 1; insn[5:1] <= 5'b10000; insn[0] <= 0;
+                            insn[31:25] = 33; insn[24:21] = 4'b1110; insn[20:16] = 0; insn[15:11] = 0; insn[10:6] = 1; insn[5:1] = 5'b10000; insn[0] = 0;
                         end
                         32'h13C: begin
-                            insn <= 32'hFFFFFFFF;
+                            insn = 32'hFFFFFFFF;
                         end
                         32'h13D: begin //out to imm from r1
-                            insn[31:25] <= 32; insn[24:21] <= 4'b1110; insn[20:16] <= 0; insn[15:11] <= 1; insn[10:6] <= 0; insn[5:1] <= 5'b10000; insn[0] <= 0;
+                            insn[31:25] = 32; insn[24:21] = 4'b1110; insn[20:16] = 0; insn[15:11] = 1; insn[10:6] = 0; insn[5:1] = 5'b10000; insn[0] = 0;
                         end
                         32'h13E: begin
-                            insn <= 32'hD;
+                            insn = 32'hD;
                         end
                         32'h13F: begin //out to imm from r1
-                            insn[31:25] <= 32; insn[24:21] <= 4'b1110; insn[20:16] <= 0; insn[15:11] <= 1; insn[10:6] <= 0; insn[5:1] <= 5'b10000; insn[0] <= 0;
+                            insn[31:25] = 32; insn[24:21] = 4'b1110; insn[20:16] = 0; insn[15:11] = 1; insn[10:6] = 0; insn[5:1] = 5'b10000; insn[0] = 0;
                         end
                         32'h140: begin
-                            insn <= 32'hF;
+                            insn = 32'hF;
                         end
                         32'h141: begin //out to imm from r1
-                            insn[31:25] <= 32; insn[24:21] <= 4'b1110; insn[20:16] <= 0; insn[15:11] <= 1; insn[10:6] <= 0; insn[5:1] <= 5'b10000; insn[0] <= 0;
+                            insn[31:25] = 32; insn[24:21] = 4'b1110; insn[20:16] = 0; insn[15:11] = 1; insn[10:6] = 0; insn[5:1] = 5'b10000; insn[0] = 0;
                         end
                         32'h142: begin
-                            insn <= 32'h11;
+                            insn = 32'h11;
                         end
                         32'h143: begin //out to imm from r1
-                            insn[31:25] <= 32; insn[24:21] <= 4'b1110; insn[20:16] <= 0; insn[15:11] <= 1; insn[10:6] <= 0; insn[5:1] <= 5'b10000; insn[0] <= 0;
+                            insn[31:25] = 32; insn[24:21] = 4'b1110; insn[20:16] = 0; insn[15:11] = 1; insn[10:6] = 0; insn[5:1] = 5'b10000; insn[0] = 0;
                         end
                         32'h144: begin
-                            insn <= 32'hE;
+                            insn = 32'hE;
                         end
                         32'h145: begin //in from imm to 30
-                            insn[31:25] <= 31; insn[24:21] <= 4'b1110; insn[20:16] <= 0; insn[15:11] <= 0; insn[10:6] <= 30; insn[5:1] <= 5'b10000; insn[0] <= 0;
+                            insn[31:25] = 31; insn[24:21] = 4'b1110; insn[20:16] = 0; insn[15:11] = 0; insn[10:6] = 30; insn[5:1] = 5'b10000; insn[0] = 0;
                         end
                         32'h146: begin
-                            insn <= 32'hA;
+                            insn = 32'hA;
                         end
                         32'h5E771E7D: begin //br_pos to 0
-                            insn[31:25] <= 25; insn[24:21] <= 4'b0101; insn[20:16] <= 0; insn[15:11] <= 0; insn[10:6] <= 0; insn[5:1] <= 5'b00000; insn[0] <= 0;
+                            insn[31:25] = 25; insn[24:21] = 4'b0101; insn[20:16] = 0; insn[15:11] = 0; insn[10:6] = 0; insn[5:1] = 5'b00000; insn[0] = 0;
                         end
                         32'h5E771E7E: begin //ret_neg
-                            insn[31:25] <= 28; insn[24:21] <= 4'b0100; insn[20:16] <= 0; insn[15:11] <= 0; insn[10:6] <= 0; insn[5:1] <= 5'b00000; insn[0] <= 0;
+                            insn[31:25] = 28; insn[24:21] = 4'b0100; insn[20:16] = 0; insn[15:11] = 0; insn[10:6] = 0; insn[5:1] = 5'b00000; insn[0] = 0;
                         end
                         default: begin
-                            insn <= 32'b0;
+                            insn = 32'b0;
                         end
                 endcase
         end
@@ -229,7 +229,7 @@ module main();
 
     test_processor_assembly proc0(lr, sp, st, pc, {pins3, pins2, pins1, pins0}, insn, clk, rst);
 
-    fib32_rom rom0(insn, pc);
+    test_rom rom0(insn, pc);
 
     assign pins0[15:0] = 16'h1488;
 
