@@ -13,14 +13,14 @@ module memory_op_stage_passthrough(q_a1, q_a2, q_op, q_proceed, a1, a2, op, proc
 
     always @(posedge clk or posedge rst) begin
         if(rst) begin
-            q_a1 <= 5'b0; q_a2 <= 5'b0;
-            q_op <= 4'b0;
-            q_proceed <= 1'b0;
+            q_a1 = 5'b0; q_a2 = 5'b0;
+            q_op = 4'b0;
+            q_proceed = 1'b0;
         end
         else begin
-            q_a1 <= a1; q_a2 <= a2;
-            q_op <= op;
-            q_proceed <= proceed;
+            q_a1 = a1; q_a2 = a2;
+            q_op = op;
+            q_proceed = proceed;
         end
     end
 endmodule

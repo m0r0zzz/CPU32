@@ -1,6 +1,6 @@
 `timescale 1 ns / 100 ps
 
-//hazard checker, to be replaced
+//hazard checker
 module reg_hazard_checker(ex_hazard, mem_hazard, reg_hazard, ex_r1_a, ex_r2_a, ex_r_op, ex_proceed, mem_r1_a, mem_r2_a, mem_r_op, mem_proceed, reg_r1_a, reg_r2_a, reg_write, dec_r1_addr, dec_r2_addr, dec_r_read);
 	output wire ex_hazard;
 	output wire mem_hazard;
@@ -73,7 +73,7 @@ module reg_hazard_checker(ex_hazard, mem_hazard, reg_hazard, ex_r1_a, ex_r2_a, e
 endmodule
 
 //module insn_decoder( e_a, e_b, e_alu_op, e_is_cond, e_cond, e_write_flags, e_swp, m_a1, m_a2, m_r1_op, m_r2_op, r_a1, r_a2, r_op, d_pass, d_pcincr, r_r1_addr, r_r2_addr, r_read, word, r1, r2, hazard, rst, clk);
-module insn_decoder( e_a, e_b, e_alu_op, e_is_cond, e_cond, e_write_flags, e_swp, m_a1, m_a2, m_r1_op, m_r2_op, r_a1, r_a2, r_op, d_pcincr, r_r1_addr, r_r2_addr, r_read, word, r1, r2, hazard, rst, clk);
+module insn_decoder( e_a, e_b, e_alu_op, e_is_cond, e_cond, e_write_flags, e_swp, m_a1, m_a2, m_r1_op, m_r2_op, r_a1, r_a2, r_op, d_pcincr, r_r1_addr, r_r2_addr, r_read, word, r1, r2, hazard_ex, hazard_mem, hazard_reg, rst, clk);
 	output wire [31:0] e_a, e_b; //arguments
 	output wire [7:0] e_alu_op; //ALU operation
 	output wire [3:0] e_cond; //Conditional code
@@ -94,7 +94,7 @@ module insn_decoder( e_a, e_b, e_alu_op, e_is_cond, e_cond, e_write_flags, e_swp
 
 	input [31:0] word; //Input from progmem (insn/imm)
 	input [31:0] r1, r2; //Inputs from register file (r1/r2)
-	input hazard; //Hazard detection flag? to be replaced
+	input hazard_ex, hazard_mem, hazard_reg; //hazards
 	input rst, clk; //Internal
 	
 	//insn comprehension
@@ -107,7 +107,7 @@ module insn_decoder( e_a, e_b, e_alu_op, e_is_cond, e_cond, e_write_flags, e_swp
 	wire [1:0] in_imm_action = word[5:4];
 	
 	//pass comprehension
-	wire pass; //flag
+	reg pass; //flag
 	wire [31:0] sh_e_a, sh_e_b;
 	reg [7:0] reg_e_alu_op;
 	reg [3:0] reg_e_cond;
@@ -161,14 +161,21 @@ module insn_decoder( e_a, e_b, e_alu_op, e_is_cond, e_cond, e_write_flags, e_swp
 	wire is_imm_fetch = imm1_op_action_masked | imm2_op_action_masked;
 	
 	reg is_delay;
+	reg is_delay_in_progress;
 	reg [3:0] delay_ctr;
+	
+	wire is_hazard = hazard_ex | hazard_mem | hazard_reg;
+	
+	reg is_hazard_delay;
 	
 	reg reg_d_pcincr;
 	//assign d_pcincr = is_imm_fetch ? 1'b1 : reg_d_pcincr;
 	always @* begin
 		if(is_imm_fetch) begin
 			d_pcincr = 1'b1;
-		end else if(is_delay) begin
+		end else if(is_delay_in_progress) begin
+			d_pcincr = 1'b0;
+		end else if(is_hazard | is_hazard_delay) begin
 			d_pcincr = 1'b0;
 		end else begin
 			d_pcincr = reg_d_pcincr;
@@ -176,7 +183,18 @@ module insn_decoder( e_a, e_b, e_alu_op, e_is_cond, e_cond, e_write_flags, e_swp
 	end
 	
 	reg reg_pass;
-	assign pass = (is_imm_fetch | is_delay /* hazard_flag_here*/) ? 1'b0 : reg_pass;	
+	//assign pass = (is_imm_fetch | is_delay | is_hazard | is_hazard_delay) ? 1'b0 : reg_pass;
+	always @* begin
+		if(is_imm_fetch) begin
+			pass = 1'b0;
+		end else if(is_delay_in_progress) begin
+			pass = 1'b0;
+		end else if(is_hazard | is_hazard_delay) begin
+			pass = 1'b0;
+		end else begin
+			pass = reg_pass;
+		end
+	end
 	
 	//reg [2:0] cur_imm_op;
 	//reg [3:0] cur_imm_state;
@@ -203,7 +221,10 @@ module insn_decoder( e_a, e_b, e_alu_op, e_is_cond, e_cond, e_write_flags, e_swp
 			reg_d_pcincr = 1'b1; // ???
 			
 			is_delay = 1'b0;
+			is_delay_in_progress = 1'b0;
 			delay_ctr = 0;
+			
+			is_hazard_delay = 1'b0;
 			
 			reg_pass = 1'b1; // ???
 			
@@ -283,11 +304,16 @@ module insn_decoder( e_a, e_b, e_alu_op, e_is_cond, e_cond, e_write_flags, e_swp
 			end else if(is_delay) begin
 				if(delay_ctr == 0) begin
 					is_delay = 0;
+					is_delay_in_progress = 0;
 				end else begin
+					is_delay_in_progress = 1;
 					delay_ctr = delay_ctr - 1;
 				end
-			end //else if(hazard) begin !!!!!
-			else begin // decode
+			end else if(is_hazard) begin
+				is_hazard_delay = 1'b0;
+			end else if(is_hazard_delay) begin
+				is_hazard_delay = 1'b0;
+			end else begin // decode
 				//latch opcode and imm_action
 				decode_state = {1'b0,  in_opcode};
 				imm1_op_action = in_imm_action[1];
