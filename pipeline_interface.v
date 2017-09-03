@@ -1,4 +1,4 @@
-`timescale 1 ns / 100 ps
+`timescale 1 ns / 1 ps
 
 module pipeline_interface(
     qe_a, qe_b, qe_alu_op, qe_is_cond, qe_cond, qe_write_flags, qe_swp, qm_a1, qm_a2, qm_r1_op, qm_r2_op, qr_a1, qr_a2, qr_op, qd_pcincr,

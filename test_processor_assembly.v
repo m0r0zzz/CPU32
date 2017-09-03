@@ -1,4 +1,4 @@
-`timescale 1 ns / 100 ps
+`timescale 1 ns / 1 ps
 
 `define INTERFACE_STAGE_NO_DELAY
 `define RWB_STAGE_HAZARD

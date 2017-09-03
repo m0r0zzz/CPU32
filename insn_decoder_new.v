@@ -1,4 +1,4 @@
-`timescale 1 ns / 100 ps
+`timescale 1 ns / 1 ps
 
 //hazard checker
 module reg_hazard_checker(ex_hazard, mem_hazard, reg_hazard, ex_r1_a, ex_r2_a, ex_r_op, ex_proceed, mem_r1_a, mem_r2_a, mem_r_op, mem_proceed, reg_r1_a, reg_r2_a, reg_write, dec_r1_addr, dec_r2_addr, dec_r_read);

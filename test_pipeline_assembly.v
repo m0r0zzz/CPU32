@@ -1,4 +1,4 @@
-`timescale 1 ns / 100 ps
+`timescale 1 ns / 1 ps
 
 `include "execute.v"
 `include "memory_op.v"
@@ -6,6 +6,7 @@
 `include "pipeline_interface.v"
 `include "insn_decoder_new.v"
 `include "regs.v"
+`include "passthrough.v"
 
 /*module test_pipeline_assembly(e_a, e_b, e_alu_op, e_is_cond, e_cond, e_write_flags, e_swp, m_a1, m_a2, m_r1_op, m_r2_op, r_a1, r_a2, r_op, pass, pcincr, clk, rst);
     input [31:0] e_a, e_b;
@@ -136,18 +137,31 @@ module test_pipeline_assembly(ram_w_addr, ram_r_addr, ram_w_line, ram_read, ram_
     status_register_adaptor sr0(sr_st, sr_stwr, sr_n, sr_z, sr_c, sr_v, sr_cc);
 
 
-    wire [31:0] ex_m_a1, ex_m_a2; //(mem_op) //output
+    /*wire [31:0] ex_m_a1, ex_m_a2; //(mem_op) //output
     wire [3:0] ex_m_r1_op, ex_m_r2_op; //(mem_op) //output
 
     wire [4:0] ex_r_a1, ex_r_a2; //(reg_wb) //output
     wire [3:0] ex_r_op; //(reg_wb) //output
     execute_stage_passthrough exh0(ex_m_a1, ex_m_a2, ex_m_r1_op, ex_m_r2_op, ex_r_a1, ex_r_a2, ex_r_op, m_a1, m_a2, m_r1_op, m_r2_op, r_a1, r_a2, r_op, clk, rst);
-
+	*/
+    
+    wire [31:0] pass_m_a1, pass_m_a2; //(mem_op) //output
+    wire [3:0] pass_m_r1_op, pass_m_r2_op; //(mem_op) //output
+    
+    wire [4:0] pass_d1_r_a1, pass_d1_r_a2;
+    wire [3:0] pass_d1_r_op;
+    
+    wire [4:0] pass_r_a1, pass_r_a2; //(reg_wb) //output
+    wire [3:0] pass_r_op; //(reg_wb) //output
+    wire pass_r_proceed; //(reg_wb) //output
+    
+    combined_ex_mem_passthrough pass0(pass_m_a1, pass_m_a2, pass_m_r1_op, pass_m_r2_op, pass_r_a1, pass_r_a2, pass_r_op, pass_r_proceed, pass_d1_r_a1, pass_d1_r_a2, pass_d1_r_op, m_a1, m_a2, m_r1_op, m_r2_op, r_a1, r_a2, r_op, ex_cres, clk, rst);
+    
 
     wire [31:0] mop_r1 = ex_r1, mop_r2 = ex_r2; //inputs  //input
-    wire [31:0] mop_a1 = ex_m_a1, mop_a2 = ex_m_a2; //memory addresses  //input
+    wire [31:0] mop_a1 = pass_m_a1, mop_a2 = pass_m_a2; //memory addresses  //input
 
-    wire [3:0] mop_r1_op = ex_m_r1_op, mop_r2_op = ex_m_r2_op; //operation codes  //input
+    wire [3:0] mop_r1_op = pass_m_r1_op, mop_r2_op = pass_m_r2_op; //operation codes  //input
 
     wire [31:0] mop_ram_r_line = ram_r_line, mop_sys_r_line = sys_r_line; // read lanes  //input
 
@@ -167,18 +181,18 @@ module test_pipeline_assembly(ram_w_addr, ram_r_addr, ram_w_line, ram_read, ram_
     assign ram_write = mop_ram_w, sys_write = mop_sys_w, ram_read = mop_ram_r, sys_read = mop_sys_r;
     memory_op mop0( mop_m1, mop_m2, mop_ram_w_addr, mop_ram_r_addr, mop_ram_w, mop_ram_r, mop_ram_w_line, mop_sys_w_addr, mop_sys_r_addr, mop_sys_w, mop_sys_r, mop_sys_w_line, mop_r1, mop_r2, mop_a1, mop_a2, mop_r1_op, mop_r2_op, mop_ram_r_line, mop_sys_r_line, mop_proceed, clk, rst);
 
-    wire [4:0] mop_r_a1, mop_r_a2; //(reg_wb)  //output
+    /*wire [4:0] mop_r_a1, mop_r_a2; //(reg_wb)  //output
     wire [3:0] mop_r_op; //(reg_wb)  //output
     wire mop_proceed2;  //output
     memory_op_stage_passthrough moph0(mop_r_a1, mop_r_a2, mop_r_op, mop_proceed2, ex_r_a1, ex_r_a2, ex_r_op, ex_cres, clk, rst);
-
+	*/
 
     wire [31:0] rwb_r1 = mop_m1, rwb_r2 = mop_m2;  //input
-    wire [4:0] rwb_a1 = mop_r_a1, rwb_a2 = mop_r_a2;  //input
+    wire [4:0] rwb_a1 = pass_r_a1, rwb_a2 = pass_r_a2;  //input
 
-    wire [3:0] rwb_op = mop_r_op;  //input
+    wire [3:0] rwb_op = pass_r_op;  //input
 
-    wire rwb_proceed = mop_proceed2;  //input
+    wire rwb_proceed = pass_r_proceed;  //input
 
     wire [31:0] rwb_wr1, rwb_wr2;  //output
     assign reg_c = rwb_wr1, reg_d = rwb_wr2;
@@ -191,7 +205,7 @@ module test_pipeline_assembly(ram_w_addr, ram_r_addr, ram_w_line, ram_read, ram_
     wire ex_hazard;
     wire reg_hazard;
     wire mem_hazard;
-    reg_hazard_checker hz0(ex_hazard, mem_hazard, reg_hazard, ex_r_a1, ex_r_a2, ex_r_op, ex_cres, mop_r_a1, mop_r_a2, mop_r_op, mop_proceed2, rwb_wa1, rwb_wa2, rwb_write, r_r1_a, r_r2_a, r_read);
+    reg_hazard_checker hz0(ex_hazard, mem_hazard, reg_hazard, pass_d1_r_a1, pass_d1_r_a2, pass_d1_r_op, ex_cres, pass_r_a1, pass_r_a2, pass_r_op, pass_r_proceed, rwb_wa1, rwb_wa2, rwb_write, r_r1_a, r_r2_a, r_read);
 /*`ifdef RWB_STAGE_HAZARD
     assign d_hazard = ex_hazard || reg_hazard || mem_hazard;
 `else

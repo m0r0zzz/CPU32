@@ -1,4 +1,4 @@
-`timescale 1 ns / 100 ps
+`timescale 1 ns / 1 ps
 
 `include "alu.v"
 
@@ -65,10 +65,10 @@ module execute_stage_passthrough(qm_a1, qm_a2, qm_r1_op, qm_r2_op, qr_a1, qr_a2,
             qr_op = 4'b0;
         end
         else begin
-            qm_a1 = m_a1; qm_a2 = m_a2;
-            qm_r1_op = m_r1_op; qm_r2_op = m_r2_op;
-            qr_a1 = r_a1; qr_a2 = r_a2;
-            qr_op = r_op;
+            qm_a1 <= m_a1; qm_a2 <= m_a2;
+            qm_r1_op <= m_r1_op; qm_r2_op <= m_r2_op;
+            qr_a1 <= r_a1; qr_a2 <= r_a2;
+            qr_op <= r_op;
         end
     end
 endmodule
@@ -115,8 +115,8 @@ module execute(r1, r2, cres, n, z, c, v, cc, a, b, alu_op, is_cond, cond, write_
             cres = 1'b0;
         end
         else begin
-            r1 = alu_q1;
-            r2 = alu_q2;
+            r1 <= alu_q1;
+            r2 <= alu_q2;
             if(is_cond) cres = cond_res;
             else cres = 1'b1;
         end

@@ -1,4 +1,4 @@
-`timescale 1 ns / 100 ps
+`timescale 1 ns / 1 ps
 
 module gpio_mux(pins, func0_in, func1_in, func2_in, func3_in, func0_out, func1_out, func2_out, func3_out, func0_dir, func1_dir, func2_dir, func3_dir, addr, sys_w_addr, sys_r_addr, sys_w_line, sys_r_line, sys_w, sys_r, rst, clk);
     inout [31:0] pins;

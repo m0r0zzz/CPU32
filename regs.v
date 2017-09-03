@@ -1,5 +1,5 @@
 
-`timescale 1 ns / 100 ps
+`timescale 1 ns / 1 ps
 
 module reg32_2x2_pc(rd0, rd1, ra0, ra1, wa0, wa1, wd0, wd1, read, write, clk, rst, lrout, spout, stout, pcout, stin, stwr, pcincr);
     parameter addrsize = 5;
@@ -44,10 +44,10 @@ module reg32_2x2_pc(rd0, rd1, ra0, ra1, wa0, wa1, wd0, wd1, read, write, clk, rs
         //if(read[0]) rd0 <= regs[ra0];
         //if(read[1]) rd1 <= regs[ra1];
 
-            if(write[0]) regs[wa0] = wd0;
-            if(write[1]) regs[wa1] = wd1;
+            if(write[0]) regs[wa0] <= wd0;
+            if(write[1]) regs[wa1] <= wd1;
 
-            if(stwr) regs[28] = stin;
+            if(stwr) regs[28] <= stin;
             if(pcincr) regs[31] = regs[31] + 1;
         end
     end

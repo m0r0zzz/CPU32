@@ -1,4 +1,4 @@
-`timescale 1 ns / 100 ps
+`timescale 1 ns / 1 ps
 
 `include "gpio_mux.v"
 `include "gpio.v"

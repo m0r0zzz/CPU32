@@ -1,4 +1,4 @@
-`timescale 1 ns / 100 ps
+`timescale 1 ns / 1 ps
 
 module ram(r_addr, w_addr, r_line, w_line, read, write, wrdy, rrdy, exc, clk);
     input [31:0] r_addr;
@@ -33,19 +33,18 @@ module ram(r_addr, w_addr, r_line, w_line, read, write, wrdy, rrdy, exc, clk);
     end*/
 
     always @(posedge clk) begin
-    	#0.1
         if(wrdy) wrdy = 1'b0;
         if(rrdy) rrdy = 1'b0;
 
         if(read & !rrdy ) begin
             if(r_addr >= mem_size) begin
-                r_line = 32'b0;
-                exc = 1'b1;
+                r_line <= 32'b0;
+                exc <= 1'b1;
             end
             else begin
-                r_line = mem[r_addr];
-                rrdy = 1'b1;
-                exc = 1'b0;
+                r_line <= mem[r_addr];
+                rrdy <= 1'b1;
+                exc <= 1'b0;
             end
         end
         else r_line = 32'bz;
@@ -90,14 +89,13 @@ module emb_ram(r_addr, w_addr, r_line, w_line, read, write, exc, clk);
     end*/
 
      always @(posedge clk) begin //??????????
-        #0.1;
         if(read) begin
             if(r_addr >= mem_size) begin
                 r_line = 32'b0;
                 exc = 1'b1;
             end
             else begin
-                r_line = mem[r_addr];
+                r_line <= mem[r_addr];
                 exc = 1'b0;
             end
         end
@@ -106,7 +104,7 @@ module emb_ram(r_addr, w_addr, r_line, w_line, read, write, exc, clk);
         if(write) begin
             if(w_addr >= mem_size) exc = 1'b1;
             else begin
-                mem[w_addr] = w_line;
+                mem[w_addr] <= w_line;
                 exc = 1'b0;
             end
         end

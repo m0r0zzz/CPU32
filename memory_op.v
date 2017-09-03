@@ -1,4 +1,4 @@
-`timescale 1 ns / 100 ps
+`timescale 1 ns / 1 ps
 
 module memory_op_stage_passthrough(q_a1, q_a2, q_op, q_proceed, a1, a2, op, proceed, clk, rst);
     input [4:0] a1, a2; //(reg_wb)
@@ -18,9 +18,9 @@ module memory_op_stage_passthrough(q_a1, q_a2, q_op, q_proceed, a1, a2, op, proc
             q_proceed = 1'b0;
         end
         else begin
-            q_a1 = a1; q_a2 = a2;
-            q_op = op;
-            q_proceed = proceed;
+            q_a1 <= a1; q_a2 <= a2;
+            q_op <= op;
+            q_proceed <= proceed;
         end
     end
 endmodule
@@ -68,7 +68,8 @@ module memory_op( m1, m2, ram_w_addr, ram_r_addr, ram_w, ram_r, ram_w_line, sys_
         end
         else begin
             //ram_w <= 1'b0; ram_r <= 1'b0; sys_r <= 1'b0; sys_w <= 1'b0;
-            //#0;
+        	r1_inner <= r1;
+        	r2_inner <= r2;        	
             ram_w = 1'b0; ram_r = 1'b0; sys_r = 1'b0; sys_w = 1'b0;
             case(r1_op_inner)
                 0: begin //clean NOP
@@ -255,8 +256,6 @@ module memory_op( m1, m2, ram_w_addr, ram_r_addr, ram_w, ram_r, ram_w_line, sys_
                     //ram_w <= 1'b0; ram_r <= 1'b0; sys_r <= 1'b0; sys_w <= 1'b0;
                     end
             endcase
-            r1_inner = r1;
-            r2_inner = r2;
         end
     end
 endmodule
