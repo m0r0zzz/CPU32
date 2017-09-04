@@ -75,50 +75,70 @@ endmodule
 
 
 
-module execute(r1, r2, cres, n, z, c, v, cc, a, b, alu_op, is_cond, cond, write_flags, st, swp, clk, rst);
+module execute(r1, r2, cres, n, z, c, v, cc, a, b, op, is_cond, cond, write_flags, st, swp, clk, rst);
     input [31:0] a, b; //operands
     input [31:0] st; //status register
-    input [7:0] alu_op; // alu operation
+    input [7:0] op; // alu operation
     input is_cond; //is a conditional command signal
     input [3:0] cond; //cc
     input [3:0] write_flags; //write n/z/c/v
     input swp; //swap ops?
     input clk, rst;
+    
+    reg [7:0] in_op;
+    reg in_is_cond;
+    reg [3:0] in_cond;
+    reg [3:0] in_wr_flags;
+//    reg [31:0] in_st;
+    
+    
+    output wire [31:0] r1, r2; 
+    output wire n, z, c, v; 
+    output wire cc; 
+    output wire cres; 
 
-    output reg [31:0] r1, r2; //results, sync
-    output wire n, z, c, v; //flags, async
-    output wire cc; //write flags, async
-    output reg cres; //conditional results, sync
-
-    wire [31:0] ra = swp ? b : a;
-    wire [31:0] rb = swp ? a : b;
+    reg [31:0] ra, rb;
 
     wire [31:0] alu_q1, alu_q2;
     wire alu_n, alu_z, alu_c, alu_v;
     wire [7:0] alu_op;
-    alu32_2x2 alu0(alu_q1, alu_q2, {alu_n, alu_z, alu_c, alu_v}, ra, rb, alu_op);
+    alu32_2x2 alu0(alu_q1, alu_q2, {alu_n, alu_z, alu_c, alu_v}, ra, rb, in_op);
 
     wire cond_n = st[3], cond_z = st[2], cond_c = st[1], cond_v = st[0];
     wire cond_res;
-    cond_calc cond0(cond_res, cond, cond_n, cond_z, cond_c, cond_v);
+    cond_calc cond0(cond_res, in_cond, cond_n, cond_z, cond_c, cond_v);
 
     assign cc = (write_flags != 4'b0) && (is_cond && cond_res);
-    assign n = write_flags[3] ? alu_n : cond_n;
-    assign z = write_flags[2] ? alu_z : cond_z;
-    assign c = write_flags[1] ? alu_c : cond_c;
-    assign v = write_flags[0] ? alu_v : cond_v;
-
+    assign n = in_wr_flags[3] ? alu_n : cond_n;
+    assign z = in_wr_flags[2] ? alu_z : cond_z;
+    assign c = in_wr_flags[1] ? alu_c : cond_c;
+    assign v = in_wr_flags[0] ? alu_v : cond_v;
+    assign cres = in_is_cond ? cond_res : 1'b1;
+    
+    assign r1 = alu_q1;
+    assign r2 = alu_q2;
+    
     always @(posedge clk or posedge rst) begin
         if(rst) begin
-            r1 = 31'b0;
-            r2 = 31'b0;
-            cres = 1'b0;
+            ra <= 0; rb <= 0;
+           	in_op <= 0;
+           	in_is_cond = 0;
+           	in_cond <= 0;
+           	in_wr_flags <= 0;
         end
         else begin
-            r1 <= alu_q1;
-            r2 <= alu_q2;
-            if(is_cond) cres = cond_res;
-            else cres = 1'b1;
+        	if(swp) begin
+        		ra <= b;
+        		rb <= a;
+        	end else begin
+        		ra <= a;
+        		rb <= b;
+        	end
+        	in_op <= op;
+        	in_is_cond <= is_cond;
+        	in_cond <= cond;
+        	in_wr_flags <= write_flags;
+//        	in_st <= st;
         end
     end
 endmodule

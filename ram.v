@@ -91,21 +91,21 @@ module emb_ram(r_addr, w_addr, r_line, w_line, read, write, exc, clk);
      always @(posedge clk) begin //??????????
         if(read) begin
             if(r_addr >= mem_size) begin
-                r_line = 32'b0;
-                exc = 1'b1;
+                r_line <= 32'b0;
+                exc <= 1'b1;
             end
             else begin
                 r_line <= mem[r_addr];
-                exc = 1'b0;
+                exc <= 1'b0;
             end
         end
-        else r_line = 32'bz;
+        else r_line <= 32'bz;
 
         if(write) begin
-            if(w_addr >= mem_size) exc = 1'b1;
+            if(w_addr >= mem_size) exc <= 1'b1;
             else begin
                 mem[w_addr] <= w_line;
-                exc = 1'b0;
+                exc <= 1'b0;
             end
         end
     end

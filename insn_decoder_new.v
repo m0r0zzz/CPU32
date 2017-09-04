@@ -171,7 +171,7 @@ module insn_decoder( e_a, e_b, e_alu_op, e_is_cond, e_cond, e_write_flags, e_swp
 	always @* begin
 		if(is_imm_fetch) begin
 			d_pcincr = 1'b1;
-		end else if(is_delay_in_progress) begin
+		end else if(is_delay) begin
 			d_pcincr = 1'b0;
 		end else if(is_hazard | is_hazard_delay) begin
 			d_pcincr = 1'b0;
@@ -301,16 +301,15 @@ module insn_decoder( e_a, e_b, e_alu_op, e_is_cond, e_cond, e_write_flags, e_swp
 	
 	//micro op generator
 	always @* begin
-		if(rst) begin
-			reg_e_alu_op = 0; reg_e_cond = 0; reg_e_swp = 0; reg_e_write_flags = 0; reg_e_is_cond = 0; //alu nop, not conditional, no flags
-			reg_m_r1_op = 4'b0; reg_m_r2_op = 4'b0; //memory clean nop
-			reg_r_op = 0; reg_r_a1 = 0; reg_r_a2 = 0; // register write nop
-			r_r1_addr = 0; r_r2_addr = 0; r_read = 0; //register read none
-			is_a_override = 1; is_b_override = 1; is_m1_override = 1; is_m2_override = 1; //args from internal
-			imm1_op_dest = 1'b0; imm2_op_dest = 1'b0; // imm to reg
-			imm1_op_mask = 1'b1; imm2_op_mask = 1'b1; // no imm in this insn
-			reg_a = 0; reg_b = 0; reg_m_a1 = 0; reg_m_a2 = 0;
-		end else begin
+		reg_e_alu_op = 0; reg_e_cond = 0; reg_e_swp = 0; reg_e_write_flags = 0; reg_e_is_cond = 0; //alu nop, not conditional, no flags
+		reg_m_r1_op = 4'b0; reg_m_r2_op = 4'b0; //memory clean nop
+		reg_r_op = 0; reg_r_a1 = 0; reg_r_a2 = 0; // register write nop
+		r_r1_addr = 0; r_r2_addr = 0; r_read = 0; //register read none
+		is_a_override = 1; is_b_override = 1; is_m1_override = 1; is_m2_override = 1; //args from internal
+		imm1_op_dest = 1'b0; imm2_op_dest = 1'b0; // imm to reg
+		imm1_op_mask = 1'b1; imm2_op_mask = 1'b1; // no imm in this insn
+		reg_a = 0; reg_b = 0; reg_m_a1 = 0; reg_m_a2 = 0;
+		if(!rst) begin
 			case(decode_state) // synopsys full_case parallel_case
 				//logic
 				0: begin //nop

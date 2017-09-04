@@ -13,8 +13,60 @@ module register_wb( write, wr1, wr2, wa1, wa2, r1, r2, a1, a2, op, proceed, clk,
     output reg [31:0] wr1, wr2;
     output reg [4:0] wa1, wa2;
     output reg [1:0] write;
-
-    wire [3:0] inner_op;
+    
+    //fully combinational, because synchronisation point is on register file
+    always @* begin
+    	wr1 = 32'b0; wr2 = 32'b0;
+    	wa1 = 32'b0; wa2 = 32'b0;
+    	write = 2'b0;
+    	if(proceed) begin
+    		case(op)
+    			0: write = 2'b00; //NOP
+    			1: begin //write r1 to addr a1
+    				wr1 = r1;
+    				wa1 = a1;
+    				write = 2'b01;
+    			end
+    			2: begin //write r1 to addr a2
+    				wr1 = r1;
+    				wa1 = a2;
+    				write = 2'b01;
+    			end
+    			3: begin //write r1 to addr r2
+    				wr1 = r1;
+    				wa1 = r2[4:0];
+    				write = 2'b01;
+    			end
+    			4: begin //write r2 to addr a1
+    				wr1 = r2;
+    				wa1 = a1;
+    				write = 2'b01;
+    			end
+    			5: begin //write r2 to addr a2
+    				wr1 = r2;
+    				wa1 = a2;
+    				write = 2'b01;
+    			end
+    			6: begin //write r2 to addr r1
+    				wr1 = r2;
+    				wa1 = r1[4:0];
+    				write = 2'b01;
+    			end
+    			7: begin //write r2, r1 to a2, a1
+    				wr1 = r1; wr2 = r2;
+    				wa1 = a1; wa2 = a2;
+    				write = 2'b11;
+    			end
+    			8: begin //write r1, r2 to a2, a1
+    				wr1 = r1; wr2 = r2;
+    				wa1 = a2; wa2 = a1;
+    				write = 2'b11;
+    			end
+    		endcase
+    	end
+    end
+    
+    /*wire [3:0] inner_op;
 
     assign inner_op = proceed ? op : 4'b0;
 
@@ -70,6 +122,6 @@ module register_wb( write, wr1, wr2, wa1, wa2, r1, r2, a1, a2, op, proceed, clk,
                     end
             endcase
         end
-    end
+    end*/
 endmodule
 
