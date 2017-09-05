@@ -1,13 +1,25 @@
-`timescale 1 ns / 1 ps
+//`timescale 1 ns / 1 ps
 
-`include "execute.v"
-`include "memory_op.v"
-`include "register_wb.v"
-`include "pipeline_interface.v"
-`include "insn_decoder_new.v"
-`include "regs.v"
-`include "passthrough.v"
-
+`ifdef GATE_LEVEL_SIM
+	`include "synth/lib/osu025_stdcells.v" //library
+	
+	`include "synth/execute.v"
+	`include "synth/execute_status.v" //additional
+	`include "synth/memory_op.v"
+	`include "synth/register_wb.v"
+	`include "synth/insn_decoder.v"
+	`include "synth/insn_decoder_hazard.v" //additional
+	`include "synth/regs.v"
+	`include "synth/passthrough.v"
+`else
+	`include "execute.v"
+	`include "memory_op.v"
+	`include "register_wb.v"
+	`include "insn_decoder_new.v"
+	`include "regs.v"
+	`include "passthrough.v"
+`endif
+	
 /*module test_pipeline_assembly(e_a, e_b, e_alu_op, e_is_cond, e_cond, e_write_flags, e_swp, m_a1, m_a2, m_r1_op, m_r2_op, r_a1, r_a2, r_op, pass, pcincr, clk, rst);
     input [31:0] e_a, e_b;
     input [4:0] e_ra1, e_ra2;

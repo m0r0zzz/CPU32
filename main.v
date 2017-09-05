@@ -1,5 +1,7 @@
 `timescale 1 ns / 1 ps
 
+`define GATE_LEVEL_SIM
+
 `include "test_processor_assembly.v"
 
 module test_rom(word, addr);
@@ -244,17 +246,17 @@ module main();
         integer i;
         //reset
         rst = 0;
-        #20;
+        #5;
         rst = 1;
-        #20;
+        #5;
         rst = 0;
-        #20;
+        #5;
 
-        //clock 128 times
-        for(i =0; i < 1024+128; i++) begin
-            #20;
+        //clock 1024 times
+        for(i =0; i < 1024; i++) begin
+            #1;
             clk = 1;
-            #20;
+            #1;
             clk = 0;
         end
         //finish

@@ -94,6 +94,10 @@ module alu32_2x2(q0, q1, st, a, b, op);
 
 
     always @* begin
+    	q0 = 32'b0; q1 = 32'b0; st = 4'b0;
+    	subtract = 1'b0; addsub_a = 32'b0; addsub_b = 32'b0;
+    	rotate = 1'b0; left = 1'b0; arithmetic = 1'b0;
+    	b_op = 3'b0;
         case(op)
         8'h00: begin //NOP
             q0 = a;
