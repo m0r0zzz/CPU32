@@ -1,10 +1,13 @@
 `timescale 1 ns / 1 ps
 
 //hazard checker
-module reg_hazard_checker(ex_hazard, mem_hazard, reg_hazard, ex_r1_a, ex_r2_a, ex_r_op, ex_proceed, mem_r1_a, mem_r2_a, mem_r_op, mem_proceed, reg_r1_a, reg_r2_a, reg_write, dec_r1_addr, dec_r2_addr, dec_r_read);
+module reg_hazard_checker(ex_hazard, mem_hazard, reg_hazard, jmp_hazard, ex_r1_a, ex_r2_a, ex_r_op, ex_proceed, mem_r1_a, mem_r2_a, mem_r_op, mem_proceed, reg_r1_a, reg_r2_a, reg_write, dec_r1_addr, dec_r2_addr, dec_r_read);
+	parameter pc_addr = 31;
+	
 	output wire ex_hazard;
 	output wire mem_hazard;
 	output wire reg_hazard;
+	output wire jmp_hazard;
 
 	input [4:0] ex_r1_a, ex_r2_a;
 	input [3:0] ex_r_op;
@@ -67,13 +70,33 @@ module reg_hazard_checker(ex_hazard, mem_hazard, reg_hazard, ex_r1_a, ex_r2_a, e
 	wire reg_hazard_r2 = (reg_r2_write_comp && reg_r2_comp && dec_r2_read_comp);
 	wire reg_hazard_r1r2 = (reg_r1_write_comp && reg_r1r2_comp && dec_r2_read_comp);
 	wire reg_hazard_r2r1 = (reg_r2_write_comp && reg_r2r1_comp && dec_r1_read_comp);
-
+	
+	wire ex_r1_jmp_comp = (ex_r1_a == pc_addr);
+	wire ex_r2_jmp_comp = (ex_r2_a == pc_addr);
+	wire mem_r1_jmp_comp = (mem_r1_a == pc_addr);
+	wire mem_r2_jmp_comp = (mem_r2_a == pc_addr);
+	wire reg_r1_jmp_comp = (reg_r1_a == pc_addr);
+	wire reg_r2_jmp_comp = (reg_r2_a == pc_addr);
+	
 	assign reg_hazard =  reg_hazard_r1 || reg_hazard_r2 || reg_hazard_r1r2 || reg_hazard_r2r1;
+	
+	wire ex_jmp_hazard_r1 = ex_r1_jmp_comp && (ex_r1_op_comp || ex_r1r2_op_comp);
+	wire ex_jmp_hazard_r2 = ex_r2_jmp_comp && (ex_r2_op_comp || ex_r1r2_op_comp);
+	wire mem_jmp_hazard_r1 = mem_r1_jmp_comp && (mem_r1_op_comp || mem_r1r2_op_comp);
+	wire mem_jmp_hazard_r2 = mem_r2_jmp_comp && (mem_r2_op_comp || mem_r1r2_op_comp);
+	wire reg_jmp_hazard_r1 = reg_r1_jmp_comp && reg_r1_write_comp;
+	wire reg_jmp_hazard_r2 = reg_r2_jmp_comp && reg_r2_write_comp;
+	
+	wire ex_jmp_hazard = (ex_jmp_hazard_r1 || ex_jmp_hazard_r2) && ex_proceed;
+	wire mem_jmp_hazard = (mem_jmp_hazard_r1 || mem_jmp_hazard_r2) && mem_proceed;
+	wire reg_jmp_hazard = reg_jmp_hazard_r1 || reg_jmp_hazard_r2;
+	
+	assign jmp_hazard = ex_jmp_hazard || mem_jmp_hazard || reg_jmp_hazard;
 
 endmodule
 
 //module insn_decoder( e_a, e_b, e_alu_op, e_is_cond, e_cond, e_write_flags, e_swp, m_a1, m_a2, m_r1_op, m_r2_op, r_a1, r_a2, r_op, d_pass, d_pcincr, r_r1_addr, r_r2_addr, r_read, word, r1, r2, hazard, rst, clk);
-module insn_decoder( e_a, e_b, e_alu_op, e_is_cond, e_cond, e_write_flags, e_swp, m_a1, m_a2, m_r1_op, m_r2_op, r_a1, r_a2, r_op, d_pcincr, r_r1_addr, r_r2_addr, r_read, word, r1, r2, hazard_ex, hazard_mem, hazard_reg, rst, clk);
+module insn_decoder( e_a, e_b, e_alu_op, e_is_cond, e_cond, e_write_flags, e_swp, m_a1, m_a2, m_r1_op, m_r2_op, r_a1, r_a2, r_op, d_pcincr, r_r1_addr, r_r2_addr, r_read, word, r1, r2, hazard_ex, hazard_mem, hazard_reg, hazard_jmp, rst, clk);
 	output wire [31:0] e_a, e_b; //arguments
 	output wire [7:0] e_alu_op; //ALU operation
 	output wire [3:0] e_cond; //Conditional code
@@ -94,7 +117,7 @@ module insn_decoder( e_a, e_b, e_alu_op, e_is_cond, e_cond, e_write_flags, e_swp
 
 	input [31:0] word; //Input from progmem (insn/imm)
 	input [31:0] r1, r2; //Inputs from register file (r1/r2)
-	input hazard_ex, hazard_mem, hazard_reg; //hazards
+	input hazard_ex, hazard_mem, hazard_reg, hazard_jmp; //hazards
 	input rst, clk; //Internal
 	
 	//insn comprehension
@@ -158,22 +181,34 @@ module insn_decoder( e_a, e_b, e_alu_op, e_is_cond, e_cond, e_write_flags, e_swp
 	wire imm2_op_action_masked = imm2_op_action & (~imm2_op_mask);
 	wire is_imm_fetch = imm1_op_action_masked | imm2_op_action_masked;
 	
+	
+	/*reg [3:0] delay_req;
+	reg is_delay_req_processed;
+	wire is_delay_req = (delay_req != 0) && !(is_delay_req_processed);
+	
 	reg is_delay_in_progress;
 	reg [3:0] delay_ctr;
-	wire is_delay = (delay_ctr != 0);
+	wire is_delay = (delay_ctr != 0);*/
 	
-	wire is_hazard = hazard_ex | hazard_mem | hazard_reg;
+	wire is_hazard = hazard_ex | hazard_mem | hazard_reg | hazard_jmp;
 	
-	reg is_hazard_delay;
+	reg is_jump;
+	reg is_jump_in_progress;
+	
+	wire is_jump_decoded = is_jump && !(is_jump_in_progress);
+	
+	//reg is_hazard_delay;
 	
 	reg reg_d_pcincr;
 	//assign d_pcincr = is_imm_fetch ? 1'b1 : reg_d_pcincr;
 	always @* begin
 		if(is_imm_fetch) begin
 			d_pcincr = 1'b1;
-		end else if(is_delay) begin
+		/*end else if(is_delay | is_delay_req) begin
+			d_pcincr = 1'b0;*/
+		end else if(is_hazard) begin
 			d_pcincr = 1'b0;
-		end else if(is_hazard | is_hazard_delay) begin
+		end else if(is_jump_decoded) begin
 			d_pcincr = 1'b0;
 		end else begin
 			d_pcincr = reg_d_pcincr;
@@ -185,9 +220,11 @@ module insn_decoder( e_a, e_b, e_alu_op, e_is_cond, e_cond, e_write_flags, e_swp
 	always @* begin
 		if(is_imm_fetch) begin
 			pass = 1'b0;
-		end else if(is_delay_in_progress) begin
+		/*end else if(is_delay) begin
+			pass = 1'b0;*/
+		end else if(is_hazard) begin
 			pass = 1'b0;
-		end else if(is_hazard | is_hazard_delay) begin
+		end else if(is_jump_in_progress) begin
 			pass = 1'b0;
 		end else begin
 			pass = reg_pass;
@@ -234,10 +271,10 @@ module insn_decoder( e_a, e_b, e_alu_op, e_is_cond, e_cond, e_write_flags, e_swp
 			//is_imm_fetch = 1'b0;
 			reg_d_pcincr <= 1'b1; // ???
 	
-			is_delay_in_progress <= 1'b0;
-			delay_ctr <= 0;
+			/*is_delay_in_progress <= 1'b0;
+			delay_ctr <= 0;*/
 			
-			is_hazard_delay <= 1'b0;
+			//is_hazard_delay <= 1'b0;
 			
 			reg_pass <= 1'b1; // ???
 			
@@ -265,24 +302,29 @@ module insn_decoder( e_a, e_b, e_alu_op, e_is_cond, e_cond, e_write_flags, e_swp
 						is_m2_from_imm <= 1'b1;
 					end else begin //fetch to reg b
 						reg_imm_b <= word;
-						is_b_from_imm <= 1'b0;
+						is_b_from_imm <= 1'b1;
 					end
 					imm2_op_action <= 1'b0;
 				end else begin //how does we got into this state ?
 					// raise hardware fault
-				end	
-			end else if(is_delay | is_delay_in_progress) begin
-				if(!is_delay) begin
-					is_delay_in_progress <= 0;
-				end else begin
-					is_delay_in_progress <= 1;
-					delay_ctr <= delay_ctr - 1;
 				end
+			/*end else if(is_delay_req) begin
+				delay_ctr <= delay_req - 1;
+				is_delay_req_processed <= 1'b1;
+			end else if(is_delay) begin
+				delay_ctr <= delay_ctr - 1;
+				is_delay_in_progress <= 1'b1;*/
+			end else if(is_jump_decoded) begin
+				is_jump_in_progress <= 1'b1;
 			end else if(is_hazard) begin
-				is_hazard_delay <= 1'b0;
-			end else if(is_hazard_delay) begin
-				is_hazard_delay <= 1'b0;
+				//is_hazard_delay <= 1'b0;
 			end else begin // decode
+				//reset state flags
+				is_m1_from_imm <= 1'b0; is_m2_from_imm <= 1'b0;
+				is_a_from_imm <= 1'b0; is_b_from_imm <= 1'b0;
+				/*is_delay_req_processed <= 1'b0;
+				is_delay_in_progress <= 1'b0;*/
+				is_jump_in_progress <= 1'b0;
 				//latch inputs
 				in_opcode <= word[31:25];
 				in_cond <= word[24:21];
@@ -309,6 +351,7 @@ module insn_decoder( e_a, e_b, e_alu_op, e_is_cond, e_cond, e_write_flags, e_swp
 		imm1_op_dest = 1'b0; imm2_op_dest = 1'b0; // imm to reg
 		imm1_op_mask = 1'b1; imm2_op_mask = 1'b1; // no imm in this insn
 		reg_a = 0; reg_b = 0; reg_m_a1 = 0; reg_m_a2 = 0;
+		is_jump = 1'b0;
 		if(!rst) begin
 			case(decode_state) // synopsys full_case parallel_case
 				//logic
@@ -552,9 +595,7 @@ module insn_decoder( e_a, e_b, e_alu_op, e_is_cond, e_cond, e_write_flags, e_swp
 					is_a_override = 0; is_b_override = 1; is_m1_override = 1; is_m2_override = 1; //arg a from file
 					imm1_op_dest = 1'b0; imm2_op_dest = 1'b0; // imm to reg
 					imm1_op_mask = 1'b0; imm2_op_mask = 1'b1; // only first imm in this insn
-					//arm delay
-					//is_delay = 1'b1;
-					delay_ctr = 3; 
+					is_jump = 1'b1; //jump operation, pass then wait until write completes
 				end
 				26: begin //rbr
 					reg_e_alu_op = 8'h01; reg_e_cond = in_cond; reg_e_write_flags = 4'h0; reg_e_is_cond = 1; //alu add, conditional, no flags
@@ -564,9 +605,7 @@ module insn_decoder( e_a, e_b, e_alu_op, e_is_cond, e_cond, e_write_flags, e_swp
 					is_a_override = 0; is_b_override = 0; is_m1_override = 1; is_m2_override = 1; //args from file
 					imm1_op_dest = 1'b0; imm2_op_dest = 1'b0; // imm to reg
 					imm1_op_mask = 1'b1; imm2_op_mask = 1'b0; // only second imm in this insn
-					//arm delay
-					//is_delay = 1'b1;
-					delay_ctr = 3; 
+					is_jump = 1'b1; //jump operation, pass then wait until pc write completes
 				end
 				27: begin //brl
 					reg_e_alu_op = 8'h00; reg_e_cond = in_cond; reg_e_write_flags = 4'h0; reg_e_is_cond = 1; //alu nop, conditional, no flags
@@ -576,9 +615,7 @@ module insn_decoder( e_a, e_b, e_alu_op, e_is_cond, e_cond, e_write_flags, e_swp
 					is_a_override = 0; is_b_override = 0; is_m1_override = 1; is_m2_override = 1; //args from file
 					imm1_op_dest = 1'b0; imm2_op_dest = 1'b0; // imm to reg
 					imm1_op_mask = 1'b0; imm2_op_mask = 1'b1; // only first imm in this insn
-					//arm delay
-					//is_delay = 1'b1;
-					delay_ctr = 3; 
+					is_jump = 1'b1; //jump operation, pass then wait until pc write completes
 				end
 				28: begin //ret
 					reg_e_alu_op = 8'h00; reg_e_cond = in_cond; reg_e_write_flags = 4'h0; reg_e_is_cond = 1; //alu nop, conditional, no flags
@@ -588,9 +625,7 @@ module insn_decoder( e_a, e_b, e_alu_op, e_is_cond, e_cond, e_write_flags, e_swp
 					is_a_override = 0; is_b_override = 1; is_m1_override = 1; is_m2_override = 1; //arg a from file
 					imm1_op_dest = 1'b0; imm2_op_dest = 1'b0; // imm to reg
 					imm1_op_mask = 1'b1; imm2_op_mask = 1'b1; // no imm in this insn
-					//arm delay
-					//is_delay = 1'b1;
-					delay_ctr = 3; 
+					is_jump = 1'b1; //jump operation, pass then wait until pc write completes
 				end
 				29: begin //ldr
 					reg_e_alu_op = 8'h00; reg_e_cond = in_cond; reg_e_write_flags = 4'h0; reg_e_is_cond = 1; //alu nop, conditional, no flags

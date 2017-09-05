@@ -108,7 +108,7 @@ module execute(r1, r2, cres, n, z, c, v, cc, a, b, op, is_cond, cond, write_flag
     wire cond_res;
     cond_calc cond0(cond_res, in_cond, cond_n, cond_z, cond_c, cond_v);
 
-    assign cc = (write_flags != 4'b0) && (is_cond && cond_res);
+    assign cc = (in_wr_flags != 4'b0) && (in_is_cond && cond_res);
     assign n = in_wr_flags[3] ? alu_n : cond_n;
     assign z = in_wr_flags[2] ? alu_z : cond_z;
     assign c = in_wr_flags[1] ? alu_c : cond_c;

@@ -56,7 +56,7 @@ module gpio_mux(pins, func0_in, func1_in, func2_in, func3_in, func0_out, func1_o
     endgenerate
 
     always @(posedge clk or posedge rst) begin
-        #1;
+//        #1;
         if(rst) begin
             control = 64'b0;
         end

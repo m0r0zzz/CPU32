@@ -38,14 +38,14 @@ module reg32_2x2_pc(rd0, rd1, ra0, ra1, wa0, wa1, wd0, wd1, read, write, clk, rs
     		st_addr: rd0 = st;
     		lr_addr: rd0 = lr;
     		sp_addr: rd0 = sp;
-    		pc_addr: rd0 = st;
+    		pc_addr: rd0 = pc;
     		default: rd0 = regs[ra0];
     	endcase
     	case(ra1)
     		st_addr: rd1 = st;
     		lr_addr: rd1 = lr;
     		sp_addr: rd1 = sp;
-    		pc_addr: rd1 = st;
+    		pc_addr: rd1 = pc;
     		default: rd1 = regs[ra1];
     	endcase
     end

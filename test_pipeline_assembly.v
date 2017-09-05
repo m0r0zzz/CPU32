@@ -87,8 +87,8 @@ module test_pipeline_assembly(ram_w_addr, ram_r_addr, ram_w_line, ram_read, ram_
 
     wire [31:0] d_word = word; //input
     wire [31:0] d_r1 = reg_a, d_r2 = reg_b; //input
-    wire d_hazard_ex, d_hazard_mem, d_hazard_reg; //input
-    insn_decoder dec0(e_a, e_b, e_alu_op, e_is_cond, e_cond, e_write_flags, e_swp, m_a1, m_a2, m_r1_op, m_r2_op, r_a1, r_a2, r_op, d_pcincr, r_r1_a, r_r2_a, r_read, d_word, d_r1, d_r2, d_hazard_ex, d_hazard_mem, d_hazard_reg, rst, clk);
+    wire d_hazard_ex, d_hazard_mem, d_hazard_reg, d_hazard_jmp; //input
+    insn_decoder dec0(e_a, e_b, e_alu_op, e_is_cond, e_cond, e_write_flags, e_swp, m_a1, m_a2, m_r1_op, m_r2_op, r_a1, r_a2, r_op, d_pcincr, r_r1_a, r_r2_a, r_read, d_word, d_r1, d_r2, d_hazard_ex, d_hazard_mem, d_hazard_reg, d_hazard_jmp, rst, clk);
 
 
     /*wire [31:0] pi_e_a, pi_e_b; //output
@@ -205,7 +205,8 @@ module test_pipeline_assembly(ram_w_addr, ram_r_addr, ram_w_line, ram_read, ram_
     wire ex_hazard;
     wire reg_hazard;
     wire mem_hazard;
-    reg_hazard_checker hz0(ex_hazard, mem_hazard, reg_hazard, pass_d1_r_a1, pass_d1_r_a2, pass_d1_r_op, ex_cres, pass_r_a1, pass_r_a2, pass_r_op, pass_r_proceed, rwb_wa1, rwb_wa2, rwb_write, r_r1_a, r_r2_a, r_read);
+    wire jmp_hazard;
+    reg_hazard_checker hz0(ex_hazard, mem_hazard, reg_hazard, jmp_hazard, pass_d1_r_a1, pass_d1_r_a2, pass_d1_r_op, ex_cres, pass_r_a1, pass_r_a2, pass_r_op, pass_r_proceed, rwb_wa1, rwb_wa2, rwb_write, r_r1_a, r_r2_a, r_read);
 /*`ifdef RWB_STAGE_HAZARD
     assign d_hazard = ex_hazard || reg_hazard || mem_hazard;
 `else
@@ -214,6 +215,7 @@ module test_pipeline_assembly(ram_w_addr, ram_r_addr, ram_w_line, ram_read, ram_
     assign d_hazard_ex = ex_hazard;
     assign d_hazard_mem = mem_hazard;
     assign d_hazard_reg = reg_hazard;
+    assign d_hazard_jmp = jmp_hazard;
 
     assign lr = reg_lr;
     assign pc = reg_pc;

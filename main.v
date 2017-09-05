@@ -10,7 +10,7 @@ module test_rom(word, addr);
         reg [31:0] insn;
         assign word = insn;
 
-        always @(addr) begin
+        always @* begin
                 //#1;
                 case(addr)
                         /*32'h0: begin //(mov)nop reg 29 to reg 30
@@ -139,7 +139,6 @@ module fib32_rom(word, addr);
         output reg [31:0] word;
 
         always @* begin
-                #1;
                 case(addr)
                         32'h0: begin //movs 0x00 -> r0
                                 word[31:25] = 33; word[24:21] = 4'b1110; word[20:16] = 0; word[15:11] = 0; word[10:6] = 0; word[5:1] = 5'b10000; word[0] = 0;

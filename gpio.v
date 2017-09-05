@@ -35,7 +35,7 @@ module gpio(gpio_out, gpio_in, gpio_dir, addr, sys_w_addr, sys_r_addr, sys_w_lin
             sys_r_line = 32'bz;
         end
         else begin
-            #1;
+//            #1;
             if(sys_r) begin //read requested
                 if(sys_r_addr[31:1] == addr[31:1]) begin //if r addr is same
                     if(sys_r_addr[0]) begin //high part, direction
