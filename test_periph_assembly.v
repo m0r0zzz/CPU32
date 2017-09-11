@@ -1,8 +1,13 @@
-`timescale 1 ns / 1 ps
+//`timescale 1 ns / 1 ps
 
-`include "gpio_mux.v"
-`include "gpio.v"
-
+`ifdef GATE_LEVEL_SIM
+	`include "synth/gpio.v"
+	`include "synth/gpio_mux.v"
+`else
+	`include "gpio_mux.v"
+	`include "gpio.v"
+`endif
+	
 module test_periph_assembly(pins, sys_w_addr, sys_r_addr, sys_w_line, sys_r_line, sys_w, sys_r, rst, clk);
     inout [127:0] pins; //our system will have 128 pins
 

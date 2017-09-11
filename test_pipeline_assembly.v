@@ -1,8 +1,6 @@
 //`timescale 1 ns / 1 ps
 
 `ifdef GATE_LEVEL_SIM
-	`include "synth/lib/osu025_stdcells.v" //library
-	
 	`include "synth/execute.v"
 	`include "synth/execute_status.v" //additional
 	`include "synth/memory_op.v"

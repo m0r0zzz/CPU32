@@ -3,10 +3,15 @@
 `define INTERFACE_STAGE_NO_DELAY
 `define RWB_STAGE_HAZARD
 
-
 `include "test_pipeline_assembly.v"
 `include "test_periph_assembly.v"
-`include "ram.v"
+
+`ifdef GATE_LEVEL_SIM
+	`include "synth/lib/osu025_stdcells.v" //library
+	`include "synth/emb_ram.v" //additional
+`else
+	`include "ram.v"
+`endif
 
 // BEWARE:
 // general rule for continuous assignment statements

@@ -33,8 +33,8 @@ module ram(r_addr, w_addr, r_line, w_line, read, write, wrdy, rrdy, exc, clk);
     end*/
 
     always @(posedge clk) begin
-        if(wrdy) wrdy = 1'b0;
-        if(rrdy) rrdy = 1'b0;
+        if(wrdy) wrdy <= 1'b0;
+        if(rrdy) rrdy <= 1'b0;
 
         if(read & !rrdy ) begin
             if(r_addr >= mem_size) begin
@@ -47,14 +47,14 @@ module ram(r_addr, w_addr, r_line, w_line, read, write, wrdy, rrdy, exc, clk);
                 exc <= 1'b0;
             end
         end
-        else r_line = 32'bz;
+        else r_line <= 32'bz;
 
         if(write && !wrdy) begin
-            if(w_addr >= mem_size) exc = 1'b1;
+            if(w_addr >= mem_size) exc <= 1'b1;
             else begin
-                mem[w_addr] = w_line;
-                wrdy = 1'b1;
-                exc = 1'b0;
+                mem[w_addr] <= w_line;
+                wrdy <= 1'b1;
+                exc <= 1'b0;
             end
         end
     end

@@ -1,6 +1,6 @@
 `timescale 1 ns / 1 ps
 
-`define GATE_LEVEL_SIM
+//`define GATE_LEVEL_SIM
 
 `include "test_processor_assembly.v"
 
